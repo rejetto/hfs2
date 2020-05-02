@@ -1,0 +1,29 @@
+=== LIBS USED
+ICS v7 by François PIETTE http://www.overbyte.be
+GIFimage v2.2r5 by Anders Melander http://www.tolderlund.eu/delphi/
+delphi zlib v1.2.3 by base2 technologies http://www.base2ti.com
+TRegExpr v0.952 by Andrey V. Sorokin http://www.regexpstudio.com/TRegExpr/TRegExpr.html
+fastMM v4 by Pierre le Riche http://fastmm.sourceforge.net
+Kryvich's Delphi Localizer v3.2 https://sites.google.com/site/kryvich/
+
+
+=== CGI
+see python\Lib\CGIHTTPServer.py
+  
+=== CAPABILITIES OF A SCRIPTING SYSTEMS
+- skip limits on some files
+
+=== UNICODE FILENAMES
+widgets required:
+    - treeview (vfs)
+    - listbox (connections)
+    - richedit (log)
+
+code to adapt
+    - TfileListing.fromFolder()
+    - getVFS()
+    - setVFS()
+    
+=== DEFAULT TEMPLATE
+- detect mobile and use special template
+

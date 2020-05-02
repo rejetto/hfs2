@@ -1,0 +1,18 @@
+In the template system, the following %symbols% and [sections] are currently deprecated, because they have been surpassed by {.macros.}.
+They are still available for backward compatibilty in 2.x versions, but they are likely not be there since version 3.
+
+%sym-ANY%
+  equivalent: {.$sym-ANY.}
+  note: you are not forced anymore to start the section name by "sym-"
+
+%up%
+  equivalent: {.if| {.%folder% = / .} | {.$up.} .}
+  note: you are not forced anymore in keeping the code inside section [up]
+
+%item-added% and %item-modified%
+  equivalent: {.time||when=%item-added-dt%.}
+
+%new%
+  equivalent: {.if| {.get|is new.} | {.$newfile.} .}
+  note: you are not forced anymore in keeping the code inside section [newfile]
+

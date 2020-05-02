@@ -1,0 +1,6 @@
+HFS version %s, Copyright (C) 2002-2020  Massimo Melina (www.rejetto.com)
+HFS comes with ABSOLUTELY NO WARRANTY; for details click Menu -> Web links -> License
+This is FREE software, and you are welcome to redistribute it
+under certain conditions.
+
+Build #%s

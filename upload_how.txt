@@ -1,0 +1,10 @@
+1. Add a folder (choose "real folder") 
+
+You should now see a RED folder in your virtual file sytem, inside HFS 
+
+2. Right click on this folder
+3. Properties -> Permissions -> Upload
+4. Check on "Anyone"
+5. Ok 
+
+Now anyone who has access to your HFS server can upload files to you.

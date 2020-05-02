@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<ProjectSortOrder AutoSort="0" SortType="0">
+    <File Path="classesLib.pas"/>
+    <File Path="diffDlg.pas"/>
+    <File Path="diffDlg.dfm"/>
+    <File Path="filepropDlg.pas"/>
+    <File Path="filepropDlg.dfm"/>
+    <File Path="folderKindDlg.pas"/>
+    <File Path="folderKindDlg.dfm"/>
+    <File Path="hfs.dpr"/>
+    <File Path="ipsEverDlg.pas"/>
+    <File Path="ipsEverDlg.dfm"/>
+    <File Path="listSelectDlg.pas"/>
+    <File Path="listSelectDlg.dfm"/>
+    <File Path="longinputDlg.pas"/>
+    <File Path="longinputDlg.dfm"/>
+    <File Path="main.pas"/>
+    <File Path="main.dfm"/>
+    <File Path="newuserpassDlg.pas"/>
+    <File Path="newuserpassDlg.dfm"/>
+    <File Path="optionsDlg.pas"/>
+    <File Path="optionsDlg.dfm"/>
+    <File Path="parserLib.pas"/>
+    <File Path="purgeDlg.pas"/>
+    <File Path="purgeDlg.dfm"/>
+    <File Path="runscriptDlg.pas"/>
+    <File Path="runscriptDlg.dfm"/>
+    <File Path="scriptLib.pas"/>
+    <File Path="shellExtDlg.pas"/>
+    <File Path="shellExtDlg.dfm"/>
+    <File Path="utillib.pas"/>
+  </ProjectSortOrder>
+</BorlandProject>

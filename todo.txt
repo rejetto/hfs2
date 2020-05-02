@@ -1,0 +1,194 @@
+* consider letting comment "protected" files. Can it really cause harm? 
+* flag to enable lnk files in a folder (disabled by default)
+experiment session login in place of http authentication
++ add mkv mime type http://www.rejetto.com/forum/html-templates/online-video-mkv-player/msg1061237/?topicseen#msg1061237
++ sign exe http://www.rejetto.com/forum/hfs-~-http-file-server/'unsafe'/msg1061437/#msg1061437
+cache reReplace
+- comments are not updated when moving or renaming files http://www.rejetto.com/forum/bug-reports/descript-ion-and-comment-not-cleaned-up-after-moving-file/
++ hash&salt passwords
+- setInterval > setTimeout
++ target=_blank as an option on links
+- an unsaved VFS will be asked twice if a restart is caused by an update
+- while renaming a file, CTRL+C/V doesn't work on the text but is handled by the context menu action
++ more macros http://www.rejetto.com/forum/index.php/topic,10631.0.html
+- long folder names are overflowing the tree-box http://www.rejetto.com/forum/index.php/topic,10631.0.html
++ {.vfs delete.}
++ log: color upload and downloads http://www.rejetto.com/forum/index.php/topic,10202.0.html
++ make simple variables work outside connections http://www.rejetto.com/forum/index.php/topic,9805.msg1054886.html#msg1054886
++ {.server stop.} http://www.rejetto.com/forum/index.php/topic,9577.msg1054784.html#msg1054784
++ macros missing to cache a folder: {.reply|content=|var=|code=|filename=|mime=.}
+- unexpected scripting behavior http://www.rejetto.com/forum/index.php/topic,9728.msg1054517.html#msg1054517
+    in handleItem() translate only symbols, and run all macros at the end
+document: [+section]
+document: {.set item|diff template.}
+document: single line diff templates
+document: disconnection reason|if=XXX
+document: %url%
+document: commands returning white space: add folder, save, set account, exec, mkdir, chdir, delete, rename, move copy, set
+document: dir, disk free, filetime, file changed, load tpl
++ event to filter logging http://www.rejetto.com/forum/index.php/topic,9784.0.html
+- wrong browser http://www.rejetto.com/forum/index.php/topic,9710.0.html
+    solution:
+        read HKEY_CURRENT_USER\Software\Microsoft\Windows\Shell\Associations\UrlAssociations\http\UserChoice::Progid
+        read ROOT\$program-id\shell\open\command::Default
+* findExtOnStartupChk, when failing, is not reporting the server
+- better dialog message http://www.rejetto.com/forum/index.php/topic,9778.0.html
++ upload to non-browsable folder
+- android doesn't upload http://www.rejetto.com/forum/index.php/topic,9699.0/topicseen.html#msg1054287
+- android doesn't work with passwords http://www.rejetto.com/forum/index.php/topic,9575.msg1054029.html#msg1054029
+? default tpl: check with IE6
+? default tpl: consider css data uri http://www.nczonline.net/blog/2010/07/06/data-uris-make-css-sprites-obsolete/
++ default tpl: support for rawr thumbnails
++ next VFS file format version should be XML-based
++ remove the "progress" from "log what", and use [progress|no log] instead
+? {.rename.} should update descript.ion
++ folder archive depth limit http://www.rejetto.com/forum/index.php/topic,8546.msg1050027.html#msg1050027
+? in getPage() many %symbols% are translated in a way incompatible with {.section.}
+? Windows Script Interfaces
+? {.image|src=file|width=x|dst=outfile.}
++ replace /~imgXX with ?mode=icon&id=XX
++ user input through {.dialog.}
++ show missing files in VFS http://www.rejetto.com/forum/index.php/topic,8203.new.html
+* {.cache.} should be able to work on a simple variable
++ plugins system http://www.rejetto.com/wiki/index.php/HFS:_plugins_design
+? tpl as plugin category
+? try merging 2 implementations of runEventScript()
++ support PUT http method
+? use the system index for faster searching http://msdn.microsoft.com/en-us/library/bb266517(VS.85).aspx http://www.rejetto.com/forum/index.php/topic,7700.msg1047024.html#msg1047024
+- out of memory / GDI http://www.rejetto.com/forum/index.php/topic,7703.msg1047118.html#msg1047118
+? consider using tpl.appendString() in getFolderPage() instead of getRecursiveDiffTplAsStr() to avoid some string concatenations
+? fake the by-default "anyone" in permission/download, to reflect the behavior www.rejetto.com/forum/?topic=7301
++ log event to filter www.rejetto.com/forum/?topic=7332.0
+? integration with mediainfo.dll www.rejetto.com/forum/?topic=7329
++ folder archive log, just as for deletion http://www.rejetto.com/forum/index.php?topic=6904.msg1042974;topicseen#msg1042974
+- upload doesn't work on chinese folders with uneven length  www.rejetto.com/forum/?topic=5382
+- chinese problems since #161 www.rejetto.com/forum/?topic=5344
+- AV with RealVNC on hints by mouse hovering www.rejetto.com/forum/?topic=5261
+- N-Stalker can locally crash HFS
+- AV in #179 http://www.rejetto.com/forum/index.php?topic=5653.msg1033457#msg1033457  www.rejetto.com/forum/?topic=5681
+- AV in #184 http://www.rejetto.com/forum/index.php?topic=5792.msg1034538#msg1034538
+- AV in #185 http://www.rejetto.com/forum/indebx.php?topic=5795.msg1034536#msg1034536  www.rejetto.com/forum/?topic=5873
+- focus problem hovering this hint http://www.rejetto.com/forum/index.php?topic=6321.msg1038272#msg1038272
+- lock icon is lost on moving http://www.rejetto.com/forum/index.php?topic=6371.msg1038531#msg1038531
+- there seems to be problems with SMB resources www.rejetto.com/forum/?topic=6365
+- malfunctions with incorrect timestamps http://www.rejetto.com/forum/index.php?topic=6418.msg1039179#msg1039179
+? permission events www.rejetto.com/forum/?topic=6698
+- show error message http://www.rejetto.com/forum/index.php?topic=6695.msg1041212#msg1041212
+- AV deleting files in #221 www.rejetto.com/forum/?topic=6629
++ "no download" should become a permission http://www.rejetto.com/forum/index.php?topic=6870.msg1042583#msg1042583
++ http://www.rejetto.com/forum/index.php?topic=6719.msg1041559#msg1041559
++ link properties: "open in new window"
++ authentication digest
++ improve the connections box http://www.rejetto.com/forum/index.php?topic=6689.msg1041182#msg1041182
++ ban page can't eventually access template files www.rejetto.com/forum/?topic=6628
++ support POSTed files www.rejetto.com/forum/?topic=6618
++ clicking on a group, user should get notified of what accounts are part of it
++ multi-span folder archive www.rejetto.com/forum/?topic=6575
++ an updated hint on virtual folders, to explain how to get upload working
+- requesting a non-existant file inside an unauthorized folder, apache replies 401, hfs 404. try to comply.
++ make %list% available in every page
++ support for ALT+F4 with option "Minimize to tray clicking the close button" www.rejetto.com/forum/?topic=6351 
++ replace and delete icons http://www.rejetto.com/forum/index.php?topic=6317.msg1038157#msg1038157
++ self-test supporting https
+? currently the delete permission is only inside a folder. you can't mark a file or delete the marked folder. is this ok?
++ when a link is protected (no access for this user) it may be displayed as a link to the %item-name%, then 401, and if login is successful provide a redirection 
++ change folder/link/generic-file icons (via GUI, without editing the template) 
++ a way to get bigger icons (client side) 
++ be able to produce rss http://www.rejetto.com/forum/index.php?topic=5846.msg1035481#msg1035481
+* better warning message http://www.rejetto.com/forum/index.php?topic=5795.msg1034406#msg1034406
+? on the fly files compression www.rejetto.com/forum/?topic=5492
+? firewall mode www.rejetto.com/forum/?topic=5461
+? auto-removing folders www.rejetto.com/forum/?topic=3149
++ last-access-time for files www.rejetto.com/forum/?topic=5266
++ expiration time for account www.rejetto.com/forum/?topic=5409
++ warn the user if there's no useful IP address http://www.rejetto.com/forum/index.php?topic=3193.msg1031371#msg1031371  
++ GUI suggestions www.rejetto.com/forum/?topic=5334
++ {.cookie.} http://www.rejetto.com/forum/index.php?topic=5349.0
++ restrict access to -> ip mask www.rejetto.com/forum/?topic=5244
++ an option to not consider LAN traffic graph/statistics http://www.rejetto.com/forum/index.php?topic=5244.msg1030090#msg1030090
++ url command to save the output in a cache, given an ID an an expiry time (minutes?) http://www.rejetto.com/forum/index.php?topic=5239.msg1030223#msg1030223
++ ban list sorting (maybe always sort?) www.rejetto.com/forum/?topic=5251
+? shutdown message www.rejetto.com/forum/?topic=3206
++ a variant of ?limit to trim after full listing (rename limit? the other method recalls the SQL limit, would fit better) http://www.rejetto.com/forum/index.php?topic=5196.msg1029734#msg1029734
++ show update news inside HFS
++ a way to filter/show only "new" files www.rejetto.com/forum/?topic=5227
+? add to the LOG the X-REQUEST To to be able to know whom the  proxy is forwarding to
++ a way to add via cmdline a file specifying its virtual name/path
+? "sticky file" with an hint on adding a leading blank space www.rejetto.com/forum/?topic=5088
++ upload file overwriting per-folder www.rejetto.com/forum/?topic=5086
++ https
++ filter mask based on host, to disconnect who is not using our dyndns
++ mouse hovering the graph, shows the speed and time for that point
++ per-folder no-limit
++ windows auth (NLTM? seems to be available in ICS) www.rejetto.com/forum/?topic=3762
++ more stats www.rejetto.com/forum/?topic=4968
++ to disable single ban rules 
++ ban by hostname
++ edit comments for real folders www.rejetto.com/forum/?topic=4667
++ a way to pass ini commands through the command line
++ create folders via command line www.rejetto.com/forum/?topic=3955
+? support mp3ToIon www.rejetto.com/forum/?topic=4600
++ download only for <account-list>
++ account: see all transfers in ~progress http://www.rejetto.com/forum/index.php/topic,9325.msg1053416/topicseen.html#msg1053416 
++ limit account to a host mask
++ tray icons for uploads
++ MAC filter
++ if robots.txt does not exist, an option "don't be listed on search engines"
++ menu -> limits -> temporarily disable all limits
++ menu -> limits -> max speed for each address
++ option to display counter for folders as number of accesses instead of total access to files in it   
++ autodisabling accounts www.rejetto.com/forum/?topic=5379 
++ on update, propose a link to the "what's new" page
++ add special folder (expert mode): let you specify a special folder, like documents, or manually enter a path (useful for relative paths), or GUID
++ logs rotation (hfs always append)
++ double address bar, one for LAN and one for the Internet   
++ per user diff-tpl (apply both folder and user diff-tpl.s, and let the user decide priority, default:user,folder)
++ "Folder image mask", a file mask indicating the external file that should be used as icon (~img_folder)
++ to be able to add icons from multi-icon files (like shell32.dll)
++ installer (saving to registry, and making ini-file the new default, don't ask for shell menu)
++ support unicode filenames (FindFirstFileW. Cannot be done because widgets don't support unicode) 
+* show "(home)" instead of "/" in VFS
++ show updateinfo notice also in autocheck
++ top 10 downloaded files
++ after the self test fails, and a router problem is detected, prompt a wizard for portforwad.com (extract routers list)
++ export vfs map as txt/html
++ specific message for each disabled account             
++ search for files including meta information (id3 tag) www.rejetto.com/forum/?topic=5312
++ multiupload using flash
+? support shortcut to folders in real-folders
+* save custom icons in VFS only once
++ DNS reverse for ips www.rejetto.com/forum/?topic=4970
++ UPnP (www.upnpworks.alcidelic.com/links.html) (www.whitebear.ch) (http://miniupnp.free.fr/) (http://miniupnp.free.fr/files/xchat-upnp20061022.patch)
++ UPnP Media Server www.rejetto.com/forum/?topic=5538
++ save to registry in different strings
++ loading cfg, if version < current then warn user
++ auto-ban IP if: bad login X times (with IP exclusion mask) [macros?]
++ deny listing and download for uploading files
++ download/upload quota (global and account-based)
++ purge VFS from unexistant items: files, real folders, virtual folders, empty folders
++ custom browser [with an help on how to get a new browser window]
++ admin panel (with stats, and maybe commands)
++ limit bandwidth/downloads/kb by user, by ip
++ external text files with list of authorized IP addresses/accounts
++ periodic password changer? (t=1061)
++ thumbnails mode (create thumbnails on addition)
+? socks5
++ SSI
++ support file renaming notification
++ multi-language
++ zip format for folder archives
+* stop using /~commands and move all of them in the standard ?name=value form
+
+VER 3
++ new kind of folder (no more real/virtual folders) 
+
+VER 3.5
++ search for files
++ file/folder properties in a window (collect menu commands)
++ undo (multilevel)
+
+VER 4
++ PHP/ASP via CGI (http://cgi-spec.golux.com/)
+
+VER 5
++ ftp / webdav

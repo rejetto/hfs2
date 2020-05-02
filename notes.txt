@@ -1,0 +1,62 @@
+=== 4GB+ FILES DOWNLOAD SUPPORT 
+Reget Deluxe 4.1
+MetaProducts Download Express 1.7
+Getright
+Firefox 2.0
+
+=== 2GB+ FILES UPLOAD SUPPORT
+firefox 3.0: no
+
+=== HOW TO CREATE BIG FILES
+fsutil file createnew <filename> <filesize>
+
+=== HOW TO DOWNLOAD WITH NO DISK ACTIVITY (SPEED TEST)
+create a big file as above
+then download this way: wget -q -O nul http://localhost/big
+
+=== SUBMITTED TO
+www.nonags.com
+www.sharewareconnection.com
+
+=== LISTED ON
+www.sofotex.com
+www.download3000.com
+www.onekit.com
+www.all4you.dk/FreewareWorld
+www.snapfiles.com
+sourceforge
+www.freedownloadscenter.com
+download.freenet.de
+www.softonic.com
+www.portablefreeware.com
+www.download.com
+www.freewarepub.org
+www.handyarchive.com
+www.softpedia.com
+www.acidfiles.com
+www.fileedge.com
+www.freewarepark.com
+
+=== REVIEWS
+http://www.technospot.net/blogs/host-a-web-server-on-your-home-pc/
+http://www.snapfiles.com/get/hfs.html
+http://www.downloadsquad.com/2006/05/24/hft-quick-and-easy-http-file-server/
+http://www.caseytech.com/how-to-host-a-web-site-from-your-computer/
+http://www.chip.de/downloads/c1_downloads_29480524.html
+http://blog.pcserenity.com/2009/01/easy-conten-sharing-with-windows.html
+http://hfs.onehelp.ch
+http://www.lanacion.com.ar/nota.asp?nota_id=1148507
+http://blogmotion.fr/systeme/partage-windows-hfs-3947
+ita
+http://lafabbricadibyte.wordpress.com/2007/05/01/hfs-file-server-http-gratuito-per-windows/
+http://server.html.it/articoli/leggi/2335/hfs-file-sharing-via-http/
+
+=== OTHER SOFTWARE BASED ON HFS
+http://www.wrinx.com/products/pfs/
+  commercial, licensed
+http://www.powernetservers.com/pnwfs.php
+  commercial, probably unlicensed
+
+=== INSTALLABLE PLUGINS
+log links usage 
+    http://www.rejetto.com/forum/index.php/topic,7765.msg1047258.html#msg1047258

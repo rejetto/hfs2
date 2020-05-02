@@ -1,0 +1,10 @@
+This is already explained in the docs, but people don't read docs.
+If you want to allow only specified addresses to access your files, you can.
+You need only 1 row to get it.
+
+Let say you want 1 and 2 to pass, others to be blocked.
+Just put this IP address mask: \1;2
+The opening \ character inverts the logic, so everything that is NOT 1 or 2 will be banned.
+E.g. 3 will be banned.
+
+If you want to know more about address masks, check the guide.

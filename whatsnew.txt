@@ -1,0 +1,951 @@
+HFS - what's new
+
+LEGEND
+!   very important
++   new feature
+*   change
+-   bug fix
+AV  access violation
+
+VER 2.4
+propaganda
+  New mobile-friendly template
+/propaganda
++ new default template
++ {.set item|name.}
++ {.get item|icon.}
++ {.set cfg.}
++ cache for jquery and template sections
++ new template commands: base64, base64decode, md5, sha1
+- fixed template handling of section names with both '+' and '=' present
+- fixed LNK files to deleted items
+- fixed comments files were not updated upon deletion of files
+- fixed "requesting" forever with empty cookies http://rejetto.com/forum/index.php?topic=13112.0
+- fixed double "Content-Length" header on compressed pages
+- fixed log text base color not matching system settings http://rejetto.com/forum/index.php?topic=13233.0 
+
+VER 2.3m
+propaganda
+  Bug fixes
+/propaganda
++ initial localization support http://www.rejetto.com/forum/programmers-corner/translations-to-other-languages/
++ {.remove header.}
+- fixed error pages' loading problem http://www.rejetto.com/forum/bug-reports/httpauth-challenge-http-headers-bug/
+- fixed error with {.load.} with size exceeding real size http://rejetto.com/forum/index.php?topic=12059.msg1062781#msg1062781
+- fixed template translation issues http://rejetto.com/forum/index.php?topic=11880.msg1062167#msg1062167
+
+VER 2.3k
+propaganda
+  Bug fixes
+/propaganda
+- fixed {.rename.} {.move.} and {.delete.} with lnk files
+- fixed slowness problem introduced in previous release http://www.rejetto.com/forum/hfs-~-http-file-server/very-slow-loading-on-2-3j-with-userpass-folders/
+- fixed management of user/pass overlapping accounts
+- fiexd invisible window http://www.rejetto.com/forum/hfs-~-http-file-server/new-version-2-3j/msg1062129/#msg1062129
+
+VER 2.3j
+propaganda
+   Security and bug fixes
+/propaganda
+- prevent upload and rename of .lnk files
+- cache system didn't recognize sub-second changes
+- fixed chinese search problem http://www.rejetto.com/forum/bug-reports/can-not-search-chinese-word-in-recent-2-3-beta-version/
+- fixed missing "delete" button
+- fixed {.add header.} http://www.rejetto.com/forum/staff/proposal-of-update-to-correct-the-macro-'add-header'/msg1061397/#msg1061397
+- fixed renaming files with dollar sign http://www.rejetto.com/forum/bug-reports/standard-template-rename-does-funny-things-with-$-before-numbers-in-new-name/
+
+ver 2.3i
+propaganda
+   Security fix
+/propaganda
++ Report range for partial downloads in the log http://www.rejetto.com/forum/hfs-~-http-file-server/add-to-log-range-(starting-and-ending-byte)/
+- fixed Remote Command Execution http://www.rejetto.com/forum/bug-reports/execution-exploit/
+- {.add header.} wasn't overwriting existing headers
+- temporary files not deleted
+- incorrect handling of empty rows in ban tables
+
+ver 2.3h
+propaganda
+   Bugs fixed
+/propaganda
+- account names were uppercased http://www.rejetto.com/forum/bug-reports/account-names/
+- malformed TAR files with long file paths http://www.rejetto.com/forum/hfs-~-http-file-server/tar-headers-corrupt/
+- template [+sections] with a plus sign ahead were not working in diff template http://www.rejetto.com/forum/html-templates/disable-right-click-in-template/msg1061207/#msg1061207 
+- in case of lnk files, wrong file size was displayed
+- a lnk in a folder was stored with the wrong path if downloaded as archive
+
+ver 2.3g
+propaganda
+   Bugs fixed
+/propaganda
+- general problems navigating folders http://www.rejetto.com/forum/bug-reports/404-not-found-server-error/
+- default template: comment was not moved with the file http://www.rejetto.com/forum/bug-reports/descript-ion-and-comment-not-cleaned-up-after-moving-file/msg1060608/#msg1060608
+- request header limit too small, now raised to 16KB
+
+ver 2.3f
+propaganda
+   Security fix
+/propaganda
++ new [stream ready] event and %is-archive% symbol http://www.rejetto.com/forum/index.php?topic=8609.msg1060172#msg1060172
++ now you can use [upload completed] to refuse uploads http://www.rejetto.com/forum/html-templates/limits-to-upload-files-by-extension-and-size/msg1060476/#msg1060476
+* no more CDN for jquery
+- "bad session" error was not handled correctly http://www.rejetto.com/forum/html-templates/troubleshooting-hfs-cookie-issues-on-rename-in-the-default-template
+- possible XSS with %symbols%, and session stealing (thanks to Daniele Linguaglossa)
+
+ver 2.3e
+propaganda
+  Small fixes
+/propaganda
++ upload: multiple file selection
++ search accounts by typing the first letter
++ smarter speed measure in the log
+* using jquery's CDN instead of google's
+- delete not working after archive http://www.rejetto.com/forum/bug-reports/2-3d-(292)-delete-after-archive-repeats-the-archive-download-again/
+- getUri problem http://www.rejetto.com/forum/programmers-corner/last-beta-sources/msg1059938/#msg1059938
+- a big MD5 file can hang http://www.rejetto.com/forum/bug-reports/hfs-hangs-on-access/
+
+ver 2.3d
+propaganda
+  Security fixes
+/propaganda
+- fixed Remote Command Execution CVE-2014-7226 (thanks to Daniele Linguaglossa)
+- default files were totally overriding the template http://www.rejetto.com/forum/hfs-~-http-file-server/deconfiguring-template/msg1059524/#msg1059524
+
+ver 2.3c
+propaganda
+  Security fixes
+/propaganda
+* files are reloaded when the timestamp has changed, not only when it's newer
+- fixed Remote Command Execution CVE-2014-6287 (thanks to Daniele Linguaglossa)
+- fixed CSRF (thanks to D.L.)
+- fixed XSS on comments and upload (thanks to D.L.)
+- program was stuck on lengthy disk harvesting
+
+ver 2.3b
+propaganda
+  Security fixes
+/propaganda
+- fixed default template for serious security flaws 
+- fixed possible discovery of server paths
+- fixed "bind root to real folder"
+- fixed {.load tpl.} not applying to some pages http://www.rejetto.com/forum/html-templates/multiple-templates-based-on-browser/msg1058862/#msg1058862
+- fixed {.filename.} and {.filepath.} to work with backslashes
+
+ver 2.3a
+propaganda
+  Self-test fixed
+/propaganda
+- fixed self-test
+- fixed external IP services
++ new event [got header] http://www.rejetto.com/forum/hfs-~-http-file-server/new-events-section/
+
+ver 2.3
+propaganda
+  Faster file transfer
+  Brand new template
+  Delete files remotely
+  Scripting system, for both template and automation
+  Account groups
+  More
+/propaganda
++ extreme speed up of VFS loading
++ Menu > updates > revert to previous version
++ loading of "default.tpl" in the exe's folder
++ improved accessibility
++ alternative method to get archive: ?mode=archive instead of ~folder.tar (will be deprecated in the future)
++ "lan" symbol for address masks
++ command line parameter -c to set configuration directly on the command line
++ bans: sort button
++ "view http header" will now show even incomplete http headers
++ the TAR format is more standard compliant (is it?)
++ faster self-test
++ Log menu -> Log what -> Deletions
++ address masks support form 1.2.3.4/5 http://en.wikipedia.org/wiki/CIDR#CIDR_blocks
++ new tabbed format for the regular log http://www.rejetto.com/forum/index.php?topic=6719.msg1041763#msg1041763
++ improved Windows links support (*.lnk)   
++ %build-time% in other pages
++ now you can archive even search results
++ URL parameter "nofolders" for folder archives http://www.rejetto.com/wiki/index.php/HFS:_URL_parameters
++ selective folder archive
++ new template section [special:alias] http://www.rejetto.com/forum/index.php?topic=6635.msg1040986#msg1040986
++ by specifying [+section] instead of [section], the new text will not overwrite a previously existing [section] but will be appended 
++ Account notes (and related %user-notes%)
++ File Menu -> "Properties..."
++ Log menu -> "Max lines on screen..."
++ added F7 shortcut for accounts
++ a way to give access/upload to any account
++ Folder menu -> "Delete permissions"
++ Options -> MIME types -> "Open directly in browser when MIME type is defined"
++ Options -> Accounts -> new "upload" box preview
++ Options -> Tray message -> new preview box  
++ adding an "upload" folder suggest proper settings
++ easier way to restore options after "temporarily reset options"
++ apache log format improved (more symbols, conditions, parameters)
++ template installation through drag&drop
++ "addresses ever connected" moved to external file hfs.ips.txt, and hopefully fixed performance problems with many addresses www.rejetto.com/forum/?topic=5716
++ per-folder default sorting http://www.rejetto.com/forum/index.php?topic=5656.msg1033337#msg1033337
++ Menu -> Other options -> "Prevent system standby on network activity" www.rejetto.com/forum/?topic=5694 
++ Menu -> Limits -> Speed limit for single address
++ customize the default template by putting a [style.user] section in the diff template of the root
++ %folder-item-comment% has the same value of %item-comment% in [folder-comment]
++ searching ABC* will force the name to begin by ABC, while *ABC force it to be at the end
++ automatic comment for the uploaded file 
++ search results have links to their folder http://www.rejetto.com/forum/index.php?topic=5371.msg1031206#msg1031206
++ reverse sorting by clicking twice
++ Menu -> URL encoding -> "URLs starting with https instead of http" http://www.rejetto.com/forum/index.php?topic=2002.msg1030879#msg1030879
++ Menu -> Other options -> "Dump traffic"
++ "dynamic dns updater" automatically disables "find external address on startup" because they are incompatible.
++ show header(x-forwarded-for) instead of IP, but only if IP in a customizable ip-mask (127.0.0.1 by default) www.rejetto.com/forum/?topic=5811
++ (expert mode) Menu -> Limits -> "Stop spiders" www.rejetto.com/forum/?topic=3097
++ proportional files/log size www.rejetto.com/forum/?topic=5310
++ log toolbar
++ upload filter will by default reject index.htm* and default.htm* files for improved security
++ nicer icon for the self test, thanks to Jayrome
+* "@" allowed in user name
+* double slash in URL ignored (Apache behaviour)
+- many bugfixes
+
+ver 2.2f
+propaganda
+  Bug and security fixes
+/propaganda
+- several progress indicators were stuck to zero
+- save log had extension .tt instead of .txt
+- big security problem only for Win95/98/ME (not others): directory crossing www.rejetto.com/forum/?topic=6542
+- "open it" was not working if the path had spaces http://www.rejetto.com/forum/index.php?topic=6632.msg1040608#msg1040608
+- setting same name for 2 accounts was not prevented http://www.rejetto.com/forum/index.php?topic=6550.msg1039964#msg1039964
+* characters ;|^,{} are no more encoded in URLs
+
+ver: 2.2e
+propaganda
+  Bug and security fixes
+/propaganda
+* double slash in URL ignored (Apache behaviour)
+- fixed unicode support for uploads
+- small file upload bug www.rejetto.com/forum/?topic=5044
+- pendrive support wasn't applied by "edit resource"
+- NT4 incompatibility with automatic updates
+- some problems automatic updates
+- using special characters in username led to hanging connections http://www.rejetto.com/forum/index.php?topic=5573.msg1033030#msg1033030
+- dynamic dns host was not saved
+- sometimes it was reported "options saved" when they were not
+- couldn't load some files with read only attribute
+- erroneous handling of null chars in the URL
+- "minimum disk space" not working when using HFS on removable drives
+- vfs loading could jam www.rejetto.com/forum/?topic=5979
+- for range "0-0" it was sent the whole file instead of the first byte
+- "Browse it" wasn't working with links http://www.rejetto.com/forum/index.php?topic=6010.msg1035702#msg1035702
+- MIME types would not work with blank spaces in file masks
+- IE6 refresh problem should be now fixed www.rejetto.com/forum/?topic=5376
+- workaround for IE7 that most times will solve the "underscore_instead_of_spaces" problem www.rejetto.com/forum/?topic=6275
+
+ver: 2.2d
+propaganda
+  Bug fixes
+/propaganda
+- AV with very long paths and %user% in log filename
+- missing ":" for port in %host%
+
+ver: 2.2c
+propaganda
+  Security fixes
+/propaganda
+- prevent possible XSS attack
+- on specific (non-default) configuration DoS attack and arbitrary file creation was possible
+- was possible to know the version of HFS even with proper configuration
+
+ver: 2.2b
+propaganda
+  Bug fixes
+/propaganda
+- forged uploads were able to upload outside the assigned folder
+- sometimes importing an UTF-8 template resulted in an empty text www.rejetto.com/forum/?topic=5306
+- files with local characters were not sorted correctly
+- %item-ext% was not working with enabled "Hide file extension in listing"
+- folder was left locked after downloading it as archive  
+- incorrect behaviour accessing /~
+- incorrect handling of // in URI www.rejetto.com/forum/?topic=4969
+- incorrect behaviour adding an empty CD drives
+- bad URL for links with ?recursive www.rejetto.com/forum/?topic=5070  
+- archive for subfolders of real folders had a wrong path 
+- fixed unicode support for uploading file names
+- file icons on Windows98 broken in build #123
+- URLs to folders with no trailing / were not always redirected
+
+ver: 2.2a
+propaganda
+  Bug fixes
+/propaganda
+- a protected folder inside a folder protected by different account, was not accessible
+- occasional wrong URL building (double slash)
+- invasion of "save file system?" dialogs
+- AV upgrading
+- some files had no icon
+- no more dupe filenames if you add items to a real folder
+- "hide empty folders" was very slow 
+
+ver: 2.2
+propaganda
+  Folder archive: download a folder with 1 click
+  Anti-leeching system (download accelerators)
+  better USB drive support
+  Improved usability
+  Lot of new features
+  Many bug fixes
+/propaganda
++ Folder archive
++ smarter bandwidth division (between connections)
++ specific warning messages on some limits
++ Menu -> Limits -> "Allowed referer..." (to stop hotlinking)
++ when the port is busy, reports the name of process holding the port
++ new log file name symbol: %user% 
++ new template symbols: %build% %item-ext% %sequential% %number-addresses-ever%
++ Log menu -> "Addresses ever connected..."
++ File menu -> "Don't log"
++ Menu -> Limits -> "Prevent leeching"
++ custom symbols %sym-NAME%
++ offset and limit URL parameters 
++ main tray icon shows -> number of different IP addresses
++ main tray icon shows -> number of different IP addresses ever connected
++ CTRL A in some editors, to select the whole text
++ smarter saving prompting
++ Menu -> Virtual File System -> "Use OEM for DESCRIPT.ION"
++ failed logins are now logged, if enabled Log what -> Other events  
++ warning message after aborting file addition
++ support for dynamic path for the log
++ double (or right) clicking on statusbar: "out" opens speed limit, "vfs not saved" opens save dialog
++ speed limit is shown in the graph
++ remembers edit position for last diff template
++ introduced a workaround uploading 2GB+ files with browser not supporting it
++ \t (tab) and \n (newline) symbols supported in apache log format
++ warning on "don't include port in url"  
++ if hfs runs on a  ble drive, any file on the same drive is pointed relatively (useful for pendrives) 
++ (expert mode) Log menu -> "Clear and reset totals"
++ locks are shown also on the browser (new template symbol: %protected%)    
+* log menu -> log what -> replies  ...now disabled by default
+* log: no more "served" messages after "full downloaded"
+* Moved some File Menu items in a "Advanced" subgroup
+* big change for the ON button and the Port box
+* beta versions will check for new build every 8 hours
+- the "from stable versions to unstable" was not working with the daily check
+- "Create fingerprints" misbehaved when fingerprints were disabled  
+- problems with multi monitor
+- focus problem with options modal off 
+- "copy URL with fingerprint" now visible only for files
+- virtual file inside real folders made wrong counters
+- "Minimize to tray clicking the close button" was not working with Aero in Vista
+- removable drives were not handled correctly with real folders
+- hovering with mouse while editing a filename in vfs would stop the editing
+- clicking on statusbar may lead to the wrong dialog
+- "out of space" was shown also for disconnected drives
+- possible problem disabling "speed limit"
+- sometimes reporting "disconnected by server" while it was actually the client
+- "log icons" now filters also favicon in subfolders
+- fixed vfs corruption on loading abortion
+- file list for "/a/new a" was broken
+- user icon indexes are not fixed, breaking saved iconMasks 
+- problems with the "always on top"
+- problem with "confirm exit" and windows shutdown
+- download got corrupted if resumed after 2GB  
+- file list not working with diff template
+- file list on unexistant path now returns [not found]
+- occasional AVs 
+- freezing on listing/archiving
+- didn't save option when the system shuts down
+- access rights, beside upload rights, are now checked for uploads
+- inherited files/folders filter was not displayed in hint
+- fixed possible non standard formatting in cache commands
+- the connection was unfairly closed/reset after downloads (IE6 sometimes complaining about this)
+- complains updating  
+- graph visibility was not saved
+- bad %protected% behaviour
+- sometimes "Edit HTML template" was not working from the tray icon 
+- @anonymous restriction was considered as protection
+- using DNS updater, the IP changes when it shouldn't
+- unicode support for diff tpl
+- fix for uninstalling error
+- handle uninstall/update without only1instance
+- AV on void rename
+
+ver: 2.1d - build #088
+propaganda
+  UTF8 support improved
+  bug fixes
+/propaganda
++ Menu -> Virtual File System -> "Reset totals"
++ speed limit accepts decimal values 
+* clearing the log no longer reset totals
+* renamed: "Reset downloads" > "Reset files hits"
+* renamed: "Don't count as download" > "Don't consider as a download" 
+* renamed: "Save total in/out" > "Save totals", also saves hits/downloads/uploads, enabled by default 
+* show browser icon in address bar
+- updated template help
+- UTF8 fix for filename in progress frame (only uploading)
+- ~specials (urls with ~) didn't work with folders with "?" in the name
+- holding SHIFT and CTRL keys were undetected at startup
+- hfs.comments.txt was not used for symbol %folder-comment%
+- template import/export support for UTF8
+
+ver: 2.1d - build #086
+propaganda
+  template features: section aliasing, new symbols, graph colors, better UTF8 support
+  many bug fixes
+/propaganda
++ new template symbols: %total-downloads% %total-uploads% %total-hits% %folder-name% %time-left% %item-folder% %item-url%
++ template section aliasing, e.g. [file.gif = file.jpg = file.png]
++ Menu -> Other options -> "Default sorting"
++ dns updater: host is now automatically included in IP address list
++ graph colors customizable via URL 
++ Upgrading, prompt for saving before quitting
++ if an update attempt fails, re-use the already downloaded update
++ Menu -> Updates -> "Offer me to update from stable versions to unstable testing versions"
+* now visible in easy mode: Menu -> Upload -> "How to?"
+* improved readability in transfer progress bar  
+* renamed: "save in/out totals" > "save total in/out"
+* non-ascii option applied also inside pages
+* file menu: now hidden in easy mode: comment, icon, switch to, new link, browse it
+* file menu: rearranged and renamed some items to improve usability (let download > no download, new folder > new empty folder, copy URL > copy URL address, let browse > browsable) 
+* address bar redesigned
+* "HFS last update check.tmp" is now created as hidden, less intrusive
+* now some special files are protected with same access rights as the root folder: /~img*, /~progress, /favicon.ico
+- fixed UTF-8 support 
+- removed passwords from "show customized options"
+- dns updater: User and Host are now saved in options
+- favicon.ico now respect the "log icons" option
+- uploading, only upload rights were checked but no access rights
+- "Encode non-ASCII characters" was not working anymore
+- server refuses to turn on after a "complete" IP change 
+- fixed continous DNS update requests
+- "Max addresses downloading" was not working
+- problem fixed with no-ip
+- fixed support of special characters in folders
+- it was possible set empty name for folders   
+- possible DoS vulnerability by asking for big graph
+
+ver: 2.1c - build #071
+propaganda
+  UTF8 support
+  bug fixes
+/propaganda
++ Menu -> Upload -> "How to?"
++ support for UTF-8 templates
++ autoupdate clipboard on change ip
+- no backward compatibility for no-ip
+- "Check update: failed" every minute
+- HFS was no more working with "Persistent connections" disabled 
+- "last update check" thing works also without saving options
+
+ver: 2.1b
+propaganda
+  autocheck updates
+  bug fixes
+/propaganda
++ Menu -> Updates -> "Auto check every day"
++ new template symbol: %ip%
++ filelist.tpl is loaded at every change, not only at start
++ the "Fully downloaded" event, reports the URL
+* Build number shown in the title bar
+* SVG files are added to the default "open directly in browser"
+- edit template: same shortcut for font and find
+- solved win9x problem
+- downloaders browser was not detected
+
+ver: 2.1a
+propaganda
+  many bug fixes
+/propaganda
+* "Keep old version updating" now disabled by default
+- forged html could let upload were not allowed
+- with port different than 80 and "include password in pages" enabled, port was included twice
+- was unable to interpret no-ip response
+- problems with unicode encoding of special ascii characters
+- characters in the "UP" link were not properly encoded
+- upload is broken sometimes
+- update feature not working on 98/ME systems
+- support for 4byte unicode characters   
+- "Let download" erroneously shown for virtual folders
+
+ver: 2.1
+propaganda
+  improved usability
+  fingerprints
+  external comments
+  bind to single network interface
+  [file.EXT] sections in template
+  many bug fixes
+/propaganda
++ Menu -> "Accept connections on"
++ Menu -> Virtual File System -> "Support DESCRIPT.ION"
++ Menu -> Virtual File System -> "Adding folder"  
++ Menu -> Virtual File System -> "Icon masks..."
++ Menu -> Virtual File System -> "Enable recursive listing"  
++ Menu -> Virtual File System -> "Support Link Fingerprints"
++ Menu -> Virtual File System -> "Skip confirmation on deletion"
++ Menu -> Other options -> "Input comment on file addition"
++ Menu -> Other options -> "Show customized options"
++ Menu -> Other options -> "Use ISO date format"
++ Menu -> Other options -> "Browse using localhost" 
++ Menu -> Other options -> "Add icons..."
++ Menu -> Dynamic DNS updater -> "Disable"
++ Menu -> Fingerprints
++ Menu -> URL encoding -> "Unreadable passwords in URLs"
++ Menu -> URL encoding -> "Include password in pages"
++ Log menu -> Log what -> "Only served requests" (enabled by default)
++ File Menu -> "Copy URL with fingerprint"
++ File Menu -> "Diff template" (overlap main template)
++ File Menu -> "Hide file extention in listing"
++ File Menu -> Restrict acces -> "@anonymous"
++ File Menu -> Restrict acces -> "New account"
++ File Menu -> Upload -> Upload for accounts -> "New account"
++ File Menu -> Icon -> "New icon"
++ Self Test distinguish between router and firewall problems
++ confirm on item deletion
++ Self-test now cancelable
++ improved file/folder hints
++ improved drag&drop scrolling on VFS
++ when no port is specified and port 80 is busy, port 8080, 280, 10080 are probed (then dynamic port is used)
++ Log menu: clicking "Address 2 name" automatically fills the IP field
++ total download counter works now also for real-folders 
++ symbol ~nodefault to skip the default file 
++ command line: -a <FILENAME> (load additional ini file)
++ support browser cache command (If-Modified-Since)
++ [file.<EXT>] sections in template
++ "Copy url" now works for multiple files
++ double clicking on download tray icon brings to HFS window
++ F8 key switches easy/expert 
++ cancel folder reading if client disconnected (useful for big folders)
++ speed up folder sorting (useful for big folders)
++ template editor: customizable font and status bar 
++ sort by hits
++ added ini-commmand to be used with -a parameter: "load-tpl-from=FULLPATH"
+* template: changed default refresh time for progress frame, from 3 to 7 seconds
+* removed feature: "Visible only to anonymous users"
+* self test: clearer warning
+* Set url: old value as default
+* accept IP masks with less than 3 dots if wildcards are used
+* %up% %host% in [upload] [upload-results]
+* renamed items in "Restrict access"
+* renamed "Get passworded URL" in "Copy URL with password"
+* split "Copy URL" and "Copy URL with different address"
+* Users renamed to Accounts
+- shortcut to folders inside real-folders are unsupported, thus now are correctly not listed  
+- eliminated the lnk2frame() error message
+- using "Add to HFS" on many folders, many instances stayed open
+- messages "Cannot open clipboard" now trapped
+- ~files.lst was not protected
+- fixed and improved dns updater
+
+VER: 2.0b
+- problem with Login and IE
+
+VER: 2.0a
+propaganda
+  boosted startup download speed
+  bug fixes
+/propaganda
++ boosted startup download speed
+- problem requesting folders without including trailing slash
+- authentication didn't work for URLs http://user:pwd@host/folder (no trailing slash)
+- "file list" was not affected by "Let browse"
+- "file list" didn't work for folders with single quotes (')
+- moving a protected item, didn't paint the lock anymore
+- "get passwored url" was not working for inherited user/pass 
+- authentication didn't work for URLs http://user:pwd@host/folder (no trailing slash)
+- other minor bugfixes
+
+ver: 2.0
+propaganda
+  Upload
+  Default file mask
+  Easy/Expert mode
+  Load comments from external files
+  Dynamic DNS updater
+  IP-ranges
+  Self Test
+  Uninstall
+  Flag files added recently
+  Apache log file format
+  Autoupdate (automatic download & replace)
+  For full list check the website
+/propaganda
++ File Menu -> Upload (only for real-folders)
++ File Menu -> Default file mask
++ Easy/Expert mode
++ multiselect files
++ load comments from external files
++ support for IP-ranges (syntax FROM_ADDRESS-TO_ADDRESS)
++ you can abort loading VFS and downloading update
++ new VFS format with compression
++ warn you loading incompatible VFS formats
++ Menu -> Start/Exit -> "Only 1 instance"
++ Menu -> Other options -> "Compressed browsing"
++ Menu -> Other options -> "Delete partial uploads"
++ Menu -> Other options -> "Rename partial uploads"
++ Menu -> Other options -> "Modal dialog for options"
++ Menu -> "Self Test"
++ Menu -> "Uninstall"
++ Menu -> Virtual File System -> "Flag files added recently"
++ Menu -> Virtual File System -> "Auto-save every..."
++ Menu -> Tray icons -> The tray icon shows -> "Number of logged uploads"
++ Menu -> Start/Exit -> "Confirm exit"
++ Menu -> IP address -> "Don't include port in URL"
++ Menu -> IP address -> "Find external address"
++ Menu -> "Dynamic DNS updater"
++ Menu -> Start/Exit -> "Find external address at startup"
++ Menu -> Other options -> "Save in/out totals"
++ Menu -> Other options -> "Keep old version updating"
++ Menu -> Limits -> "Minimum disk space"
++ Menu -> Limits -> "Max contemporary downloads"
++ Menu -> Limits -> "Max contemporary downloads from single address"
++ Menu -> Limits -> "Max contemporary addresses"
++ Menu -> Limits -> "Max contemporary addresses downloading"
++ Menu -> Flash taskbutton -> "Also beep"
++ Menu -> Save options -> "Auto-save every..."
++ File Menu -> "Bind/unbind root to real-folder"
++ File Menu -> "Switch to real-folder" 
++ File Menu -> "Don't count as download"
++ File Menu -> "Flag as new"
++ File Menu -> "Reset <new> flag"
++ File Menu -> "Edit resource"
++ File Menu -> "Visible only to anonymous users"
++ File Menu -> "Let download"
++ File Menu -> "Auto-hide empty folders"
++ Log Menu -> "Do not log address"
++ Log Menu -> "Ban this address" (an address must be at caret position)
++ Log Menu -> Log what -> "Banned"
++ Log Menu -> "Apache log file format..."
++ shell context menu: checkbox instead of add/delete (moved to Other options)
++ Template editor -> Find
++ warning on many items
++ better "open folder" dialog
++ "Ignore limits" for accounts
++ Bans -> "Add/delete row" (easier to understand)
++ new HTML template symbols: you can find a full list in the included help
++ file-masks and address-masks now support inverted logic: just put "\" ahead
++ pipelined requests now supported
++ autoupdate (automatic download & replace)
++ /~progress
++ multiple custom addresses
++ new symbol in tray message: %uploads% (global uploads counter)
++ "File list" link generating a list to feed download managers
++ new symbols in the log filename for log rotation
++ username displayed (when logged in)
++ Download counter now works also for real folders
++ command line: -d X (waits at start for X tenth of second)
++ command line: -q (quit, useful with "only 1 instance")
++ command line: -i X (load/save hfs.ini in folder X)
++ average speed are logged
++ ~files.lst template can be loaded from external file "filelist.tpl"
++ first start: a dialog suggest to enable shell integration
+* hfs.ini by default saved in the same folder with hfs.exe
+* "copy URL" as submenu
+* save options -> "delete" replaced by "Clear options and quit"
+* "No tray icon for file extentions" has been removed because obsolete
+* symbol %login% renamed in %login-link%
+* new behaviour for Options dialog
+* "Abort file addition" more visible
+* "Access for users" renamed to "Restrict access"
+* "Run it" renamed to "Open it"
+* by default config is now saved in user registry
+* filetime sorts from newer to older
+- sometimes the VFS was not flagged as modified (and then not auto-saved)
+- newline problem in tray message
+- comments were limited to 255 chars
+- "Flash task button: on download" was flashing on every GET request
+- clearing the file system, no new file name was asked
+- problem downloading empty files
+- "leave disconnected connections" prevented tray icons from being removed
+- tray icons now display total percentage, to be consistent with the main window
+- fixed problems with unicode 
+- logging bytes sent/received could stuck
+- ban list was unproperly saved in configuration
+- loading a new VFS didn't discard completely old settings 
+- sometimes IE hangs after reaching 100%
+- ~files.lst showing filenames it shouldn't
+- "let browse" was not inherited by subfolders of real folders
+- set user/pass: inputing a password with empty username did not raise error
+- other minor fixes
+
+ver: 1.6a
+propaganda
+  many bug fixes
+/propaganda
+- file hints: also inherited user access were shown (while the rest shown is just local)
+- having folders URLs with no trailing slash, caused problems with some folder/browser pairs
+- users panel: you was able to enter 2 users with same username
+- sometimes DEL and CTRL+V shortcuts were lost
+- port changes were not applied to the address bar
+- Accept-Ranges was not sent
+- URL problems with non-latin characters (thanks Pavel Rus)
+
+ver: 1.6
+propaganda
+  LOGIN button (browsing)
+  support for external links in the VFS: File Menu -> `New link`
+  customizable 401 and 403 HTTP error pages
+  customizable ban page
+  faster page generation
+  more XP styled
+  support for default favicon.ico (i saw Mozilla using it)
+  new HTML template symbols
+  File hint now additionally displays: users, files/folders filter, realm
+  fixed possible DoS attack
+  4GB single file limit removed
+  many bug fixes
+/propaganda
++ LOGIN button (browsing)
++ support for external links in the VFS: File Menu -> "New link"
++ customizable 401 and 403 HTTP error pages
++ customizable ban page
++ faster page generation
++ Menu -> Other options -> "Use comment as realm"
++ Menu -> Other options -> "Login realm"
++ Menu -> Limits -> "Connection inactivity timeout"
++ Menu -> Encoding URL -> "Use UNICODE in HTML"
++ Menu -> Help -> "Introduction"
++ Menu -> Virtual File System -> "Reset hits"
++ Menu -> Virtual File System -> "Reset downloads"
++ Menu -> "Abort file addition"
++ Menu -> "Clear file system"
++ File Menu -> Icon
++ File Menu -> Switch to virtual
++ File Menu -> "Customized realm"
++ File Menu -> Access for users -> ALL/NONE
++ Log Menu -> "Log what"
++ Log Menu -> "Log on video"
++ Connections menu -> "Kick idle connections"
++ Users -> User properties: browse protected resources by user
++ complete downloads counting
++ "Time left"
++ more XP styled
++ added Reset button in "Set user/pass" dialog
++ support for default favicon.ico (i saw Mozilla using it)
++ new HTML template symbols: %total-bytes%, %total-kbytes%, %total-size%  (size of listed files)
++ File hint now additionally displays: users, files/folders filter, realm
+* connections box: merge of "IP" and "User" fields
+* connections box: "Agent" and "Start time" displayed in tip
+* folders known before as "autoupdated folders" are now "real folders", others (yellow) are "virtual folders"
+* "Get passworded URL" doesn't show password anymore
+* new "let browse" behavior
+* options saved to file by default
+* "reload open VFS" by default
+* username is now case insensitive
+- problems sending HTTP error pages
+- problems with files with corrupted timestamp
+- VFS: minor redrawing problem
+- "Hide tree" was not propagating to autoupdated folders
+- hits were not displayed (in tips) for folders
+- it is safer now during long files addition: files are locked and you can quit the program at once
+- removed a useless limit on filenames
+- drag&drop was restricted to labels area
+- inverted ban logic was not applyed on start (but after opening options window)
+- the hidden graph was reappearing after a couple of restarts
+- fixed possible DoS attack
+- 4GB single file limit removed
+- whole drives were unsupported
+- file & folder filters were not applied to subfolders
+- adding files by copy&paste caused instability
+- problems with non-virtual shared folders
+- problems with wildcards
+- other minor bugs
+
+ver: 1.5g
++ wildcards (*,?) allowed in Bans window
++ Menu -> Virtual File System -> "List files with <hidden> attribute"
++ Menu -> Virtual File System -> "List files with <system> attribute"
++ Menu -> Virtual File System -> "List protected items only for allowed users"
++ username is shown in Log and in Connections box
++ more distinction between main tray icon and download icons
++ Log Menu -> "Font"
+* moved some options here and there
+* new GIF library: made by Anders Melander
+- virtual sub-items of an autoupdated folder were listed also at deeper levels
+- log font is wrong on some systems
+- 2GB limit removed on several things (like status bar)
+- problem with HEAD requests (0 bytes)
+
+ver: 1.5f
++ Dual mode ban list: ban/allow
++ Log menu -> "Log file"
++ File Menu -> "Hide tree"
+- hang on starting
+
+ver: 1.5e
+- adding an auto-updated folder can cause AV
+- "speed limit" was not able to get over 10k/s
+
+ver: 1.5d
++ Menu -> Other Options -> "Persistent connections"
+- files remained blocked (open)
+- prevents Windows from shutting down
+
+ver: 1.5c
++ improved speed/cpu usage
++ Menu -> Other Options -> "Send HFS identifier"
+- on some systems HFS refuses to open any port for listening
+- the "no download" timeout was reset only at download start, and not downloading
+- unstable while user browsing if a "speed limit" was set
+- files bigger 2Gb+ were not handled
+- ban was not immediate
+- the check for duplicate files was case sensitive
+- AV if quit occours while uploading
+
+ver: 1.5
++ now the statusbar shows the total bytes sent
++ Menu -> Other Options -> "Users"
++ Menu -> "URL encoding"
++ Menu -> Tray Icons -> "Tray message"
++ Menu -> Other Options -> "Getright browser specific HTML"
++ Menu -> Other Options -> "Auto-save VFS on exit"
++ File Menu -> "Get passworded URL"
++ File Menu -> "Access for users"
++ File Menu -> Filters
++ File Menu -> Expand/Collapse
++ different tray icon when the server is offline
++ items can be added to an autoupdated folder
++ customizable "server full" page
++ user/pass validation on user input
++ statusbar: [not saved] appears when the VFS is edited
+- you was unable to set a local address if an internet address was available
+- "Hide" should not be available for the root item
+- other minor fixes
+
+ver: 1.5 rc6
++ IP address is checked every 10 seconds
++ HTML template: %item-added% is the item's addition time
++ items' downloads count is now saved to file
++ Menu -> Other Options -> "Reload on startup VFS file previously open"
++ Menu -> Other Options -> "MIME types"
++ Menu -> Other Options -> "Auto-copy URL on start"
+* added standard "..." to menu
+- user/pass was not saved for the root item
+- non-ascii characters were not encoded in the URL
+
+ver: 1.5 rc5
++ you can now hide the bandwidth graph
++ Connection menu -> "Pause"
++ window position is saved
++ Menu -> Other Options -> "Always on top"
++ Menu -> Tray icons -> "No tray icon for file extentions"
++ Menu -> "Auto-close"
++ switching off the server, user is asked for closing open connections
++ File Menu -> Edit
++ sorting
++ F4 switch the server on/off
++ log improved
++ customizable file-not-found page (404)
++ new template symbols: %item-modified% %item-dl-count%
++ more info on download tray icons
++ brand new html template
++ files in VFS that does not exist anymore are not listed while browsing
++ check for updates
++ browse button
++ comment is sent as message/realm to the user/password dialog (if present)
++ a padlock is displayed
++ Menu -> Limits -> "Bans"
++ Menu -> "Recent files"
++ Connection Menu -> "Ban IP address"
++ F10 shows the main menu
++ support for persistent connections (HTTP 1.1)
+* moved many options to Menu -> "Other options"
+* when drag&dropping a folder, the dialog for autoupdate is set foreground
+- problems with url-encoding for … Š  • — (IE, Opera)
+- problems saving a template to registry
+- sometimes "check for update" was not working after a failure
+- CRITICAL: directory crossing was possible on autoupdating folders
+- agent was not shown for folder requests
+- problems with not-found documents (404)
+- solved possible DoS attack
+- internal GIFs were not transparent
+- password was not applied to items in autoupdated folders
+- sometimes the server button was ON when the server was OFF
+- sometimes AV on "Kick IP address"
+- sometimes the config file was saved in the wrong folder
+- fast hits cause AVs
+- several minor bugs fixed
+
+ver: 1.5 beta1
++ user/password protection
++ comments for files/folders
++ Menu -> Limits -> "Pause streaming"
++ hidden items in VFS are painted in italic
+
+ver: 1.4 beta2
++ download tray icons, now % filling
++ improved bandwidth graph
++ now you can publish files via copy&paste
++ now you can publish files via "Add files" and "Add Folder"
++ Menu -> Weblinks
+
+ver: 1.4 beta1
++ Menu -> Limits -> "Speed limit"
++ Menu -> Limits -> "Max connections", "Max connections for single address"
++ Menu -> Save options -> "Auto-save options on exit"
++ speed improvement, over 3Mb/s on my Duron@1300
++ smarter tray refresh (less CPU)
+- hiding a file, adjacent one was hidden too
+
+ver: 1.3 beta8
+- custom ip was never selected on start
+
+ver: 1.3 beta7
++ Menu -> "Use system icons"
++ Menu -> "Official website"
++ Menu -> Tray icons -> "Show main tray icon"
+* new tray icon
+- invalid mime-type was sent for GIF files
+- individual tray icons for downloads were not working
+
+ver: 1.3 beta6
+- forgot to encode blank-spaces in clipboard
+
+ver: 1.3 beta5
++ "Custom ip", now you can use yourowndomain.com
+- autoupdate folders was not applying the "Folders before" setting
+- there were problems with url-encoding for blank-space, ø and "
+- some crashes may have been fixed
+
+ver: 1.3 beta4
++ added GIF support for internal images (requires JVCL library)
+* brand new html template
+- kick all connections was not working
+- html folder pages were not served for folders with 1 single item, and hidden
+
+ver: 1.3 beta3
++ added CRC checking to VFS files
+
+ver: 1.3 beta2
++ check for same filename in same folder
+* new icons
+- %folder% in template was not url-decoded
+- problems with URLs encoding
+
+ver: 1.3 beta1
++ Autoupdate folders
++ "Leave disconnected connections" in connections menu
++ smarter "agent" colum
++ Bandwidth graph
+* Loading a project the tree is not expanded
+- Problems with special characters
+- While editing the filename, Delete key deletes the file
+- "Tray icon for each download" was not saved
+- Renaming a virtual folder was not applied on the web
+
+ver: 1.2
++ "Tray icon for each download" in main menu
++ Drastic speed up on fast downloads (LAN)
+- Closing HFS with open connections causes AV
+- Fast hits cause AV
+
+ver: 1.1
++ "agent" column for connections
++ colored log
+- StarDownloader was not recognizing resume feature
+- On fast downloads (LAN), information on window was not updated
+- Resume was not always working correctly
+
+ver: 1.0
+first sane release, fully rewritten
+
+ver: 0.1
+please, forget it

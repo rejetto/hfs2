@@ -1,0 +1,12 @@
+1 24 "WindowsXP.manifest"
+defaultTpl TEXT default.tpl
+copyright TEXT copyright.txt
+dmBrowserTpl TEXT dmBrowser.tpl
+invertban TEXT invertban.txt
+filelistTpl TEXT filelist.tpl
+uploadDisabled TEXT upload_disabled.txt
+uploadHowTo TEXT upload_how.txt
+alias TEXT alias.txt
+shell GIF shell.gif
+IPservices TEXT ipservices.txt
+jquery TEXT jquery.min.js

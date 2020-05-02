@@ -1,0 +1,5 @@
+You selected a virtual folder.
+Upload is NOT available for virtual folders, only for real folders.
+
+=== How to get a real folder?
+Add a folder from your disk, then click on "Real Folder".

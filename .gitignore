@@ -1,0 +1,13 @@
+tmp/
+__history/
+__recovery/
+win32/
+*.vfs
+*.dcu
+*.exe
+*.map
+hfs.ini
+*.tmp
+*.bak
+*.*-
+*.corrupted

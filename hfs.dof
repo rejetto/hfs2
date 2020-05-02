@@ -1,0 +1,133 @@
+[FileVersion]
+Version=6.0
+[Compiler]
+A=8
+B=0
+C=1
+D=1
+E=0
+F=0
+G=1
+H=1
+I=1
+J=0
+K=0
+L=1
+M=0
+N=1
+O=1
+P=1
+Q=0
+R=0
+S=0
+T=0
+U=0
+V=1
+W=1
+X=1
+Y=2
+Z=1
+ShowHints=1
+ShowWarnings=1
+UnitAliases=WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;
+[Linker]
+MapFile=3
+OutputObjs=0
+ConsoleApp=1
+DebugInfo=0
+RemoteSymbols=0
+MinStackSize=16384
+MaxStackSize=1048576
+ImageBase=4194304
+ExeDescription=Http File Server - www.rejetto.com/hfs
+[Directories]
+OutputDir=
+UnitOutputDir=
+PackageDLLOutputDir=
+PackageDCPOutputDir=
+SearchPath=$(DELPHI)\Lib\Debug;C:\code\other\compiled
+Packages=vcl;rtl;vclx;VclSmp;DJCL60;IcsDel60
+Conditionals=
+DebugSourceDirs=C:\code\other\ics\Delphi\Vc32\
+UsePackages=0
+[Parameters]
+RunParams=
+HostApplication=
+Launcher=
+UseLauncher=0
+DebugCWD=
+[Version Info]
+IncludeVerInfo=0
+AutoIncBuild=0
+MajorVer=1
+MinorVer=6
+Release=0
+Build=0
+Debug=0
+PreRelease=0
+Special=0
+Private=0
+DLL=0
+Locale=1040
+CodePage=1252
+[Version Info Keys]
+CompanyName=rejetto
+FileDescription=
+FileVersion=1.6.0.0
+InternalName=HFS
+LegalCopyright=Copyright (C) 2002-2004  Massimo Melina (www.rejetto.com)
+LegalTrademarks=
+OriginalFilename=hfs.exe
+ProductName=Http File Server
+ProductVersion=1.0.0.0
+Comments=
+[Excluded Packages]
+c:\programmi\borland\delphi6\Bin\dclshlctrls60.bpl=Shell Control Property and Component Editors
+c:\programmi\borland\delphi6\Projects\Bpl\dclusr60.bpl=Borland User Components
+C:\PROGRA~1\Borland\Delphi6\Projects\Bpl\JclBaseExpertD60.bpl=JCL Package containing common units for JCL Experts
+C:\PROGRA~1\Borland\Delphi6\Projects\Bpl\JclDebugExpertD60.bpl=JCL Debug IDE extension
+C:\PROGRA~1\Borland\Delphi6\Projects\Bpl\JclProjectAnalysisExpertD60.bpl=JCL Project Analyzer
+C:\PROGRA~1\Borland\Delphi6\Projects\Bpl\JclFavoriteFoldersExpertD60.bpl=JCL Open and Save IDE dialogs with favorite folders
+C:\PROGRA~1\Borland\Delphi6\Projects\Bpl\JclThreadNameExpertD60.bpl=JCL Thread Name IDE expert
+C:\PROGRA~1\Borland\Delphi6\Projects\Bpl\JclUsesExpertD60.bpl=JCL Uses Wizard
+C:\PROGRA~1\Borland\Delphi6\Projects\Bpl\JclSIMDViewExpertD60.bpl=JCL Debug Window of XMM registers
+C:\Programmi\Borland\Delphi6\Projects\Bpl\JvAppFrmD6D.bpl=JVCL Application and Form Components
+C:\PROGRA~1\Borland\Delphi6\Projects\Bpl\JvCoreD6D.bpl=JVCL Core Components
+C:\Programmi\Borland\Delphi6\Projects\Bpl\JvBandsD6D.bpl=JVCL Band Objects
+C:\Programmi\Borland\Delphi6\Projects\Bpl\JvCmpD6D.bpl=JVCL Non-Visual Components
+C:\Programmi\Borland\Delphi6\Projects\Bpl\JvCryptD6D.bpl=JVCL Encryption and Compression Components
+C:\Programmi\Borland\Delphi6\Projects\Bpl\JvCtrlsD6D.bpl=JVCL Visual Controls
+C:\Programmi\Borland\Delphi6\Projects\Bpl\JvCustomD6D.bpl=JVCL Custom Controls
+C:\Programmi\Borland\Delphi6\Projects\Bpl\JvDlgsD6D.bpl=JVCL Dialog Components
+C:\Programmi\Borland\Delphi6\Projects\Bpl\JvDockingD6D.bpl=JVCL Docking Components
+C:\Programmi\Borland\Delphi6\Projects\Bpl\JvDotNetCtrlsD6D.bpl=JVCL DotNet Controls
+C:\Programmi\Borland\Delphi6\Projects\Bpl\JvGlobusD6D.bpl=JVCL Globus Components
+C:\Programmi\Borland\Delphi6\Projects\Bpl\JvHMID6D.bpl=JVCL HMI Controls design time unit
+C:\Programmi\Borland\Delphi6\Projects\Bpl\JvInterpreterD6D.bpl=JVCL Interpreter Components
+C:\Programmi\Borland\Delphi6\Projects\Bpl\JvJansD6D.bpl=JVCL Jans Components
+C:\Programmi\Borland\Delphi6\Projects\Bpl\JvManagedThreadsD6D.bpl=JVCL Managed Threads
+C:\Programmi\Borland\Delphi6\Projects\Bpl\JvMMD6D.bpl=JVCL Multimedia and Image Components
+C:\Programmi\Borland\Delphi6\Projects\Bpl\JvNetD6D.bpl=JVCL Network Components
+C:\Programmi\Borland\Delphi6\Projects\Bpl\JvPageCompsD6D.bpl=JVCL Page Style Components
+C:\Programmi\Borland\Delphi6\Projects\Bpl\JvPluginD6D.bpl=JVCL Plugin Components
+C:\Programmi\Borland\Delphi6\Projects\Bpl\JvPrintPreviewD6D.bpl=JVCL Print Preview Components
+C:\Programmi\Borland\Delphi6\Projects\Bpl\JvRuntimeDesignD6D.bpl=JVCL Runtime Design Components
+C:\Programmi\Borland\Delphi6\Projects\Bpl\JvStdCtrlsD6D.bpl=JVCL Standard Controls
+C:\Programmi\Borland\Delphi6\Projects\Bpl\JvSystemD6D.bpl=JVCL System Components
+C:\Programmi\Borland\Delphi6\Projects\Bpl\JvTimeFrameworkD6D.bpl=JVCL Time Framework
+C:\Programmi\Borland\Delphi6\Projects\Bpl\JvUIBD6D.bpl=JVCL Unified Interbase Components
+C:\Programmi\Borland\Delphi6\Projects\Bpl\JvValidatorsD6D.bpl=JVCL Validators and Error Provider Components
+C:\Programmi\Borland\Delphi6\Projects\Bpl\JvWizardD6D.bpl=JVCL Wizard Design Time Package
+C:\Programmi\Borland\Delphi6\Projects\Bpl\JvXPCtrlsD6D.bpl=JVCL XP Controls
+C:\PROGRAMMI\BORLAND\DELPHI6\Bin\PDIFac60.bpl=Interface for ProDelphi viewer
+c:\programmi\borland\delphi6\Bin\dcl31w60.bpl=Delphi 1.0 Compatibility Components
+c:\programmi\borland\delphi6\Projects\Bpl\VirtualTreesD6D.bpl=Virtual Treeview
+[HistoryLists\hlDebugSourcePath]
+Count=1
+Item0=C:\code\other\ics\Delphi\Vc32\
+[HistoryLists\hlUnitAliases]
+Count=1
+Item0=WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;
+[HistoryLists\hlSearchPath]
+Count=1
+Item0=$(DELPHI)\Lib\Debug;C:\code\other\compiled
