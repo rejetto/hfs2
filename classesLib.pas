@@ -193,12 +193,12 @@ type
   Ttlv = class
   protected
     cur, bound: integer;
-    whole, lastValue: ansistring;
+    whole, lastRaw: ansistring;
     stack: array of integer;
     stackTop: integer;
   public
     procedure parse(data:ansistring);
-    function pop(var value:ansistring):integer;
+    function pop(var value:string; var raw:ansiString):integer;
     function down():boolean;
     function up():boolean;
     function getTotal():integer;
@@ -207,6 +207,8 @@ type
     function isOver():boolean;
     function getTheRest():ansistring;
     end;
+
+const TLV_UTF8_FLAG = $1000000;
 
 implementation
 
@@ -1144,7 +1146,7 @@ bound:=length(data);
 stackTop:=0;
 end; // parse
 
-function Ttlv.pop(var value:ansistring):integer;
+function Ttlv.pop(var value:string; var raw:ansistring):integer;
 var
   n: integer;
 begin
@@ -1152,8 +1154,15 @@ result:=-1;
 if isOver() then exit; // finished
 result:=integer((@whole[cur])^);
 n:=Pinteger(@whole[cur+4])^;
-value:=copy(whole, cur+8, n);
-lastValue:=value;
+raw:=copy(whole, cur+8, n);
+lastRaw:=raw;
+if result and TLV_UTF8_FLAG = 0 then
+  value:=string(raw)
+else
+  begin
+  dec(result, TLV_UTF8_FLAG);
+  value:=UTF8toString(raw);
+  end;
 inc(cur, 8+n);
 end; // pop
 
@@ -1174,7 +1183,7 @@ stack[stackTop]:=bound;
 inc(stackTop);
 
 bound:=cur;
-dec(cur, length(lastValue));
+dec(cur, length(lastRaw));
 result:=true;
 end; // down
 

@@ -313,9 +313,8 @@ function encodeURL(url:string; nonascii:boolean=TRUE; spaces:boolean=TRUE;
 // returns true if address is not suitable for the internet
 function isLocalIP(ip:string):boolean;
 // base64 encoding
-function base64encode(s:string):string;
-function base64decode(s:string):string;
-function base64decodeA(s:string):Tbytes;
+function base64encode(s:ansistring):ansistring;
+function base64decode(s:ansistring):ansistring;
 // an ip address where we are listening
 function getIP():string;
 // ensure a string ends with a specific string
@@ -445,7 +444,7 @@ begin
   until false;
 end; // nonQuotedPos
 
-function base64encode(s:string):string;
+function base64encode(s:ansistring):ansistring;
 const
   TABLE='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 type
@@ -469,7 +468,7 @@ if length(s) mod 3 > 0 then
     +ifThen(length(s) mod 3=1,'==',TABLE[1+(p[1] and 15) shl 2+p[2] shr 6]+'=');
 end; // base64encode
 
-function base64decode(s:string):string;
+function base64decode(s:ansistring):ansistring;
 const
   TABLE:array[#43..#122] of byte=(
   	62,0,0,0,63,52,53,54,55,56,57,58,59,60,61,0,0,0,0,0,0,0,0,1,2,3,4,5,6,7,
@@ -488,31 +487,6 @@ while i <= length(s) do
     +ifThen(s[i+3]<>'=', chr(TABLE[s[i+2]] shl 6+TABLE[s[i+3]]));
   inc(i,4);
   end;
-end; // base64decode
-
-function base64decodeA(s:string):Tbytes;
-const
-  TABLE:array[#43..#122] of byte=(
-  	62,0,0,0,63,52,53,54,55,56,57,58,59,60,61,0,0,0,0,0,0,0,0,1,2,3,4,5,6,7,
-    8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,0,0,0,0,0,0,26,27,28,
-    29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51);
-var
-  i, n: integer;
-begin
-setLength(result, length(s));
-i:=1;
-n:=0;
-while i <= length(s) do
-  begin
-	result[n]:=TABLE[s[i]] shl 2+TABLE[s[i+1]] shr 4;
-  inc(n);
-  result[n]:=ifThen(s[i+2]<>'=', TABLE[s[i+1]] shl 4+TABLE[s[i+2]] shr 2);
-  inc(n);
-  result[n]:=ifThen(s[i+3]<>'=', TABLE[s[i+2]] shl 6+TABLE[s[i+3]]);
-  inc(n);
-  inc(i,4);
-  end;
-setLength(result, n);
 end; // base64decode
 
 function decodeURL(url:ansistring; utf8:boolean=TRUE):string;
@@ -549,8 +523,11 @@ function encodeURL(url:string; nonascii:boolean=TRUE; spaces:boolean=TRUE;
 var
   i: integer;
   encodePerc, encodeUni: set of char;
+  a: ansistring;
 begin
 result:='';
+if url = '' then
+  exit;
 encodeUni:=[];
 if nonascii then encodeUni:=[#128..#255];
 encodePerc:=[#0..#31,'#','%','?','"','''','&','<','>',':'];
@@ -560,6 +537,14 @@ if not unicode then
   begin
   encodePerc:=encodePerc+encodeUni;
   encodeUni:=[];
+  end;
+if nonascii then
+  begin
+  a:=UTF8encode(url); // couldn't find a better way to force url to have the UTF8 encoding
+  i:=length(a);
+  setLength(url, i);
+  for i := 1 to i do
+    url[i]:=char(a[i]);
   end;
 for i:=1 to length(url) do
 	if charInSet(url[i], encodePerc) then

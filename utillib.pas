@@ -199,9 +199,10 @@ procedure excludeTrailingString(var s:string; ss:string);
 function findEOL(s:string; ofs:integer=1; included:boolean=TRUE):integer;
 function getUniqueName(start:string; exists:TnameExistsFun):string;
 function getStr(from,to_:pchar):string;
-function TLV(t:integer; data:ansistring):ansistring;
-function TLV_NOT_EMPTY(t:integer; data:ansistring):ansistring;
-function popTLV(var s,data:ansistring):integer;
+function TLV(t:integer; s:string):ansistring; overload;
+function TLV(t:integer; data:ansistring):ansistring; overload;
+function TLV_NOT_EMPTY(t:integer; s:string):ansistring; overload;
+function TLV_NOT_EMPTY(t:integer; data:ansistring):ansistring;overload;
 function getCRC(data:ansistring):integer;
 function dotted(i:int64):string;
 function xtpl(src:string; table:array of string):string; overload;
@@ -787,21 +788,24 @@ result.right:=strToInt(chop(',',s));
 result.bottom:=strToInt(chop(',',s));
 end; // strToRect
 
+function TLV(t:integer; s:string):ansistring;
+var
+  raw: ansistring;
+begin
+raw:=UTF8encode(s);
+if length(raw) > length(s) then
+  inc(t, TLV_UTF8_FLAG);
+result:=str_(t)+str_(length(raw))+raw
+end;
+
 function TLV(t:integer; data:ansistring):ansistring;
 begin result:=str_(t)+str_(length(data))+data end;
 
 function TLV_NOT_EMPTY(t:integer; data:ansistring):ansistring;
 begin if data > '' then result:=TLV(t,data) else result:='' end;
 
-// for heavy jobs you are supposed to use class Ttlv
-function popTLV(var s,data:ansistring):integer;
-begin
-result:=-1;
-if length(s) < 8 then exit;
-result:=Pinteger(@s[1])^;
-data:=copy(s,9,Pinteger(@s[5])^);
-delete(s,1,8+length(data));
-end; // popTLV
+function TLV_NOT_EMPTY(t:integer; s:string):ansistring;
+begin if s > '' then result:=TLV(t,s) else result:='' end;
 
 function getCRC(data:ansistring):integer;
 var

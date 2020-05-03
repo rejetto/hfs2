@@ -2637,8 +2637,6 @@ end; // getIconForTreeview
 
 function encodeURL(s:string; fullEncode:boolean=FALSE):string;
 begin
-if fullEncode or mainFrm.encodenonasciiChk.checked then
-  s:=ansiToUTF8(s);
 result:=HSlib.encodeURL(s, mainFrm.encodeNonasciiChk.checked,
   fullEncode or mainFrm.encodeSpacesChk.checked)
 end; // encodeURL
@@ -6318,7 +6316,8 @@ type
     E_ZIP:
       begin
       result:=zCompressStr2(s, zcMax);
-      if length(result) > round(0.95*length(s)) then result:=s;
+      if length(result) > round(0.95*length(s)) then
+        result:=s;
       result:=base64encode(result);
       end;
     end;
@@ -6634,9 +6633,14 @@ var
     end;
   end; // loadBanlist
 
-  function unzip(s:string):string;
+  function unzip(s:ansistring):ansistring;
+  var a: Tbytes;
   begin
-  try result:=ZDecompressStr(base64decodeA(s));
+  try
+    s:=base64decode(s);
+    setLength(a, length(s));
+    move(s[1], a[0], length(s));
+    result:=ZDecompressStr(a)
   except end;
   end; // unzip
 
@@ -9115,6 +9119,7 @@ const
   FK_CRC = 6;
   FK_COMMENT = 7;
   FK_USERPWD = 8;
+  FK_USERPWD_UTF8 = 108;
   FK_ADDEDTIME = 9;
   FK_DLCOUNT = 10;
   FK_ROOT = 11;
@@ -9137,7 +9142,7 @@ const
 
 function Tmainfrm.getVFS(node:Ttreenode=NIL):ansistring;
 
-  function getAutoupdatedFiles():string;
+  function getAutoupdatedFiles():ansistring;
   var
     i: integer;
     fn: string;
@@ -9164,7 +9169,7 @@ f:=nodeToFile(node);
 commonFields:=TLV(FK_FLAGS, str_(f.flags))
     +TLV_NOT_EMPTY(FK_RESOURCE, f.resource)
     +TLV_NOT_EMPTY(FK_COMMENT, f.comment)
-    +if_(f.user>'', TLV(FK_USERPWD, base64encode(f.user+':'+f.pwd)))
+    +if_(f.user>'', TLV(FK_USERPWD_UTF8, base64encode(f.user+':'+f.pwd)))
     +TLV_NOT_EMPTY(FK_ACCOUNTS, join(';',f.accounts[FA_ACCESS]) )
     +TLV_NOT_EMPTY(FK_UPLOADACCOUNTS, join(';',f.accounts[FA_UPLOAD]))
     +TLV_NOT_EMPTY(FK_DELETEACCOUNTS, join(';',f.accounts[FA_DELETE]))
@@ -9211,6 +9216,7 @@ resourcestring
 
 var
   data: ansistring;
+  s: string;
   f: Tfile;
   after: record
     resetLetBrowse: boolean;
@@ -9220,17 +9226,18 @@ var
 
   procedure parseAutoupdatedFiles(data:ansistring);
   var
-    s, fn: ansistring;
+    s, fn: string;
+    raw: ansiString;
   begin
   autoupdatedFiles.Clear();
   tlv.down();
-  while tlv.pop(s) = FK_NODE do
+  while tlv.pop(s,raw) = FK_NODE do
     begin
     tlv.down();
     while not tlv.isOver() do
-      case tlv.pop(s) of
+      case tlv.pop(s,raw) of
         FK_NAME: fn:=s;
-        FK_DLCOUNT: autoupdatedFiles.setInt(fn, int_(s));
+        FK_DLCOUNT: autoupdatedFiles.setInt(fn, int_(raw));
         end;
     tlv.up();
     end;
@@ -9253,7 +9260,7 @@ f.node:=node;
 tlv:=Ttlv.create;
 tlv.parse(vfs);
 while not tlv.isOver() do
-  case tlv.pop(data) of
+  case tlv.pop(s,data) of
     FK_ROOT:
       begin
       setVFS(data, rootNode );
@@ -9278,7 +9285,8 @@ while not tlv.isOver() do
       { I was unable to reproduce the bug, but i found that correct data doesn't complain if i add an extra #0. }
       try
         data:=ZDecompressStr(bytesOf(data+#0));
-        if isAnyMacroIn(data) then loadingVFS.macrosFound:=TRUE;
+        if isAnyMacroIn(data) then
+          loadingVFS.macrosFound:=TRUE;
         setVFS(data, node);
       except msgDlg(MSG_ZLIB, MB_ICONERROR) end;
     FK_FORMAT_VER:
@@ -9304,15 +9312,15 @@ while not tlv.isOver() do
         if msgDlg(MSG_BADCRC+MSG_BETTERSTOP,MB_ICONERROR+MB_YESNO) = IDYES then
         	exit;
         end;
-    FK_RESOURCE: f.resource:=data;
+    FK_RESOURCE: f.resource:=s;
     FK_NAME:
       begin
-      f.name:=data;
-      node.text:=data;
+      f.name:=s;
+      node.text:=s;
       end;
     FK_FLAGS: move(data[1], f.flags, length(data));
   	FK_ADDEDTIME: f.atime:=dt_(data);
-    FK_COMMENT: f.comment:=data;
+    FK_COMMENT: f.comment:=s;
     FK_USERPWD:
     	begin
       data:=base64decode(data);
@@ -9320,17 +9328,24 @@ while not tlv.isOver() do
       f.pwd:=data;
       usersInVFS.track(f.user, f.pwd);
       end;
+    FK_USERPWD_UTF8:
+    	begin
+      s:=UTF8toString(base64decode(data));
+      f.user:=chop(':',s);
+      f.pwd:=s;
+      usersInVFS.track(f.user, f.pwd);
+      end;
     FK_DLCOUNT: f.DLcount:=int_(data);
-    FK_ACCOUNTS: f.accounts[FA_ACCESS]:=split(';',data);
-    FK_UPLOADACCOUNTS: f.accounts[FA_UPLOAD]:=split(';',data);
-    FK_DELETEACCOUNTS: f.accounts[FA_DELETE]:=split(';',data);
-    FK_FILESFILTER: f.filesfilter:=data;
-    FK_FOLDERSFILTER: f.foldersfilter:=data;
-    FK_UPLOADFILTER: f.uploadFilterMask:=data;
-    FK_REALM: f.realm:=data;
-    FK_DEFAULTMASK: f.defaultFileMask:=data;
-    FK_DIFF_TPL: f.diffTpl:=data;
-    FK_DONTCOUNTASDOWNLOADMASK: f.dontCountAsDownloadMask:=data;
+    FK_ACCOUNTS: f.accounts[FA_ACCESS]:=split(';',s);
+    FK_UPLOADACCOUNTS: f.accounts[FA_UPLOAD]:=split(';',s);
+    FK_DELETEACCOUNTS: f.accounts[FA_DELETE]:=split(';',s);
+    FK_FILESFILTER: f.filesfilter:=s;
+    FK_FOLDERSFILTER: f.foldersfilter:=s;
+    FK_UPLOADFILTER: f.uploadFilterMask:=s;
+    FK_REALM: f.realm:=s;
+    FK_DEFAULTMASK: f.defaultFileMask:=s;
+    FK_DIFF_TPL: f.diffTpl:=s;
+    FK_DONTCOUNTASDOWNLOADMASK: f.dontCountAsDownloadMask:=s;
     FK_DONTCOUNTASDOWNLOAD: if boolean(data[1]) then include(f.flags, FA_DONT_COUNT_AS_DL);  // legacy, now moved into flags
     FK_ICON_GIF: if data > '' then f.setupImage(str2pic(data));
     FK_AUTOUPDATED_FILES: parseAutoupdatedFiles(data);
@@ -9359,7 +9374,8 @@ for act:=low(act) to high(act) do
 
 if FA_VIS_ONLY_ANON in f.flags then
   loadingVFS.visOnlyAnon:=TRUE;
-if f.isVirtualFolder() or f.isLink() then f.mtime:=f.atime;
+if f.isVirtualFolder() or f.isLink() then
+  f.mtime:=f.atime;
 if assigned(f.accounts[FA_UPLOAD]) and (f.resource > '') then
   addString(f.resource, uploadPaths);
 f.setupImage();
@@ -12286,7 +12302,6 @@ var
   dll: HMODULE;
 
 INITIALIZATION
-
 randomize();
 setErrorMode(SEM_FAILCRITICALERRORS);
 exePath:=extractFilePath(ExpandFileName(paramStr(0)));

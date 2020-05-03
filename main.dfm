@@ -2906,7 +2906,6 @@ object mainFrm: TmainFrm
       object encodenonasciiChk: TMenuItem
         AutoCheck = True
         Caption = 'Encode non-ASCII characters'
-        Checked = True
       end
       object encodePwdUrlChk: TMenuItem
         AutoCheck = True
