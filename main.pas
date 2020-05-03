@@ -1330,7 +1330,7 @@ result:=(mainfrm.listfileswithhiddenattributeChk.checked or (attr and faHidden =
 end; // hasRightAttributes
 
 function hasRightAttributes(fn:string):boolean; overload;
-begin result:=hasRightAttributes(GetFileAttributesA(pAnsiChar(ansiString(fn)))) end;
+begin result:=hasRightAttributes(GetFileAttributes(pChar(fn))) end;
 
 function isAnyMacroIn(s:ansistring):boolean; inline;
 begin result:=pos(MARKER_OPEN, s) > 0 end;
@@ -3242,7 +3242,7 @@ for i:=0 to length(parts)-1 do
   n:=cur.getFirstChild();
   while assigned(n) do
     begin
-    found:=stringExists(n.text, s) or sameText(n.text, UTF8toString(s));
+    found:=sameText(n.text, s);
     if found then break;
     n:=n.getNextSibling();
     end;
@@ -3556,7 +3556,7 @@ try
     diffTpl.fullText:=optUTF8(diffTpl.over, folder.getRecursiveDiffTplAsStr());
 
   isDMbrowser:= otpl = dmBrowserTpl;
-  fullEncode:=not isDMbrowser;
+  fullEncode:=FALSE;
   ofsRelUrl:=length(folder.url(fullEncode))+1;
   ofsRelItemUrl:=length(optUTF8(diffTpl, folder.pathTill()))+1;
   // pathTill() is '/' for root, and 'just/folder', so we must accordingly consider a starting and trailing '/' for the latter case (bugfix by mars)
@@ -4478,7 +4478,7 @@ procedure Tmainfrm.httpEvent(event:ThttpEvent; conn:ThttpConn);
 var
   data: TconnData;
   f: Tfile;
-  url: ansistring;
+  url: string;
 
   procedure switchToDefaultFile();
   var
@@ -4801,6 +4801,11 @@ var
   assignFile(data.f^, data.uploadDest);
   end; // getUploadDestinationFileName
 
+  procedure addContentDisposition(attach:boolean=TRUE);
+  begin
+  conn.addHeader( 'Content-Disposition: '+if_(attach, 'attachment; ')+'filename*=UTF-8''"'+UTF8encode(data.lastFN)+'";');
+  end;
+
   procedure sessionSetup();
   begin
   if (data = NIL) or assigned(data.session) then exit;
@@ -4948,7 +4953,7 @@ var
       '%archive-size%', intToStr(tar.size)
     ]), data.lastFN);
     if not noContentdispositionChk.checked then
-      conn.addHeader('Content-Disposition: attachment; filename="'+data.lastFN+'";');
+      addContentDisposition();
   except tar.free end;
   end; // serveTar
 
@@ -5029,7 +5034,7 @@ var
       conn.reply.contentType:=if_(trim(getTill('<', s))='', 'text/html', 'text/plain');
     conn.reply.mode:=HRM_REPLY;
     conn.reply.bodyMode:=RBM_STRING;
-    conn.reply.body:=s;
+    conn.reply.body:=UTF8encode(s);
     compressReply(data);
     end; // replyWithString
 
@@ -5474,7 +5479,7 @@ var
   data.eta.idx:=0;
   conn.reply.contentType:=name2mimetype(f.name, DEFAULT_MIME);
   conn.reply.bodyMode:=RBM_FILE;
-  conn.reply.body:=f.resource;
+  conn.reply.bodyFile:=f.resource;
   data.downloadingWhat:=DW_FILE;
   { I guess this would not help in any way for files since we are already handling the 'if-modified-since' field
   try
@@ -5493,7 +5498,7 @@ var
   if (data.agent = 'MSIE') and (conn.getHeader('Accept') = '*/*') then
     s:=replaceStr(s, ' ','%20');
   if not noContentdispositionChk.checked or not b then
-    conn.addHeader( 'Content-Disposition: '+if_(not b, 'attachment; ')+'filename="'+s+'";' );
+    addContentDisposition(not b);
   end; // handleRequest
 
   procedure lastByte();

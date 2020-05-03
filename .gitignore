@@ -2,12 +2,15 @@ tmp/
 __history/
 __recovery/
 win32/
+.vscode/
 *.vfs
 *.dcu
 *.exe
 *.map
-hfs.ini
 *.tmp
 *.bak
 *.*-
 *.corrupted
+hfs.ini
+hfs.identcache
+

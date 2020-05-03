@@ -102,6 +102,7 @@ type
       RBM_STREAM        // refer to bodyStream
     );
     body: ansistring;    // specifies reply body according to bodyMode
+    bodyFile: string;
     bodyStream: Tstream;   // note: the stream is automatically freed 
     firstByte, lastByte: int64;  // body interval for partial replies (206)
     realm: ansistring;   // this will appear in the authentication dialog
@@ -528,7 +529,9 @@ while i<length(url) do
     try
       url[j]:=ansichar(strToInt( '$'+url[i+1]+url[i+2] ));
       inc(i,2); // three chars for one
-    except url[j]:='_' end;
+    except url[j]:='_' end
+  else if i>j then
+    url[j]:=url[i];
   end;
 setLength(url, j);
 if utf8 then
@@ -1425,7 +1428,7 @@ if (state = HCS_REPLYING_HEADER) and (reply.mode <> HRM_REPLY_HEADER) then
     reply.bodyMode:=RBM_STRING;
     reply.body:=HRM2BODY[reply.mode];
     if reply.mode in [HRM_REDIRECT, HRM_MOVED] then
-      reply.body:=stringReplace(reply.body, '%url%', reply.url, [rfReplaceAll]);
+      reply.body:=replaceStr(reply.body, '%url%', reply.url);
     initInputStream();
     end;
   end;
@@ -1502,7 +1505,7 @@ try
       end;
     RBM_FILE:
       begin
-      i:=fileopen(reply.body, fmOpenRead+fmShareDenyNone);
+      i:=fileopen(reply.bodyFile, fmOpenRead+fmShareDenyNone);
       if i = -1 then exit;
       stream:=TFileStream.Create(i);
       end;
