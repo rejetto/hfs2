@@ -13,4 +13,4 @@ win32/
 *.corrupted
 hfs.ini
 hfs.identcache
-
+hfs.tpl
