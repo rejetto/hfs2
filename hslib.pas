@@ -444,6 +444,7 @@ begin
   until false;
 end; // nonQuotedPos
 
+// consider using TBase64Encoding.Base64.Encode() in unit netencoding
 function base64encode(s:ansistring):ansistring;
 const
   TABLE='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
@@ -482,9 +483,9 @@ i:=1;
 while i <= length(s) do
   begin
 	result:=result
-  	+chr(TABLE[s[i]] shl 2+TABLE[s[i+1]] shr 4)
-    +ifThen(s[i+2]<>'=', chr(TABLE[s[i+1]] shl 4+TABLE[s[i+2]] shr 2))
-    +ifThen(s[i+3]<>'=', chr(TABLE[s[i+2]] shl 6+TABLE[s[i+3]]));
+  	+ansichar(TABLE[s[i]] shl 2+TABLE[s[i+1]] shr 4)
+    +ifThen(s[i+2]<>'=', ansichar(TABLE[s[i+1]] shl 4+TABLE[s[i+2]] shr 2))
+    +ifThen(s[i+3]<>'=', ansichar(TABLE[s[i+2]] shl 6+TABLE[s[i+3]]));
   inc(i,4);
   end;
 end; // base64decode

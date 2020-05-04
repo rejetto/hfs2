@@ -26,11 +26,11 @@ interface
 
 uses
   // delphi libs
-  zlib, Windows, Messages, SysUtils, Forms, Menus, Graphics, Controls, ComCtrls, Dialogs, math,
+  Windows, Messages, SysUtils, Forms, Menus, Graphics, Controls, ComCtrls, Dialogs, math,
   registry, ExtCtrls, shellapi, ImgList, ToolWin, StdCtrls, strutils, AppEvnts, types,
   winsock, clipbrd, shlobj, activex, Buttons, FileCtrl, dateutils, iniFiles, Classes,
   // 3rd part libs. ensure you have all of these, the same version reported in dev-notes.txt
-  OverbyteIcsWSocket, OverbyteIcsHttpProt, OverbyteicsMD5, GIFimage, regexpr,
+  OverbyteIcsWSocket, OverbyteIcsHttpProt, OverbyteicsMD5, GIFimage, regexpr, OverbyteIcsZLibHigh, OverbyteIcsZLibObj,
   // rejetto libs
   HSlib, traylib, monoLib, progFrmLib, classesLib, System.ImageList;
 
@@ -1086,7 +1086,7 @@ var
   clock: integer;       // program ticks (tenths of second)
   // workaround for splitters' bad behaviour
   lastGoodLogWidth, lastGoodConnHeight: integer;
-  etags: THashedStringList; 
+  etags: THashedStringList;
   tray_ico: Ticon;             // the actual icon shown in tray
   usingFreePort: boolean=TRUE; // the actual server port set was 0
   upTime: Tdatetime;           // the server is up since...
@@ -1235,11 +1235,6 @@ function isFingerprintFile(fn:string):boolean;
 begin
 result:=mainfrm.fingerprintsChk.checked and isExtension(fn, '.md5')
 end; // isFingerprintFile
-
-function zCompressStr2(s:string; lev:TZCompressionLevel):ansistring;
-begin
-  result:=PansiChar(zcompressStr(s,lev))^
-end;
 
 type
   TaccountRecursionStopCase = (ARSC_REDIR, ARSC_NOLIMITS, ARSC_IN_SET);
@@ -4061,7 +4056,7 @@ if mainfrm.useISOdateChk.checked then FormatSettings.ShortDateFormat:='yyyy-mm-d
 else FormatSettings.ShortDateFormat:=GetLocaleStr(LOCALE_USER_DEFAULT, LOCALE_SSHORTDATE,'');
 end;
 
-procedure Tmainfrm.add2log(lines:string; cd:TconnData=NIL; clr:Tcolor=clDefault);
+procedure Tmainfrm.add2log(lines:string; cd:TconnData=NIL; clr:Tcolor=Graphics.clDefault);
 var
   s, ts, first, rest, addr: string;
 begin
@@ -4069,7 +4064,7 @@ if not logOnVideoChk.checked
 and ((logFile.filename = '') or (logFile.apacheFormat > '')) then
   exit;
 
-if clr = clDefault then
+if clr = Graphics.clDefault then
   clr:=clWindowText;
 
 if logDateChk.checked then
@@ -6304,6 +6299,46 @@ port:=was;
 if act then startServer();
 end; // changePort
 
+function zCompressStr(const s: ansistring;  level:TCompressionLevel=clMax; type_:TzStreamType=zsZlib): ansistring;
+var
+  src, dst: TMemoryStream;
+begin
+if s = '' then
+  exit('');
+src:= TMemoryStream.create;
+dst:= TMemoryStream.create;
+try
+  src.write(s[1], Length(s));
+  src.position:= 0;
+  zlibCompressStreamEx(src, dst, level, type_, false);
+  setLength(result, dst.size);
+  copyMemory(@result[1], dst.Memory, dst.Size);
+finally
+  src.free;
+  dst.free;
+  end;
+end; // zCompressStr
+
+function zDecompressStr(const s: ansistring): ansistring;
+var
+  src, dst: TMemoryStream;
+begin
+if s = '' then
+  exit('');
+src:= TMemoryStream.create;
+dst:= TMemoryStream.create;
+try
+  src.write(s[1], Length(s));
+  src.position:= 0;
+  zlibDecompressStream(src, dst);
+  setLength(result, dst.size);
+  copyMemory(@result[1], dst.Memory, dst.Size);
+finally
+  src.free;
+  dst.free;
+  end;
+end; // zDecompressIcs
+
 function TmainFrm.getCfg(exclude:string=''):string;
 type
   Tencoding=(E_PLAIN,E_B64,E_ZIP);
@@ -6315,8 +6350,8 @@ type
     E_B64: result:=base64encode(s);
     E_ZIP:
       begin
-      result:=zCompressStr2(s, zcMax);
-      if length(result) > round(0.95*length(s)) then
+      result:=zCompressStr(s, clMax);
+      if length(result) > round(0.9*length(s)) then
         result:=s;
       result:=base64encode(result);
       end;
@@ -6633,16 +6668,12 @@ var
     end;
   end; // loadBanlist
 
-  function unzip(s:ansistring):ansistring;
-  var a: Tbytes;
+  function unzipCfgProp(s:ansistring):ansistring;
   begin
-  try
-    s:=base64decode(s);
-    setLength(a, length(s));
-    move(s[1], a[0], length(s));
-    result:=ZDecompressStr(a)
+  result:=base64decode(s);
+  try result:=ZDecompressStr(result)
   except end;
-  end; // unzip
+  end; // unzipCfgProp
 
   procedure strToAccounts();
   var
@@ -6665,20 +6696,27 @@ var
       // account properties are separated by pipes
       t:=chop('|',s);
       p:=chop(':',t); // get property name
-      if p = '' then continue;
+      if p = '' then 
+        continue;
       if p = 'login' then
       	begin
         if not anycharIn(':', t) then
   	      t:=base64decode(t);
   	    a.user:=chop(':',t);
 	      a.pwd:=t;
-        end;
-      if p = 'enabled' then a.enabled:=yes(t);
-      if p = 'no-limits' then a.noLimits:=yes(t);
-      if p = 'group' then a.group:=yes(t);
-      if p = 'redir' then a.redir:=t;
-      if p = 'link' then a.link:=split(':',t);
-      if p = 'notes' then a.notes:=unzip(t);
+        end
+      else if p = 'enabled' then 
+        a.enabled:=yes(t)
+      else if p = 'no-limits' then 
+        a.noLimits:=yes(t)
+      else if p = 'group' then 
+        a.group:=yes(t)
+      else if p = 'redir' then 
+        a.redir:=t
+      else if p = 'link' then 
+        a.link:=split(':',t)
+      else if p = 'notes' then
+        a.notes:=UTF8ToString(unzipCfgProp(t))
       end;
     end;
   end; // strToAccounts
@@ -6704,7 +6742,7 @@ var
   while l > '' do
     begin
     iFrom:=strTointDef(chop(':', l), -1);
-    iTo:=str2pic(unzip(chop('|', l)));
+    iTo:=str2pic(unzipCfgProp(chop('|', l)));
     for i:=0 to length(iconMasks)-1 do
       if iconMasks[i].int = iFrom then
         iconMasks[i].int:=iTo;
@@ -9281,10 +9319,10 @@ while not tlv.isOver() do
       { Explanation for the #0 workaround.
       { I found an uncompressable vfs file, with ZDecompressStr2() raising an exception.
       { In the end i found it was missing a trailing #0, maybe do to an incorrect handling of strings
-      { containing a trailing #0. You know, being using a zlib wrapper there is some underlying C code.
+      { containing a trailing #0. Using a zlib wrapper there is some underlying C code.
       { I was unable to reproduce the bug, but i found that correct data doesn't complain if i add an extra #0. }
       try
-        data:=ZDecompressStr(bytesOf(data+#0));
+        data:=ZDecompressStr(data+#0);
         if isAnyMacroIn(data) then
           loadingVFS.macrosFound:=TRUE;
         setVFS(data, node);
@@ -9387,7 +9425,7 @@ function addVFSheader(vfsdata:ansistring):ansistring;
 begin
 if length(vfsdata) > COMPRESSION_THRESHOLD then
   vfsdata:=TLV(FK_COMPRESSED_ZLIB,
-    ZcompressStr2(vfsdata, zcFastest) );
+    ZcompressStr(vfsdata, clFastest) );
 result:= TLV(FK_HEAD, VFS_FILE_IDENTIFIER)
   +TLV(FK_FORMAT_VER, str_(CURRENT_VFS_FORMAT))
   +TLV(FK_HFS_VER, VERSION)
@@ -9469,7 +9507,7 @@ var
 
   function getColor(idx:integer; def:Tcolor):Tcolor;
   begin
-  if (length(colors) <= idx) or (colors[idx] = clDefault) then result:=def
+  if (length(colors) <= idx) or (colors[idx] = Graphics.clDefault) then result:=def
   else result:=colors[idx]
   end; // getColor
 
@@ -9572,7 +9610,7 @@ else
       bmp.height:=min(i, 300000 div max(1,bmp.width));
     refresh:=ansistring(chop('x',options));
     for i:=1 to 5 do
-      addColor(stringToColorEx(chop('x',options), clDefault));
+      addColor(stringToColorEx(chop('x',options), graphics.clDefault));
   except
     end;
 drawGraphOn(bmp.canvas, colors);
@@ -10803,7 +10841,7 @@ if (cd.workaroundForIEutf8  = toDetect) and (cd.agent > '') then
     cd.workaroundForIEutf8:=yes
   else
     cd.workaroundForIEutf8:=no;
-s:=ZcompressStr2(s, zcFastest);
+s:=ZcompressStr(s, clFastest, zsGzip);
 if (cd.workaroundForIEutf8  = yes) and (length(s) < BAD_IE_THRESHOLD) then exit;
 cd.conn.addHeader('Content-Encoding: gzip');
 //cd.conn.addHeader('Content-Length: '+intToStr(length(s)));
