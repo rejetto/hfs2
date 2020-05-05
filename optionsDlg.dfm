@@ -203,7 +203,7 @@ object optionsFrm: ToptionsFrm
           TabOrder = 2
         end
         object pwdBox: TLabeledEdit
-          Left = 13
+          Left = 11
           Top = 63
           Width = 198
           Height = 22

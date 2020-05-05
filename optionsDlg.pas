@@ -602,6 +602,7 @@ var
 begin
 a.user:=getUniqueName('new user', userExists);
 a.pwd:='';
+a.group:=FALSE;
 a.enabled:=TRUE;
 a.noLimits:=FALSE;
 a.redir:='';
