@@ -100,8 +100,6 @@ type
     procedure addBtnClick(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure deleteBtnClick(Sender: TObject);
-    procedure pwdBoxEnter(Sender: TObject);
-    procedure pwdBoxExit(Sender: TObject);
     procedure addMimeBtnClick(Sender: TObject);
     procedure deleteMimeBtnClick(Sender: TObject);
     procedure addA2NbtnClick(Sender: TObject);
@@ -140,6 +138,8 @@ type
     procedure accountsBoxKeyPress(Sender: TObject; var Key: Char);
     procedure accountsBoxEditing(Sender: TObject; Item: TListItem;
       var AllowEdit: Boolean);
+    procedure pwdBoxMouseEnter(Sender: TObject);
+    procedure pwdBoxChange(Sender: TObject);
   public
     procedure checkRedir();
 		procedure loadAccountProperties();
@@ -860,11 +860,11 @@ try
 finally groups.free end;
 end;
 
-procedure ToptionsFrm.pwdBoxEnter(Sender: TObject);
-begin if pwdBox.Text > '' then pwdBox.passwordChar:=#0 end;
+procedure ToptionsFrm.pwdBoxChange(Sender: TObject);
+begin pwdBox.hint:=pwdBox.text end;
 
-procedure ToptionsFrm.pwdBoxExit(Sender: TObject);
-begin pwdBox.passwordChar:='*' end;
+procedure ToptionsFrm.pwdBoxMouseEnter(Sender: TObject);
+begin pwdBox.hint:=pwdBox.text end;
 
 procedure ToptionsFrm.addBtnClick(Sender: TObject);
 begin bansBox.InsertRow('','',TRUE) end;
