@@ -65,7 +65,7 @@ const
   MINUTES = HOURS*60;
   SECONDS = MINUTES*60; // Tdatetime * SECONDS = time in seconds
   ETA_FRAME = 5; // time frame for ETA (in seconds)
-  DOWNLOAD_MIN_REFRESH_TIME :Tdatetime = 1/(5*SECONDS); // 5 Hz
+  DOWNLOAD_MIN_REFRESH_TIME :Tdatetime = 1/3/SECONDS; // 3 Hz
   BYTES_GROUPING_THRESHOLD :Tdatetime = 1/SECONDS; // group bytes in log
   IPS_THRESHOLD = 50;  // used to avoid an external file for few IPs (ipsEverConnected list)
   STATUSBAR_REFRESH = 10; // tenth of second
