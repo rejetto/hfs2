@@ -11034,7 +11034,7 @@ result:=inputQuery('Enter user', 'Enter user', dyndns.user)
   and inputQuery('Enter password', 'Enter password', dyndns.pwd)
   and (dyndns.pwd > '');
 dyndns.user:=trim(dyndns.user);
-dyndns.pwd:=trim(dyndns.pwd);
+dyndns.pwd:=ifThen(dyndns.user='', '', trim(dyndns.pwd));
 end; // dynDNSinputUserPwd
 
 function dynDNSinputHost():boolean;
@@ -11058,7 +11058,7 @@ end; // dynDNSinputHost
 
 procedure finalizeDynDNS();
 begin
-addString(dyndns.host, customIPs);
+addUniqueString(dyndns.host, customIPs);
 setDefaultIP(dyndns.host);
 end; // finalizeDynDNS
 
