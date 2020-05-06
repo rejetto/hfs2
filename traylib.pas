@@ -35,25 +35,26 @@ type
     TM_ERROR = NIIF_ERROR
   );
 
-  TNotifyIconDataEx = record
+  TNotifyIconData = record
     cbSize: DWORD;
     wnd: HWND;
     uID: UINT;
     uFlags: UINT;
     uCallbackMessage: UINT;
     hIcon: HICON;
-    szTip: array [0..127] of AnsiChar;
+    szTip: array [0..127] of Char;
     dwState: DWORD;
     dwStateMask: DWORD;
-    szInfo: array[0..255] of AnsiChar;
+    szInfo: array[0..255] of Char;
     uVersion: UINT;
-    szInfoTitle: array[0..63] of AnsiChar;
+    szInfoTitle: array[0..63] of Char;
     dwInfoFlags: DWORD;
+    hBaloonIcon: HICON;
     end;
 
   TmyTrayIcon=class
     private
-      icondata: TNotifyIconDataEx;
+      icondata: TNotifyIconData;
       shown: boolean;
       procedure wndProc(var Message: TMessage);
       procedure notify(ev:TtrayEvent);
@@ -114,8 +115,8 @@ end;
 procedure TmyTrayIcon.update();
 begin
 if shown then
-  if not Shell_NotifyIcon(NIM_MODIFY, @icondata) then
-    Shell_NotifyIcon(NIM_ADD, @icondata);
+  if not Shell_NotifyIconW(NIM_MODIFY, @icondata) then
+    Shell_NotifyIconW(NIM_ADD, @icondata);
 end; { update }
 
 procedure TmyTrayIcon.setIcon(icon:Ticon);
@@ -141,7 +142,7 @@ begin
 s:=stringReplace(s,'&','&&',[rfReplaceAll]);
 if length(s) > maxTipLength then setlength(s,maxTipLength);
 if string(icondata.szTip) = s then exit;
-strPLCopy(icondata.szTip, ansiString(s), sizeOf(icondata.szTip)-1);
+strPLCopy(icondata.szTip, s, sizeOf(icondata.szTip)-1);
 update();
 end; // setTip
 
@@ -200,8 +201,8 @@ case kind of
   TM_INFO: icondata.dwInfoFlags:=NIIF_INFO;
   else icondata.dwInfoFlags:=NIIF_NONE;
 end;
-strPLCopy(icondata.szInfo, ansiString(msg), sizeOf(icondata.szInfo)-1);
-strPLCopy(icondata.szInfoTitle, ansiString(title), sizeOf(icondata.szInfoTitle)-1);
+strPLCopy(icondata.szInfo, msg, sizeOf(icondata.szInfo)-1);
+strPLCopy(icondata.szInfoTitle, title, sizeOf(icondata.szInfoTitle)-1);
 icondata.uVersion:=round(secondsTimeout*1000);
 icondata.uFlags := icondata.uFlags or NIF_INFO;
 update();

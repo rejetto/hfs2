@@ -129,7 +129,7 @@ object optionsFrm: ToptionsFrm
       object Label7: TLabel
         Left = 251
         Top = 349
-        Width = 299
+        Width = 430
         Height = 28
         Hint = 'You also need to right click on the folder, then restrict access'
         Anchors = [akLeft, akBottom]
@@ -161,7 +161,7 @@ object optionsFrm: ToptionsFrm
           WordWrap = True
         end
         object Label8: TLabel
-          Left = 336
+          Left = 345
           Top = 20
           Width = 28
           Height = 14
