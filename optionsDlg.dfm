@@ -129,8 +129,8 @@ object optionsFrm: ToptionsFrm
       object Label7: TLabel
         Left = 251
         Top = 349
-        Width = 430
-        Height = 17
+        Width = 328
+        Height = 14
         Hint = 'You also need to right click on the folder, then restrict access'
         Anchors = [akLeft, akBottom]
         Caption = 
@@ -579,7 +579,7 @@ object optionsFrm: ToptionsFrm
       object Label5: TLabel
         Left = 8
         Top = 32
-        Width = 249
+        Width = 227
         Height = 14
         Caption = 'Each line is a file-mask associated with an icon'
         WordWrap = True

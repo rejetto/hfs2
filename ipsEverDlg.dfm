@@ -3,7 +3,7 @@ object ipsEverFrm: TipsEverFrm
   Top = 0
   BorderStyle = bsDialog
   Caption = 'Addresses ever connected'
-  ClientHeight = 275
+  ClientHeight = 271
   ClientWidth = 286
   Color = clBtnFace
   Constraints.MaxHeight = 300
@@ -18,12 +18,12 @@ object ipsEverFrm: TipsEverFrm
   OnShow = FormShow
   DesignSize = (
     286
-    275)
+    271)
   PixelsPerInch = 96
   TextHeight = 13
   object totalLbl: TLabel
     Left = 197
-    Top = 253
+    Top = 246
     Width = 61
     Height = 13
     Anchors = [akLeft]
@@ -33,7 +33,7 @@ object ipsEverFrm: TipsEverFrm
     Left = 0
     Top = 0
     Width = 286
-    Height = 242
+    Height = 236
     Align = alTop
     Anchors = [akLeft, akTop, akRight, akBottom]
     ReadOnly = True
@@ -42,7 +42,7 @@ object ipsEverFrm: TipsEverFrm
   end
   object resetBtn: TButton
     Left = 114
-    Top = 248
+    Top = 241
     Width = 75
     Height = 25
     Anchors = [akLeft]
@@ -52,7 +52,7 @@ object ipsEverFrm: TipsEverFrm
   end
   object editBtn: TButton
     Left = 8
-    Top = 248
+    Top = 241
     Width = 95
     Height = 25
     Anchors = [akLeft]
