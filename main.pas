@@ -1330,7 +1330,7 @@ function hasRightAttributes(fn:string):boolean; overload;
 begin result:=hasRightAttributes(GetFileAttributes(pChar(fn))) end;
 
 function isAnyMacroIn(s:ansistring):boolean; inline;
-begin result:=pos(MARKER_OPEN, s) > 0 end;
+begin result:=pos(ansistring(MARKER_OPEN), s) > 0 end;
 
 function loadDescriptionFile(fn:string):string;
 begin
@@ -3155,15 +3155,17 @@ function Tmainfrm.findFilebyURL(url:string; parent:Tfile=NIL; allowTemp:boolean=
   if dirCrossing(s) then exit;
 
   s:=includeTrailingPathDelimiter(f.resource)+s; // we made the ".." test before, so relative paths are allowed in the VFS
-  if not fileOrDirExists(s) then
-    if fileOrDirExists(s+'.lnk') then s:=s+'.lnk'
-    else s:=UTF8ToString(s); // these may actually be two distinct files, but it's very unlikely to be, and pratically we workaround big problem
-  if not fileOrDirExists(s) or not hasRightAttributes(s) then exit;
+  if not fileOrDirExists(s) and fileOrDirExists(s+'.lnk') then
+    s:=s+'.lnk';
+  if not fileOrDirExists(s) or not hasRightAttributes(s) then
+    exit;
   // found on disk, we need to build a temporary Tfile to return it
   result:=Tfile.createTemp(s);
   // the temp file inherits flags from the real folder
-  if FA_DONT_LOG in f.flags then include(result.flags, FA_DONT_LOG);
-  if not (FA_BROWSABLE in f.flags) then exclude(result.flags, FA_BROWSABLE);
+  if FA_DONT_LOG in f.flags then
+    include(result.flags, FA_DONT_LOG);
+  if not (FA_BROWSABLE in f.flags) then
+    exclude(result.flags, FA_BROWSABLE);
   // temp nodes are bound to parent's node
   result.node:=f.node;
   end; // workTheRestByReal
@@ -3428,7 +3430,7 @@ var
       addArray(nonPerc, ['~img_file', '~img'+intToStr(f.getSystemIcon())]);
 
   if recur or (itemFolder = '') then
-    itemFolder:=optUTF8(diffTpl, f.getFolder());
+    itemFolder:=f.getFolder();
   if recur then
     url:=substr(itemFolder, ofsRelItemUrl)
   else
@@ -3455,8 +3457,10 @@ var
   if fingerprintsChk.checked and f.isFile() then
     begin
     s:=loadMD5for(f.resource);
-    if s = '' then s:=hasher.getHashFor(f.resource);
-    if s > '' then fingerprint:='#!md5!'+s;
+    if s = '' then
+      s:=hasher.getHashFor(f.resource);
+    if s > '' then
+      fingerprint:='#!md5!'+s;
     end;
   if f.isLink() then
     begin
@@ -3601,6 +3605,13 @@ try
       else
         inc(numberFiles);
       end;
+    {TODO this symbols will be available when executing macros in handleItem. Having
+      them at this stage is useful only in case immediate calculations are required.
+      This may happen seldom, but maybe some template is using it since we got this here.
+      Each symbols is an extra iteration on the template piece and we may be tempted
+      to consider for optimizations. To not risk legacy problems we should consider
+      treating table symbols with a regular expression and a Tdictionary instead.
+    }
     table:=toSA([
       '%upload-link%', if_(accountAllowed(FA_UPLOAD, cd, folder), diffTpl['upload-link']),
       '%files%', diffTpl[if_(n>0, 'files','nofiles')],

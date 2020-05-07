@@ -739,7 +739,7 @@ end; // dotted
 function getRes(name:pchar; typ:string='TEXT'):string;
 var
   h1, h2: Thandle;
-  p: pchar;
+  p: pAnsiChar;
   l: integer;
   ansi: ansiString;
 begin
