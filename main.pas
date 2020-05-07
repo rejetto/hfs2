@@ -917,6 +917,7 @@ type
       Stage: TCustomDrawStage; var DefaultDraw: Boolean);
     procedure Reverttopreviousversion1Click(Sender: TObject);
     procedure updateBtnClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
   private
     function searchLog(dir:integer):boolean;
     function  getGraphPic(cd:TconnData=NIL): ansistring;
@@ -991,6 +992,7 @@ type
     function  getTrayTipMsg(tpl:string=''):string;
     procedure menuDraw(sender:Tobject; cnv: Tcanvas; r:Trect; selected:boolean);
     procedure menuMeasure(sender:Tobject; cnv: Tcanvas; var w:integer; var h:integer);
+    procedure wrapInputQuery(sender:Tobject);
   end; // Tmainfrm
 
 const
@@ -3402,7 +3404,7 @@ var
     inc(idx);
     idxS:=intToStr(idx);
     delete(result, p, length(PATTERN)-length(idxS));
-    move(idxS[1], result[p], length(idxS));
+    moveChars(idxS[1], result[p], length(idxS));
     until false;
   end; // applySequential
 
@@ -9682,17 +9684,17 @@ var
 begin
 if speedLimit < 0 then s:=''
 else s:=floatToStr(speedLimit);
-if inputquery(LIMIT, MSG_MAX_BW+#13+MSG_EMPTY_NO_LIMIT, s) then
-	try
-  	s:=trim(s);
-  	if s = '' then setSpeedLimit(-1)
-    else setSpeedLimit(strToFloat(s));
-    if speedLimit = 0 then
-      msgDlg(ZEROMSG, MB_ICONWARNING);
-    // a manual set of speedlimit voids the pause command
-    Pausestreaming1.Checked:=FALSE;
-  except msgDlg(MSG_INVALID_VALUE, MB_ICONERROR)
-  end;
+if not inputquery(LIMIT, MSG_MAX_BW+#13+MSG_EMPTY_NO_LIMIT+#13, s) then
+  exit;
+try
+  s:=trim(s);
+  if s = '' then setSpeedLimit(-1)
+  else setSpeedLimit(strToFloat(s));
+  if speedLimit = 0 then
+    msgDlg(ZEROMSG, MB_ICONWARNING);
+  // a manual set of speedlimit voids the pause command
+  Pausestreaming1.Checked:=FALSE;
+except msgDlg(MSG_INVALID_VALUE, MB_ICONERROR) end;
 end;
 
 procedure TmainFrm.Speedlimitforsingleaddress1Click(Sender: TObject);
@@ -10606,6 +10608,11 @@ try
   { Windows from shutting down, but the flag would stay set, while Windows is no more shutting down. }
   windowsShuttingDown:=FALSE;
 finally queryingClose:=FALSE end;
+end;
+
+procedure TmainFrm.FormCreate(Sender: TObject);
+begin
+screen.onActiveFormChange:=wrapInputQuery;
 end;
 
 procedure TmainFrm.Loginrealm1Click(Sender: TObject);
@@ -12333,6 +12340,44 @@ if mi.Checked then
   cnv.font.Name:='WingDings';
   with cnv.Font do size:=size+2;
   cnv.TextOut(r.Left+images.width, r.Top, 'ü'); // check mark
+  end;
+end;
+
+procedure TmainFrm.wrapInputQuery(sender:Tobject);
+var
+  Form: TCustomForm;
+  Prompt: TLabel;
+  Edit: TEdit;
+  Ctrl: TControl;
+  I, J, ButtonTop: Integer;
+begin
+Form := Screen.ActiveCustomForm;
+if (Form=NIL) or (Form.ClassName<>'TInputQueryForm') then
+  Exit;
+
+for I := 0 to Form.ControlCount-1 do
+  begin
+  Ctrl := Form.Controls[i];
+  if Ctrl is TLabel then
+    Prompt := TLabel(Ctrl)
+  else if Ctrl is TEdit then
+    Edit := TEdit(Ctrl);
+  end;
+
+Edit.SetBounds(Prompt.Left, Prompt.Top + Prompt.Height + 5, max(200, Prompt.Width), Edit.Height);
+Form.ClientWidth := (Edit.Left * 2) + Edit.Width;
+ButtonTop := Edit.Top + Edit.Height + 15;
+
+J := 0;
+for I := 0 to Form.ControlCount-1 do
+  begin
+  Ctrl := Form.Controls[i];
+  if Ctrl is TButton then
+    begin
+    Ctrl.SetBounds(Form.ClientWidth - ((Ctrl.Width + 15) * (2-J)), ButtonTop, Ctrl.Width, Ctrl.Height);
+    Form.ClientHeight := Ctrl.Top + Ctrl.Height + 13;
+    Inc(J);
+    end;
   end;
 end;
 

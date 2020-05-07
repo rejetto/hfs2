@@ -17,6 +17,7 @@ object mainFrm: TmainFrm
   Position = poDesigned
   OnClose = FormClose
   OnCloseQuery = FormCloseQuery
+  OnCreate = FormCreate
   OnKeyDown = FormKeyDown
   OnKeyUp = FormKeyUp
   OnResize = FormResize

@@ -130,7 +130,7 @@ object optionsFrm: ToptionsFrm
         Left = 251
         Top = 349
         Width = 430
-        Height = 28
+        Height = 17
         Hint = 'You also need to right click on the folder, then restrict access'
         Anchors = [akLeft, akBottom]
         Caption = 
@@ -485,15 +485,15 @@ object optionsFrm: ToptionsFrm
           'n'
       end
       object Label10: TLabel
-        Left = 264
-        Top = 157
+        Left = 291
+        Top = 170
         Width = 40
         Height = 14
         Caption = 'Preview'
       end
       object traymsgBox: TMemo
         Left = 16
-        Top = 176
+        Top = 192
         Width = 233
         Height = 121
         Lines.Strings = (
@@ -502,8 +502,8 @@ object optionsFrm: ToptionsFrm
         OnChange = traymsgBoxChange
       end
       object traypreviewBox: TMemo
-        Left = 264
-        Top = 176
+        Left = 291
+        Top = 192
         Width = 233
         Height = 121
         Color = clInfoBk
@@ -579,8 +579,8 @@ object optionsFrm: ToptionsFrm
       object Label5: TLabel
         Left = 8
         Top = 32
-        Width = 207
-        Height = 28
+        Width = 249
+        Height = 14
         Caption = 'Each line is a file-mask associated with an icon'
         WordWrap = True
       end
@@ -593,7 +593,7 @@ object optionsFrm: ToptionsFrm
       end
       object iconMasksBox: TMemo
         Left = 8
-        Top = 48
+        Top = 49
         Width = 225
         Height = 245
         Anchors = [akLeft, akTop, akBottom]
