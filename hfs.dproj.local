@@ -30,5 +30,12 @@
     <File Path="shellExtDlg.pas"/>
     <File Path="shellExtDlg.dfm"/>
     <File Path="utillib.pas"/>
-  </ProjectSortOrder>
+    <File Path="traylib.pas"/>
+    <File Path="inputDialogs.pas"/>
+    <File Path="inputDialogs.dfm"/>
+  </ProjectSortOrder>  <Transactions>
+    <Transaction>2020/05/06 23:30:42.800,=C:\code\mine\hfs\Unit1.pas</Transaction>
+    <Transaction>2020/05/06 23:38:14.406,C:\code\mine\hfs\inputDialogs.dfm=C:\code\mine\hfs\Unit1.dfm</Transaction>
+    <Transaction>2020/05/06 23:38:14.406,C:\code\mine\hfs\inputDialogs.pas=C:\code\mine\hfs\Unit1.pas</Transaction>
+  </Transactions>
 </BorlandProject>

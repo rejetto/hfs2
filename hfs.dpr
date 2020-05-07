@@ -22,8 +22,6 @@ This file is part of HFS ~ HTTP File Server.
 program hfs;
 
 uses
-  //FastMM4,
-  //uFreeLocalizer,
   {$IFDEF EX_DEBUG}
   ftmExceptionForm,
   {$ENDIF }
@@ -48,7 +46,8 @@ uses
   listSelectDlg in 'listSelectDlg.pas' {listSelectFrm},
   filepropDlg in 'filepropDlg.pas' {filepropFrm},
   runscriptDlg in 'runscriptDlg.pas' {runScriptFrm},
-  scriptLib in 'scriptLib.pas';
+  scriptLib in 'scriptLib.pas',
+  traylib in 'traylib.pas';
 
 {$R *.res}
 
