@@ -556,7 +556,7 @@ var
   s:=md.cd.urlvars.values[k];
   if (s = '') and (md.cd.urlvars.indexOf(k) >= 0) then s:='1';
   try
-    result:=noMacrosAllowed(optUTF8(md.tpl, s));
+    result:=noMacrosAllowed(s);
     setVar(parEx('var'), result); // if no var is specified, it will break here, and result will have the value
     result:='';
   except end;
@@ -648,7 +648,7 @@ var
 
   if not satisfied(fld) then exit;
   e:=htmlEncode(encodeMarkers(fld.url(TRUE)));
-  d:=htmlEncode(encodeMarkers(optUTF8(md.tpl, fld.getFolder()+fld.name+'/')));
+  d:=htmlEncode(encodeMarkers(fld.getFolder()+fld.name+'/'));
   ae:=split('/', e);
   ad:=split('/', d);
   p:=macroDequote(p);
@@ -1598,11 +1598,11 @@ var
   else if name = '%style%' then
     result:=tpl['style']
   else if name = '%timestamp%' then
-    result:=optUTF8(tpl, dateTimeToStr(now()))
+    result:=dateTimeToStr(now())
   else if name = '%date%' then
-    result:=optUTF8(tpl, dateToStr(now()))
+    result:=dateToStr(now())
   else if name = '%time%' then
-    result:=optUTF8(tpl, timeToStr(now()))
+    result:=timeToStr(now())
   else if name = '%now%' then
     result:=floatToStr(now())
   else if name = '%version%' then
@@ -1610,7 +1610,7 @@ var
   else if name = '%build%' then
     result:=VERSION_BUILD
   else if name = '%uptime%' then
-    result:=optUTF8(tpl, uptimestr())
+    result:=uptimestr()
   else if name = '%speed-out%' then
     result:=floatToStrF(srv.speedOut/1000, ffFixed, 7,2)
   else if name = '%speed-in%' then
@@ -1654,7 +1654,7 @@ var
     else if name = '%url%' then
       result:=macroQuote(md.cd.conn.request.url)
     else if name = '%user%' then
-      result:=optUTF8(md.tpl, macroQuote(usr))
+      result:=macroQuote(usr)
     else if name = '%password%' then
       result:=macroQuote(md.cd.conn.request.pwd)
     else if name = '%loggedin%' then
@@ -1673,12 +1673,12 @@ var
 
   if assigned(md.folder) then
     if name = '%folder-item-comment%' then
-      result:=optUTF8(md.tpl, md.folder.getDynamicComment())
+      result:=md.folder.getDynamicComment()
     else if name = '%folder-comment%' then
       begin
       result:=md.folder.getDynamicComment();
       if result > '' then
-        result:=optUTF8(md.tpl, replaceText(tpl['folder-comment'], '%item-comment%', result));
+        result:=replaceText(tpl['folder-comment'], '%item-comment%', result)
       end
     else if name = '%diskfree%' then
       result:=smartSize(diskSpaceAt(md.folder.resource)-minDiskSpace*MEGA)
@@ -1689,11 +1689,11 @@ var
     else if name = '%parent-folder%' then
       result:=md.folder.parentURL()
     else if name = '%folder-name%' then
-      result:=optUTF8(md.tpl, md.folder.name)
+      result:=md.folder.name
     else if name = '%folder-resource%' then
       result:=md.folder.resource
     else if name = '%folder%' then
-      with md.folder do result:=optUTF8(md.tpl, if_(isRoot(), '/', getFolder()+name+'/'))
+      with md.folder do result:=if_(isRoot(), '/', getFolder()+name+'/')
   ;
 
   if assigned(md.f) then
@@ -1702,7 +1702,7 @@ var
       s:=md.f.name;
       if md.hideExt and md.f.isFile() then
         setLength(s, length(s)-length(extractFileExt(s)) );
-      result:=htmlEncode(macroQuote(optUTF8(md.tpl, s)))
+      result:=htmlEncode(macroQuote(s))
       end
     else if name = '%item-type%' then
       if md.f.isLink() then
@@ -1720,20 +1720,20 @@ var
     else if name = '%item-resource%' then
       result:=macroQuote(md.f.resource)
     else if name = '%item-ext%' then
-      result:=macroQuote(optUTF8(md.tpl, copy(extractFileExt(md.f.name), 2, MAXINT)))
+      result:=macroQuote(copy(extractFileExt(md.f.name), 2, MAXINT))
     else if name = '%item-added-dt%' then
       result:=floatToStr(md.f.atime)
     else if name = '%item-modified-dt%' then
       result:=floatToStr(md.f.mtime)
     // these twos are actually redundant, {.time||when=%item-added-dt%.}
     else if name = '%item-added%' then
-      result:=optUTF8(md.tpl, datetimeToStr(md.f.atime))
+      result:=datetimeToStr(md.f.atime)
     else if name = '%item-modified%' then
-      result:=if_(md.f.mtime=0, 'error', optUTF8(md.tpl, datetimeToStr(md.f.mtime)))
+      result:=if_(md.f.mtime=0, 'error', datetimeToStr(md.f.mtime))
     else if name = '%item-comment%' then
-      result:=optUTF8(md.tpl, md.f.getDynamicComment(TRUE))
+      result:=md.f.getDynamicComment(TRUE)
     else if name = '%item-url%' then
-      result:=macroQuote(optUTF8(md.tpl, md.f.url()))
+      result:=macroQuote(md.f.url())
   ;
 
   if assigned(md.f) and assigned(md.tpl) then
@@ -1883,7 +1883,6 @@ try
       r:=parF('when',now())+parF('offset',0);
       if s = 'y' then result:=floatToStr(r)
       else datetimeToString(result, first(s,'c'), r );
-      result:=optUTF8(md.tpl, result); // we may have special chars from datetimeToString()
       end;
 
     if name = 'disconnect' then
@@ -2052,9 +2051,9 @@ try
       else
         result:=p;
 
-    if name = 'maybe utf8' then
+    if name = 'maybe utf8' then // pre-unicode legacy
       if satisfied(md.tpl) then
-        result:=optUTF8(md.tpl.utf8, p);
+        result:=p;
 
     if name = 'after the list' then
       if md.afterTheList then

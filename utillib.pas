@@ -215,8 +215,6 @@ function getTill(ss, s:string; included:boolean=FALSE):string; overload;
 function getTill(i:integer; s:string):string; overload;
 function singleLine(s:string):boolean;
 function poss(chars:TcharSet; s:string; ofs:integer=1):integer;
-function optUTF8(bool:boolean; s:string):string; overload;
-function optUTF8(tpl:Ttpl; s:string):string; overload;
 function optAnsi(bool:boolean; s:string):string;
 function utf8Test(s:string):boolean;
 function jsEncode(s, chars:string):string;
@@ -2044,12 +2042,6 @@ begin
 setLength(result, 1000);
 setLength(result, getTempPath(length(result), @result[1]));
 end; // getTempDir
-
-function optUTF8(bool:boolean; s:string):string;
-begin if bool then result:=ansiToUtf8(s) else result:=s end;
-
-function optUTF8(tpl:Ttpl; s:string):string; inline;
-begin result:=optUTF8(assigned(tpl) and tpl.utf8, s) end;
 
 function optAnsi(bool:boolean; s:string):string;
 begin if bool then result:=UTF8toAnsi(s) else result:=s end;

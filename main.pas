@@ -3552,12 +3552,12 @@ try
     end;
 
   if otpl <> filelistTpl then
-    diffTpl.fullText:=optUTF8(diffTpl.over, folder.getRecursiveDiffTplAsStr());
+    diffTpl.fullText:=folder.getRecursiveDiffTplAsStr();
 
   isDMbrowser:= otpl = dmBrowserTpl;
   fullEncode:=FALSE;
   ofsRelUrl:=length(folder.url(fullEncode))+1;
-  ofsRelItemUrl:=length(optUTF8(diffTpl, folder.pathTill()))+1;
+  ofsRelItemUrl:=length(folder.pathTill())+1;
   // pathTill() is '/' for root, and 'just/folder', so we must accordingly consider a starting and trailing '/' for the latter case (bugfix by mars)
   if not folder.isRoot() then
     inc(ofsRelItemUrl, 2);
@@ -3669,7 +3669,7 @@ else result:='-'
 end; // getETA
 
 function tplFromFile(f:Tfile):Ttpl;
-begin result:=Ttpl.create(optUTF8(tpl, f.getRecursiveDiffTplAsStr()), tpl) end;
+begin result:=Ttpl.create(f.getRecursiveDiffTplAsStr(), tpl) end;
 
 procedure setDefaultIP(v:string);
 var
@@ -3743,7 +3743,7 @@ var
       begin
       if d.conn.reply.bodymode <> RBM_FILE then continue;
       t:=tpl2use['progress-download-file'];
-      fn:=optUTF8(tpl2use, d.lastFN);
+      fn:=d.lastFN;
       bytes:=d.conn.bytesSentLastItem;
       total:=d.conn.bytesPartial;
       end;
@@ -3793,12 +3793,12 @@ var
   for i:=0 to length(data.uploadResults)-1 do
     with data.uploadResults[i] do
       files:=files+xtpl(tpl2use[ if_(reason='','upload-success','upload-failed') ],[
-        '%item-name%', htmlEncode(macroQuote(optUTF8(tpl2use, fn))),
+        '%item-name%', htmlEncode(macroQuote(fn)),
         '%item-url%', macroQuote(encodeURL(fn)),
         '%item-size%', smartsize(size),
         '%item-resource%', f.resource+'\'+fn,
         '%idx%', intToStr(i+1),
-        '%reason%', optUTF8(tpl2use, reason),
+        '%reason%', reason,
         '%speed%', intToStr(speed div 1000), // legacy
         '%smart-speed%', smartsize(speed)
       ]);
@@ -3840,7 +3840,7 @@ try
   addUploadResultsSymbols();
   if data = NIL then s:=''
   else s:=first(data.banReason, data.disconnectReason);
-  addArray(md.table, ['%reason%', optUTF8(tpl2use, s)]);
+  addArray(md.table, ['%reason%', s]);
 
   data.conn.reply.contentType:=name2mimetype(sectionName, 'text/html');
   if sectionName = 'ban' then data.conn.reply.mode:=HRM_DENY;
@@ -4448,7 +4448,6 @@ function setTplText(text:string):boolean;
 begin
 result:=FALSE; // mod by mars
 //patch290();
-// if we'd use optUTF8() here, we couldn't make use of tpl.utf8, because text would not be parsed yet
 tpl.fullText:=text;
 tplIsCustomized:= text <> defaultTpl;
 if boolOnce(tplImport) then
