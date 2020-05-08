@@ -118,7 +118,7 @@ type
     ver: ansistring;
     firstByte, lastByte: int64;  // body interval for partial requests
     headers, cookies: ThashedStringList;
-    user,pwd: ansistring;
+    user,pwd: string;
     end;
 
   ThttpPost = record
@@ -1055,6 +1055,7 @@ procedure ThttpConn.processInputBuffer();
   function parseHeader():boolean;
   var
     r, s: ansistring;
+    u: string;
     i : integer;
   begin
   result:=FALSE;
@@ -1097,9 +1098,9 @@ procedure ThttpConn.processInputBuffer();
   if AnsiStartsText('Basic',s) then
     begin
     delete(s,1,6);
-    s:=base64decode(s);
-    request.user:=trim(chop(':',s));
-    request.pwd:=s;
+    u:=UTF8decode(base64decode(s));
+    request.user:=trim(chop(':',u));
+    request.pwd:=u;
     end;
 
   s:=getHeader('Connection');

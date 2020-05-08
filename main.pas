@@ -6365,7 +6365,7 @@ type
   begin
   case encoding of
     E_PLAIN: result:=s;
-    E_B64: result:=base64encode(s);
+    E_B64: result:=b64utf8(s);
     E_ZIP:
       begin
       result:=zCompressStr(s, clMax);
@@ -6719,7 +6719,7 @@ var
       if p = 'login' then
       	begin
         if not anycharIn(':', t) then
-  	      t:=base64decode(t);
+  	      t:=decodeB64utf8(t);
   	    a.user:=chop(':',t);
 	      a.pwd:=t;
         end
