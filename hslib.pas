@@ -32,7 +32,7 @@ uses
   OverbyteIcsWSocket, classes, messages, winprocs, forms, extctrls, sysutils, contnrs, strUtils, winsock, inifiles, types;
 
 const
-  VERSION = '2.10.1';
+  VERSION = '2.11.0';
 
 type
   ThttpSrv=class;
@@ -125,7 +125,7 @@ type
     length: int64;          // multipart form-data length
     boundary,               // multipart form-data boundary
     header,                 // contextual header
-    data,                   // misc data
+    data: ansistring;       // misc data
     varname,                // post variable name
     filename: string;       // name of posted file
     mode: (PM_NONE, PM_URLENCODED, PM_MULTIPART);
@@ -1168,7 +1168,8 @@ procedure ThttpConn.processInputBuffer();
         { only about the data we are sure it doesn't overlap a possibly coming boundary }
         begin
         post.data:=chop(length(buffer)-length(post.boundary), 0, buffer);
-        if post.data > '' then tryNotify(HE_POST_MORE_FILE);
+        if post.data > ''
+          then tryNotify(HE_POST_MORE_FILE);
         end;
       break;
       end;
@@ -1202,8 +1203,8 @@ procedure ThttpConn.processInputBuffer();
       while l > '' do
         begin
         c:=chop(nonQuotedPos(';', l), l);
-        k:=trim(chop('=', c));
-        c:=ansiDequotedStr(c,'"');
+        k:=UTF8decode(trim(chop('=', c)));
+        c:=UTF8decode(ansiDequotedStr(c,'"'));
         if sameText(k, 'filename') then
           begin
           delete(c, 1, lastDelimiter('/\',c));
@@ -1355,18 +1356,20 @@ var
   s: string;
 begin
 if error <> 0 then exit;
-s:=sock.ReceiveStr();
+s:=sock.ReceiveStrA();
 inc(brecvd, length(s));
 inc(srv.brecvd, length(s));
-if (s = '') or dontFulFil then exit;
-if state = HCS_POSTING then inc(postDataReceived, length(s));
-buffer:=buffer+s;
-if length(buffer) > MAX_INPUT_BUFFER_LENGTH then
+if (s = '') or dontFulFil then
+  exit;
+if state = HCS_POSTING then
+  inc(postDataReceived, length(s));
+if length(buffer)+length(s) > MAX_INPUT_BUFFER_LENGTH then
   begin
   disconnect();
   try sock.Abort() except end; // please, brutally
   exit;
   end;
+buffer:=buffer+s;
 eventData:=s;
 notify(HE_GOT);
 processInputBuffer();

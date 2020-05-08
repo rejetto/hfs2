@@ -1122,7 +1122,6 @@ var
   stopAddingItems, queryingClose: boolean;
   port: string;
   defaultTpl: string;
-  tpl_help: string;
   lastWindowRect: Trect;
   dmBrowserTpl, filelistTpl: Ttpl;
   tplEditor: string;
@@ -4397,7 +4396,7 @@ try
       lastPath:=path;
       end;
     end;
-  trancheEnd:=length(files)-1; // after the for-loop, the variable seems to not be trustable
+  trancheEnd:=length(files)-1; // after the for-loop, the variable seems to not be reliable
   doTheTranche();
 finally ss.free end;
 end; // removeFilesFromComments
@@ -4712,7 +4711,7 @@ var
 
   procedure extractParams();
   var
-    s: ansistring;
+    s: string;
     i: integer;
   begin
   s:=url;
@@ -5586,7 +5585,8 @@ if assigned(conn) and (conn.getLockCount <> 1) then
 
 f:=NIL;
 data:=NIL;
-if assigned(conn) then data:=conn.data;
+if assigned(conn) then
+  data:=conn.data;
 if assigned(data) then
   data.lastActivityTime:=now();
 
@@ -5719,7 +5719,7 @@ case event of
     data.fileXferStart:=now();
     f:=findFileByURL(decodeURL(conn.request.url));
     data.lastFile:=f; // auto-freeing
-    data.uploadSrc:=optAnsi(tpl.utf8, conn.post.filename);
+    data.uploadSrc:=conn.post.filename;
     data.uploadFailed:='';
     if (f = NIL) or not accountAllowed(FA_UPLOAD, data, f) or not f.accessFor(data) then
       data.uploadFailed:=if_(f=NIL, 'Folder not found.', 'Not allowed.')
@@ -6311,6 +6311,12 @@ port:=was;
 if act then startServer();
 end; // changePort
 
+function b64utf8(const s:string):ansistring;
+begin result:=base64encode(UTF8encode(s)); end;
+
+function decodeB64utf8(const s:ansistring):string;
+begin result:=UTF8decode(base64decode(s)); end;
+
 function zCompressStr(const s: ansistring;  level:TCompressionLevel=clMax; type_:TzStreamType=zsZlib): ansistring;
 var
   src, dst: TMemoryStream;
@@ -6489,7 +6495,7 @@ result:='HFS '+VERSION+' - Build #'+VERSION_BUILD+CRLF
 +'custom-ip='+join(';',customIPs)+CRLF
 +'listen-on='+listenOn+CRLF
 +'external-ip-server='+customIPservice+CRLF
-+'dynamic-dns-updater='+base64encode(dyndns.url)+CRLF
++'dynamic-dns-updater='+b64utf8(dyndns.url)+CRLF
 +'dynamic-dns-user='+dyndns.user+CRLF
 +'dynamic-dns-host='+dyndns.host+CRLF
 +'search-better-ip='+yesno[searchbetteripChk.checked]+CRLF
@@ -6835,7 +6841,7 @@ while cfg > '' do
     if h = 'ip' then savedip:=l;
     if h = 'custom-ip' then customIPs:=split(';',l);
     if h = 'listen-on' then listenOn:=l;
-    if h = 'dynamic-dns-updater' then dyndns.url:=base64decode(l);
+    if h = 'dynamic-dns-updater' then dyndns.url:=decodeB64utf8(l);
     if h = 'dynamic-dns-user' then dyndns.user:=l;
     if h = 'dynamic-dns-host' then dyndns.host:=l;
     if h = 'login-realm' then loginRealm:=l;
@@ -9219,7 +9225,7 @@ f:=nodeToFile(node);
 commonFields:=TLV(FK_FLAGS, str_(f.flags))
     +TLV_NOT_EMPTY(FK_RESOURCE, f.resource)
     +TLV_NOT_EMPTY(FK_COMMENT, f.comment)
-    +if_(f.user>'', TLV(FK_USERPWD_UTF8, base64encode(f.user+':'+f.pwd)))
+    +if_(f.user>'', TLV(FK_USERPWD_UTF8, b64utf8(f.user+':'+f.pwd)))
     +TLV_NOT_EMPTY(FK_ACCOUNTS, join(';',f.accounts[FA_ACCESS]) )
     +TLV_NOT_EMPTY(FK_UPLOADACCOUNTS, join(';',f.accounts[FA_UPLOAD]))
     +TLV_NOT_EMPTY(FK_DELETEACCOUNTS, join(';',f.accounts[FA_DELETE]))
@@ -9380,7 +9386,7 @@ while not tlv.isOver() do
       end;
     FK_USERPWD_UTF8:
     	begin
-      s:=UTF8toString(base64decode(data));
+      s:=decodeB64utf8(data);
       f.user:=chop(':',s);
       f.pwd:=s;
       usersInVFS.track(f.user, f.pwd);
@@ -12132,7 +12138,7 @@ while current > '' do
   if defV = v then continue;
   if k = 'dynamic-dns-updater' then
     begin // remove login data
-    v:=base64decode(v);
+    v:=decodeB64utf8(v);
     chop('//',v);
     v:=chop('/',v);
     if ansiContainsStr(v, '@') then chop('@',v);
@@ -12411,7 +12417,6 @@ if fileExists('default.tpl') then
   defaultTpl:=loadTextfile('default.tpl')
 else
   defaultTpl:=getRes('defaultTpl');
-tpl_help:=getRes('tplHlp');
 tpl:=Ttpl.create();
 defSorting:='name';
 dmBrowserTpl:=Ttpl.create(getRes('dmBrowserTpl'));
@@ -12428,7 +12433,7 @@ logMaxLines:=2000;
 trayShows:='downloads';
 flashOn:='download';
 forwardedMask:='127.0.0.1';
-runningOnRemovable:=DRIVE_REMOVABLE = GetDriveTypeA(PansiChar(ansistring(exePath[1]+':\')));
+runningOnRemovable:=DRIVE_REMOVABLE = GetDriveType(Pchar(exePath[1]+':\'));
 etags.values['exe']:=strMD5(dateToHTTP(getMtimeUTC(paramStr(0))));
 
 dll:=GetModuleHandle('kernel32.dll');

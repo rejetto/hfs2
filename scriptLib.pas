@@ -2045,15 +2045,8 @@ try
       else
         result:=intToStr(parI(0)+random(1+parI(1)-parI(0)));
 
-    if name = 'force ansi' then
-      if satisfied(md.tpl) and md.tpl.utf8 then
-        result:=noMacrosAllowed(UTF8toAnsi(p))
-      else
-        result:=p;
-
-    if name = 'maybe utf8' then // pre-unicode legacy
-      if satisfied(md.tpl) then
-        result:=p;
+    if (name = 'force ansi') or (name = 'maybe utf8') then // pre-unicode legacy
+      result:=p;
 
     if name = 'after the list' then
       if md.afterTheList then
