@@ -29,10 +29,11 @@ uses
   Windows, Messages, SysUtils, Forms, Menus, Graphics, Controls, ComCtrls, Dialogs, math,
   registry, ExtCtrls, shellapi, ImgList, ToolWin, StdCtrls, strutils, AppEvnts, types,
   winsock, clipbrd, shlobj, activex, Buttons, FileCtrl, dateutils, iniFiles, Classes,
+  System.ImageList, system.Generics.Collections,
   // 3rd part libs. ensure you have all of these, the same version reported in dev-notes.txt
   OverbyteIcsWSocket, OverbyteIcsHttpProt, OverbyteicsMD5, GIFimage, regexpr, OverbyteIcsZLibHigh, OverbyteIcsZLibObj,
   // rejetto libs
-  HSlib, traylib, monoLib, progFrmLib, classesLib, System.ImageList;
+  HSlib, traylib, monoLib, progFrmLib, classesLib;
 
 const
   VERSION = '2.4rc5';
@@ -290,6 +291,19 @@ type
     size: int64;
     end;
 
+  Tsession = class
+    vars: THashedStringList;
+    created, ttl, expires: Tdatetime;
+  public
+    id: string;
+    constructor create(const sid:string='');
+    destructor Destroy; override;
+    procedure setVar(const k,v:string);
+    function getVar(const k:string):string;
+    procedure keepAlive();
+    end;
+  Tsessions = Tdictionary<string,Tsession>;
+
   TconnData = class  // data associated to a client connection
   private
     FlastFile: Tfile;
@@ -337,8 +351,7 @@ type
       bytes: integer;
       since: Tdatetime;
       end;
-    sessionID: string;
-    session,
+    session: Tsession;
     vars, // defined by {.set.}
     urlvars,  // as $_GET in php
     postVars  // as $_POST in php
@@ -352,8 +365,6 @@ type
     property lastFile:Tfile read FlastFile write setLastFile;
     constructor create(conn:ThttpConn);
     destructor Destroy; override;
-    function sessionGet(k:string):string;
-    procedure sessionSet(k, v:string);
     procedure disconnect(reason:string);
     procedure logout();
     end; // Tconndata
@@ -1083,7 +1094,7 @@ uses
 var
   globalLimiter: TspeedLimiter;
   ip2obj: THashedStringList;
-  sessions: THashedStringList;
+  sessions: Tsessions;
   addToFolder: string; // default folder where to add items from the command line
   lastDialogFolder: string;  // stores last for open dialog, to make it persistent
   clock: integer;       // program ticks (tenths of second)
@@ -2257,6 +2268,53 @@ if assigned(mainFrm) then
   mainfrm.visible:=userInteraction.bakVisible;
 end; // reenableUserInteraction
 
+
+function getNewSID():string;
+begin result:=replaceStr(base64encode(str_(now())+str_(random())), '=','') end;
+
+constructor Tsession.create(const sid:string='');
+begin
+id:=sid;
+if id = '' then
+  id:=getNewSID();
+sessions.Add(id, self);
+created:=now();
+ttl:=1; // days
+keepAlive();
+end;
+
+destructor Tsession.Destroy;
+var
+  o: Tobject;
+  cd: TconnData;
+begin
+for o in srv.conns do
+  begin
+  cd:=ThttpConn(o).data;
+  if cd.session = self then
+    cd.session:=NIL;
+  end;
+sessions.remove(id);
+freeAndNIL(vars);
+end;
+
+procedure Tsession.keepAlive();
+begin expires:=now() + ttl end;
+
+function Tsession.getVar(const k:string):string;
+begin
+try result:=vars.values[k];
+except result:=''
+  end;
+end; // sessionGet
+
+procedure Tsession.setVar(const k, v:string);
+begin
+if vars= NIL then
+  vars:=THashedStringList.create;
+vars.addPair(k,v);
+end;
+
 constructor TconnData.create(conn:ThttpConn);
 begin
 conn.data:=self;
@@ -2286,7 +2344,7 @@ freeAndNIL(postVars);
 freeAndNIL(urlvars);
 freeAndNIL(tplCounters);
 freeAndNIL(limiter);
-// do NOT free "tpl". It is just a reference to cached tpl. It will be freed only at quit time. 
+// do NOT free "tpl". It is just a reference to cached tpl. It will be freed only at quit time.
 if assigned(f) then
   begin
   closeFile(f^);
@@ -2304,28 +2362,10 @@ end; // disconnect
 procedure TconnData.logout();
 begin
 freeAndNIL(session);
-sessions.delete(sessions.IndexOf(sessionID));
-sessionID:='';
 usr:='';
 pwd:='';
 conn.delCookie(SESSION_COOKIE);
 end; // logout
-
-function Tconndata.sessionGet(k:string):string;
-begin
-try result:=session.values[k];
-except result:='' end;
-end; // sessionGet
-
-procedure Tconndata.sessionSet(k, v:string);
-begin
-if session = NIL then
-  begin
-  session:=THashedStringList.create;
-  sessions.addObject(sessionID, session);
-  end;
-session.values[k]:=v;
-end; // sessionSet
 
 // we'll automatically free and previous temporary object
 procedure TconnData.setLastFile(f:Tfile);
@@ -4479,9 +4519,6 @@ else if tplLast <> 0 then
   end;
 end; // keepTplUpdated
 
-function getNewSID():string;
-begin result:=replaceStr(base64encode(str_(now())+str_(random())), '=','') end;
-
 procedure setNewTplFile(fn:string);
 begin
 tplFilename:=fn;
@@ -4825,21 +4862,29 @@ var
   end;
 
   procedure sessionSetup();
+  var
+    sid: string;
   begin
-  if (data = NIL) or assigned(data.session) then exit;
-  data.sessionID:=conn.getCookie(SESSION_COOKIE);
-  if data.sessionID = '' then
+  if data = NIL then
+    exit;
+  if data.session = NIL then
     begin
-    data.sessionID:=getNewSID();
-    conn.setCookie(SESSION_COOKIE, data.sessionID, ['path','/'], 'HttpOnly'); // the session is site-wide, even if this request was related to a folder
-    end
-  else
-    try data.session:=sessions.objects[sessions.indexOf(data.sessionID)] as ThashedStringList
-    except end;
+    sid:=conn.getCookie(SESSION_COOKIE);
+    if sid = '' then
+      begin
+      data.session:=Tsession.create();
+      conn.setCookie(SESSION_COOKIE, data.session.id, ['path','/'], 'HttpOnly'); // the session is site-wide, even if this request was related to a folder
+      end
+    else
+      try data.session:=sessions[sid]
+      except data.session:=Tsession.create(sid) // probably expired
+        end;
+    end;
+  data.session.keepAlive();
   if data.usr = '' then
     begin
-    data.usr:=data.sessionGet('user');
-    data.pwd:=data.sessionGet('password');
+    data.usr:=data.session.getVar('user');
+    data.pwd:=data.session.getVar('password');
     end;
   if (data.usr = '') and (conn.request.user > '') then
     begin
@@ -5229,17 +5274,17 @@ var
         In such case we would not be able to calculate pwd+sessionID because we'd had no clear pwd.
         By relying on md5(pwd) instead of pwd, we will avoid such problem. }
       s:=data.postVars.values['__PASSWORD_MD5'];
-      if (s > '') and (s = strMD5(strMD5(data.account.pwd)+data.sessionID))
-          or (data.postVars.values['__PASSWORD'] = data.account.pwd) then
+      if (s > '') and (s = strMD5(strMD5(data.account.pwd)+data.session.id))
+      or (data.postVars.values['__PASSWORD'] = data.account.pwd) then
         begin
         s:='ok';
         data.pwd:=data.account.pwd;
-        data.sessionSet('user', data.usr);
-        data.sessionSet('password', data.pwd);
+        data.session.setVar('user', data.usr);
+        data.session.setVar('password', data.pwd);
         end
       else
         begin
-        s:='bad password';
+        s:='bad password'; //TODO shouldn't this change http code?
         data.account:=NIL;
         data.usr:='';
         end;
@@ -7740,7 +7785,12 @@ var
   end; // every10minutes
 
   procedure everyMinute();
+  var
+    sess: Tsession;
   begin
+  for sess in sessions.values do
+    if now_ > sess.expires then
+      sess.free;
   if updateDailyChk.Checked then
     autoCheckUpdates();
   // purge icons older than 5 minutes, because sometimes icons change
@@ -12439,7 +12489,7 @@ filelistTpl:=Ttpl.create(getRes('filelistTpl'));
 globalLimiter:=TspeedLimiter.create();
 ip2obj:=THashedStringList.create();
 etags:=THashedStringList.create();
-sessions:=THashedStringList.create();
+sessions:=Tsessions.create();
 ipsEverConnected:=THashedStringList.create();
 ipsEverConnected.sorted:=TRUE;
 ipsEverConnected.duplicates:=dupIgnore;
