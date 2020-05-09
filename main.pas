@@ -1335,7 +1335,7 @@ function loadDescriptionFile(fn:string):string;
 begin
 result:=loadTextFile(fn);
 if result = '' then
-  result:=loadTextFile(fn+'\descript.ion');
+  result:=loadTextFile(fn+'\'+DESCRIPT_ION);
 if (result > '') and mainfrm.oemForIonChk.checked then
   OEMToCharBuff(@result[1], @result[1], length(result)); //to test
 end; // loadDescriptionFile

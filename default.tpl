@@ -494,7 +494,7 @@ z-index:1; /* without this .item-menu will be over*/ }
 "speed":"%smart-speed%"
 },
 {.if| {.length|%user%.} |{:
-	{.set item|{.force ansi|%folder%%item-name%.}|comment={.!uploaded by.} %user%.}
+	{.set item|%folder%%item-name%|comment={.!uploaded by.} %user%.}
 :}.}
 
 [upload-failed]
@@ -534,7 +534,7 @@ z-index:1; /* without this .item-menu will be over*/ }
 {.set|x|{.postvar|name.}.}
 {.break|if={.pos|\|var=x.}{.pos|/|var=x.}|result=forbidden.}
 {.break|if={.not|{.can mkdir.}.}|result=not authorized.}
-{.set|x|{.force ansi|%folder%{.^x.}.}.}
+{.set|x|%folder%{.^x.}.}
 {.break|if={.exists|{.^x.}.}|result=exists.}
 {.break|if={.not|{.length|{.mkdir|{.^x.}.}.}.}|result=failed.}
 {.add to log|{.!User.} %user% {.!created folder.} "{.^x.}".}
@@ -545,9 +545,9 @@ z-index:1; /* without this .item-menu will be over*/ }
 {.break|if={.not|{.can rename.}.}|result=forbidden.}
 {.break|if={.is file protected|{.postvar|from.}.}|result=forbidden.}
 {.break|if={.is file protected|{.postvar|to.}.}|result=forbidden.}
-{.set|x|{.force ansi|%folder%{.postvar|from.}.}.}
-{.set|yn|{.force ansi|{.postvar|to.}.}.}
-{.set|y|{.force ansi|%folder%.}{.^yn.}.}
+{.set|x|%folder%{.postvar|from.}.}
+{.set|yn|{.postvar|to.}.}
+{.set|y|%folder%{.^yn.}.}
 {.break|if={.not|{.exists|{.^x.}.}.}|result=not found.}
 {.break|if={.exists|{.^y.}.}|result=exists.}
 {.set|comment| {.get item|{.^x.}|comment.} .}
@@ -561,12 +561,12 @@ z-index:1; /* without this .item-menu will be over*/ }
 
 [ajax.move|no log]
 {.check session.}
-{.set|dst|{.force ansi|{.postvar|dst.}.}.}
+{.set|dst|{.postvar|dst.}.}
 {.break|if={.not|{.and|{.can move.}|{.get|can delete.}|{.get|can upload|path={.^dst.}.}/and.}.} |result=forbidden.}
 {.set|log|{.!Moving items to.} {.^dst.}.}
-{.for each|fn|{.replace|:|{.no pipe||.}|{.force ansi|{.postvar|files.}.}.}|{:
+{.for each|fn|{.replace|:|{.no pipe||.}|{.postvar|files.}.}|{:
     {.break|if={.is file protected|var=fn.}|result=forbidden.}
-    {.set|x|{.force ansi|%folder%.}{.^fn.}.}
+    {.set|x|%folder%{.^fn.}.}
     {.set|y|{.^dst.}/{.^fn.}.}
     {.if not |{.exists|{.^x.}.}|{.^x.}: {.!not found.}|{:
         {.if|{.exists|{.^y.}.}|{.^y.}: {.!already exists.}|{:
@@ -578,7 +578,7 @@ z-index:1; /* without this .item-menu will be over*/ }
                 {.set item|{.^y.}|comment={.^comment.}.}
             :} | {:
                 {.set|log|{.chr|13.}{.^fn.} (failed)|mode=append.}
-                {.maybe utf8|{.^fn.}.}: {.!not moved.}
+                {.^fn.}: {.!not moved.}
             :}/if.}
         :}/if.}
     :}.}
@@ -591,14 +591,14 @@ z-index:1; /* without this .item-menu will be over*/ }
 {.break|if={.not|{.can comment.}.} |result=forbidden.}
 {.for each|fn|{.replace|:|{.no pipe||.}|{.postvar|files.}.}|{:
      {.break|if={.is file protected|var=fn.}|result=forbidden.}
-     {.set item|{.force ansi|%folder%{.^fn.}.}|comment={.force ansi|{.postvar|text.}.}.}
+     {.set item|%folder%{.^fn.}|comment={.postvar|text.}.}
 :}.}
 {.pipe|ok.}
 
 [ajax.changepwd|no log]
 {.check session.}
 {.break|if={.not|{.can change pwd.}.} |result=forbidden.}
-{.if|{.length|{.set account||password={.force ansi|{.postvar|new.}.}.}/length.}|ok|failed.}
+{.if|{.length|{.set account||password={.postvar|new.}.}/length.}|ok|failed.}
 
 [special:alias]
 check session=if|{.{.cookie|HFS_SID_.} != {.postvar|token.}.}|{:{.cookie|HFS_SID_|value=|expires=-1.} {.break|result=bad session.}:}

@@ -215,8 +215,6 @@ function getTill(ss, s:string; included:boolean=FALSE):string; overload;
 function getTill(i:integer; s:string):string; overload;
 function singleLine(s:string):boolean;
 function poss(chars:TcharSet; s:string; ofs:integer=1):integer;
-function optAnsi(bool:boolean; s:string):string;
-function utf8Test(s:string):boolean;
 function jsEncode(s, chars:string):string;
 function nonEmptyConcat(pre,s:string; post:string=''):string;
 function first(a,b:integer):integer; overload;
@@ -933,7 +931,9 @@ end;
 function loadTextFile(fn:string):string;
 begin
 try result:=IOUtils.TFile.ReadAllText(fn)
-except result:='' end
+except result:='' end;
+try result:=UTF8decode(result)
+except end;
 end;
 
 function loadFile(fn:string; from:int64=0; size:int64=-1):ansistring;
@@ -2043,9 +2043,6 @@ setLength(result, 1000);
 setLength(result, getTempPath(length(result), @result[1]));
 end; // getTempDir
 
-function optAnsi(bool:boolean; s:string):string;
-begin if bool then result:=UTF8toAnsi(s) else result:=s end;
-
 function blend(from,to_:Tcolor; perc:real):Tcolor;
 var
   i: integer;
@@ -2082,9 +2079,6 @@ end; // jsEncode
 
 function holdingKey(key:integer):boolean;
 begin result:=getAsyncKeyState(key) and $8000 <> 0 end;
-
-function utf8Test(s:string):boolean;
-begin result:=ansiContainsText(s, 'charset=UTF-8') end;
 
 // concat pre+s+post only if s is non empty
 function nonEmptyConcat(pre, s:string; post:string=''):string;
@@ -2414,7 +2408,7 @@ l:=length(s);
 while i <= l do
   begin
   p:=posEx('&',s,i);
-  t:=decodeURL(replaceStr(substr(s,i,if_(p=0,0,p-1)), '+',' '), FALSE); // TODO should we instead try to decode utf-8? doing so may affect calls to {.force ansi.} in the template
+  t:=decodeURL(replaceStr(substr(s,i,if_(p=0,0,p-1)), '+',' ')); // TODO should we instead try to decode utf-8? doing so may affect calls to {.force ansi.} in the template
   sl.add(t);
   if p = 0 then exit;
   i:=p+1;

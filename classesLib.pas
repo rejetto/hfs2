@@ -145,14 +145,12 @@ type
     last: record section:string; idx:integer; end; // cache for getIdx()
     fileExts: TStringDynArray;
     strTable: THashedStringList;
-    fUTF8: boolean;
     fOver: Ttpl;
     function  getIdx(section:string):integer;
     function  getTxt(section:string):string;
     function  newSection(section:string):PtplSection;
     procedure fromString(txt:string);
     procedure setOver(v:Ttpl);
-    procedure updateUTF8();
   public
     onChange: TNotifyEvent;
     sections: array of TtplSection;
@@ -160,7 +158,6 @@ type
     destructor Destroy; override;
     property txt[section:string]:string read getTxt; default;
     property fullText:string read src write fromString;
-    property utf8:boolean read fUTF8;
     property over:Ttpl read fOver write setOver;
     function sectionExist(section:string):boolean;
     function getTxtByExt(fileExt:string):string;
@@ -1109,7 +1106,6 @@ first:=TRUE;
   ptxt:=succ(ansiStrPos(bos, #10)); // get to the end of line (and then beyond)
   first:=FALSE;
   until ptxt = NIL;
-updateUTF8();
 if assigned(onChange) then
   onChange(self);
 end; // appendString
@@ -1117,11 +1113,7 @@ end; // appendString
 procedure Ttpl.setOver(v:Ttpl);
 begin
 fOver:=v;
-updateUTF8();
 end; // setOver
-
-procedure Ttpl.updateUTF8();
-begin fUTF8:=assigned(over) and over.utf8 or utf8test(fullText) end;
 
 function Ttpl.getSections():TStringDynArray;
 var
