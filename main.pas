@@ -355,6 +355,7 @@ type
     function sessionGet(k:string):string;
     procedure sessionSet(k, v:string);
     procedure disconnect(reason:string);
+    procedure logout();
     end; // Tconndata
 
   Tautosave = record
@@ -2299,6 +2300,16 @@ begin
 disconnectReason:=reason;
 conn.disconnect();
 end; // disconnect
+
+procedure TconnData.logout();
+begin
+freeAndNIL(session);
+sessions.delete(sessions.IndexOf(sessionID));
+sessionID:='';
+usr:='';
+pwd:='';
+conn.delCookie(SESSION_COOKIE);
+end; // logout
 
 function Tconndata.sessionGet(k:string):string;
 begin
@@ -4469,7 +4480,7 @@ else if tplLast <> 0 then
 end; // keepTplUpdated
 
 function getNewSID():string;
-begin result:=floatToStr(random()) end;
+begin result:=replaceStr(base64encode(str_(now())+str_(random())), '=','') end;
 
 procedure setNewTplFile(fn:string);
 begin
@@ -5206,8 +5217,7 @@ var
       if s = '' then // logout
         begin
         s:='ok';
-        data.usr:='';
-        data.pwd:='';
+        data.logout();
         end
       else
         s:='username not found'

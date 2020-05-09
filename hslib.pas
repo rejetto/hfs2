@@ -213,6 +213,7 @@ type
     function  getHeader(h:string):string;  // extract the value associated to the specified header field
     function  getCookie(k:string):string;
     procedure setCookie(k, v:string; pairs:array of string; extra:string='');
+    procedure delCookie(k:string);
     function getBuffer():ansistring;
     function  initInputStream():boolean;
     property address:string read P_address;      // other peer ip address
@@ -1015,6 +1016,9 @@ if request.cookies = NIL then
   end;
 result:=decodeURL(ansistring(trim(request.cookies.values[k])));
 end; // getCookie
+
+procedure ThttpConn.delCookie(k:string);
+begin setCookie(k,'', ['expires','Thu, 01-Jan-70 00:00:01 GMT']) end;
 
 procedure ThttpConn.setCookie(k, v:string; pairs:array of string; extra:string='');
 var
