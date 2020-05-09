@@ -447,7 +447,7 @@ end; // nonQuotedPos
 // consider using TBase64Encoding.Base64.Encode() in unit netencoding
 function base64encode(s:ansistring):ansistring;
 const
-  TABLE='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+  TABLE:ansistring='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 type
   Ttriple=array [0..2] of byte;
 var
@@ -464,9 +464,15 @@ for i:=1 to length(s) div 3 do
     +TABLE[1+(p[2] and 63)];
   inc(p);
   end;
-if length(s) mod 3 > 0 then
-	result:=result+TABLE[1+p[0] shr 2]+TABLE[1+(p[0] and 3) shl 4+p[1] shr 4]
-    +ifThen(length(s) mod 3=1,'==',TABLE[1+(p[1] and 15) shl 2+p[2] shr 6]+'=');
+if length(s) mod 3 = 0 then
+  exit;
+result:=result
+  +TABLE[1+p[0] shr 2]
+  +TABLE[1+(p[0] and 3) shl 4+p[1] shr 4];
+if length(s) mod 3=1 then
+  result:=result+'=='
+else
+  result:=result+TABLE[1+(p[1] and 15) shl 2+p[2] shr 6]+'=';
 end; // base64encode
 
 function base64decode(s:ansistring):ansistring;

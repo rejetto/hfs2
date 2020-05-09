@@ -77,7 +77,7 @@ type
   public
     flist: array of record
       src,          // full path of the file on the disk
-      dst: ansistring;  // full path of the file in the archive
+      dst: string;  // full path of the file in the archive
       firstByte,    // offset of the file inside the archive
       mtime,
       size: int64;
@@ -87,7 +87,7 @@ type
 
     constructor create;
     destructor Destroy; override;
-    function addFile(src:ansistring; dst:ansistring=''; data:Tobject=NIL):boolean; virtual;
+    function addFile(src:string; dst:string=''; data:Tobject=NIL):boolean; virtual;
     function count():integer;
     procedure reset(); virtual;
     property totalSize:int64 read getTotal;
@@ -417,7 +417,7 @@ if cachedTotal < 0 then calculate();
 result:=cachedTotal;
 end; // getTotal
 
-function TarchiveStream.addFile(src:ansistring; dst:ansistring=''; data:Tobject=NIL):boolean;
+function TarchiveStream.addFile(src:string; dst:string=''; data:Tobject=NIL):boolean;
 
   function getMtime(fh:Thandle):int64;
   var
@@ -565,10 +565,13 @@ const
   PERM = '0100777'#0'0000000'#0'0000000'#0; // file mode, uid, gid
 var
   fn, s, pre: ansistring;
+  ufn: string;
 begin
-fn:=ansistring(replaceStr(flist[cur].dst,'\','/'));
+ufn:=replaceStr(flist[cur].dst,'\','/');
 if fileNamesOEM then
-  CharToOem(pWideChar(string(fn)), pAnsiChar(fn));
+  CharToOem(pWideChar(ufn), pAnsiChar(fn))
+else
+  fn:=UTF8encode(ufn);
 pre:='';
 if length(fn) >= 100 then
   begin
@@ -598,7 +601,8 @@ begin raise EWriteError.Create('write unsupproted') end;
 function gap512(i:int64):word; inline;
 begin
 result:=i and 511;
-if result > 0 then result:=512-result;
+if result > 0 then
+  result:=512-result;
 end; // gap512
 
 procedure TtarStream.padInit(full:boolean=FALSE);
@@ -970,7 +974,7 @@ if (i < 0) and assigned(over) then
 lastExt.section:=fileExt;
 lastExt.idx:=i;
 if i < 0 then exit;
-i:=int_(fileExts[i+1]);
+i:=int_(ansistring(fileExts[i+1]));
 lastExt.idx:=i;
 result:=sections[i].txt;
 end; // getTxtByExt

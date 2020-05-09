@@ -4806,8 +4806,11 @@ var
   end; // getUploadDestinationFileName
 
   procedure addContentDisposition(attach:boolean=TRUE);
+  var s:ansistring;
   begin
-  conn.addHeader( 'Content-Disposition: '+if_(attach, 'attachment; ')+'filename*=UTF-8''"'+UTF8encode(data.lastFN)+'";');
+  s:=HSlib.encodeURL(data.lastFN);
+  conn.addHeader( 'Content-Disposition: '+if_(attach, 'attachment; ')
+    +'filename*=UTF-8'''''+s+'; filename='+s);
   end;
 
   procedure sessionSetup();
@@ -4890,13 +4893,14 @@ var
       if sameText('selection', data.postvars.names[i]) then
         begin
         selection:=TRUE;
-        s:=decodeURL(getTill('#', data.postvars.valueFromIndex[i])); // omit #anchors
+        s:=getTill('#', data.postvars.valueFromIndex[i]); // omit #anchors
         if dirCrossing(s) then continue;
         ft:=findFilebyURL(s, f);
         if ft = NIL then continue;
 
         try
-          if not ft.accessFor(data) then continue;
+          if not ft.accessFor(data) then
+            continue;
           // case folder
           if ft.isFolder() then
             begin
@@ -4904,7 +4908,8 @@ var
             continue;
             end;
           // case file
-          if not fileExists(ft.resource) then continue;
+          if not fileExists(ft.resource) then
+            continue;
           if noFolders then
             s:=substr(s, lastDelimiter('\/', s)+1);
           tar.addFile(ft.resource, s);
