@@ -929,12 +929,7 @@ result:=(fn > '')
 end;
 
 function loadTextFile(fn:string):string;
-begin
-try result:=IOUtils.TFile.ReadAllText(fn)
-except result:='' end;
-try result:=UTF8decode(result)
-except end;
-end;
+begin result:=UTF8decode(loadfile(fn)) end;
 
 function loadFile(fn:string; from:int64=0; size:int64=-1):ansistring;
 var
