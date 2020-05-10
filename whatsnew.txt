@@ -10,6 +10,7 @@ AV  access violation
 VER 2.4
 propaganda
   New mobile-friendly template
+  Unicode support
 /propaganda
 + new default template
 + {.set item|name.}
@@ -22,7 +23,7 @@ propaganda
 - fixed comments files were not updated upon deletion of files
 - fixed "requesting" forever with empty cookies http://rejetto.com/forum/index.php?topic=13112.0
 - fixed double "Content-Length" header on compressed pages
-- fixed log text base color not matching system settings http://rejetto.com/forum/index.php?topic=13233.0 
+- fixed log text base color not matching system settings http://rejetto.com/forum/index.php?topic=13233.0
 
 VER 2.3m
 propaganda

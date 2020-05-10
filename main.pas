@@ -31,7 +31,7 @@ uses
   winsock, clipbrd, shlobj, activex, Buttons, FileCtrl, dateutils, iniFiles, Classes,
   System.ImageList, system.Generics.Collections,
   // 3rd part libs. ensure you have all of these, the same version reported in dev-notes.txt
-  OverbyteIcsWSocket, OverbyteIcsHttpProt, OverbyteicsMD5, GIFimage, regexpr, OverbyteIcsZLibHigh, OverbyteIcsZLibObj,
+  OverbyteIcsWSocket, OverbyteIcsHttpProt, GIFimage, regexpr, OverbyteIcsZLibHigh, OverbyteIcsZLibObj,
   // rejetto libs
   HSlib, traylib, monoLib, progFrmLib, classesLib;
 
@@ -1088,7 +1088,7 @@ implementation
 
 uses
   newuserpassDlg, optionsDlg, utilLib, folderKindDlg, shellExtDlg, diffDlg, ipsEverDlg, parserLib, MMsystem,
-  purgeDlg, filepropDlg, runscriptDlg, scriptLib;
+  purgeDlg, filepropDlg, runscriptDlg, scriptLib, System.Hash;
 
 // global variables
 var
@@ -1936,6 +1936,12 @@ while i < srv.conns.count do
   end;
 result:=length(ips);
 end; // countIPs
+
+function strSHA256(s:string):string;
+begin result:=THashSHA2.GetHashString(s) end;
+
+function strMD5(s:string):string;
+begin result:=THashMD5.GetHashString(s) end;
 
 function idx_img2ico(i:integer):integer;
 begin
@@ -3374,30 +3380,24 @@ end; // banAddress
 function createFingerprint(fn:string):string;
 var
   fs: Tfilestream;
-  digest: TMD5Digest;
-  context: TMD5Context;
+  md5: THashMD5;
   buf: array [1..32*1024] of byte;
-  i: integer;
+  n: integer;
 begin
-result:='';
+md5.Reset();
 fs:=TfileStream.create(fn, fmOpenRead+fmShareDenyWrite);
-for i:=0 to 15 do byte(digest[i]):=succ(i);
-MD5init(context);
 try
   repeat
-  i:=fs.Read(buf, sizeof(buf));
-  MD5updateBuffer(context, @buf, i);
+  n:=fs.Read(buf, sizeof(buf));
+  md5.update(buf, n);
   if not progFrm.visible then continue;
   progFrm.progress:=safeDiv(0.0+fs.position, fs.size);
   application.processMessages();
   if progFrm.cancelRequested then exit;
-  until i < sizeof(buf);
-finally
-  fs.free;
-  MD5final(digest, context);
-  for i:=0 to 15 do
-    result:=result+intToHex(byte(digest[i]), 2);
+  until n < sizeof(buf);
+finally fs.free
   end;
+result:=md5.HashAsString();
 end; // createFingerprint
 
 function uptimestr():string;
@@ -5167,6 +5167,15 @@ var
     ipsEverConnected.add(data.address);
     end; // addNewAddress
 
+  type
+    ThashFunc = function(s:string):string;
+
+    function goodPassword(s:string; func:ThashFunc):boolean;
+    begin
+    s:=data.postVars.values[s];
+    result:=(s > '') and (s = func(func(data.account.pwd)+data.session.id))
+    end;
+
   var
     b: boolean;
     s: string;
@@ -5269,12 +5278,12 @@ var
     else
       begin
       data.usr:=s;
-      { I opted to use double md5 for this authentication method so that in the
-        future we may make this work even if we store hashed password on the server.
-        In such case we would not be able to calculate pwd+sessionID because we'd had no clear pwd.
-        By relying on md5(pwd) instead of pwd, we will avoid such problem. }
-      s:=data.postVars.values['__PASSWORD_MD5'];
-      if (s > '') and (s = strMD5(strMD5(data.account.pwd)+data.session.id))
+      { I opted to use double hashing for this authentication method so that in the
+        future this may work even if we stored hashed password on the server,
+        thus being unable to calculate hash(pwd+sessionID).
+        By relying on hash(pwd) instead of pwd we avoid such problem. }
+      if goodPassword('__PASSWORD_SHA256', strSHA256)
+      or goodPassword('__PASSWORD_MD5', strMD5)
       or (data.postVars.values['__PASSWORD'] = data.account.pwd) then
         begin
         s:='ok';

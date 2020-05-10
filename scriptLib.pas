@@ -1950,9 +1950,9 @@ try
     if name = 'base64decode' then
       result:=base64decode(p);
     if name = 'md5' then
-        result:=strMD5(p);
+      result:=strMD5(p);
     if name = 'sha1' then
-        result:=SHA1toHex(sha1OfStr(p));
+      result:=SHA1toHex(sha1OfStr(p));
 
     if name = 'vfs select' then
       if pars.count = 0 then
