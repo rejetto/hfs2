@@ -286,6 +286,7 @@ object mainFrm: TmainFrm
           AutoSize = True
           BevelOuter = bvNone
           TabOrder = 1
+          ExplicitLeft = 204
           object collapsedPnl: TPanel
             Left = 0
             Top = 0
@@ -523,6 +524,7 @@ object mainFrm: TmainFrm
                 Max = 30000
                 TabOrder = 1
                 OnClick = logUpDownClick
+                ExplicitLeft = 151
               end
             end
           end
