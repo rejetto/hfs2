@@ -160,7 +160,7 @@ end;
 procedure TfilepropFrm.FormKeyPress(Sender: TObject; var Key: Char);
 begin
 if pages.focused then
-  if key in ['1'..'9'] then
+  if charInSet(key, ['1'..'9']) then
     try pages.TabIndex:=ord(key)-ord('0')-1
     except end;
 end;

@@ -29,7 +29,7 @@ unit HSlib;
 interface
 
 uses
-  OverbyteIcsWSocket, classes, messages, winprocs, forms, extctrls, sysutils, contnrs, strUtils, winsock, inifiles, types;
+  OverbyteIcsWSocket, classes, messages, winprocs, forms, extctrls, sysutils, system.contnrs, strUtils, winsock, inifiles, types;
 
 const
   VERSION = '2.11.0';
@@ -105,9 +105,9 @@ type
     bodyFile: string;
     bodyStream: Tstream;   // note: the stream is automatically freed 
     firstByte, lastByte: int64;  // body interval for partial replies (206)
-    realm: ansistring;   // this will appear in the authentication dialog
-    url: ansistring;     // used for redirections
-    reason: ansistring;  // customized reason phrase
+    realm,           // this will appear in the authentication dialog
+    reason,         // customized reason phrase
+    url: string;     // used for redirections
     resumeForbidden: boolean;
     end;
 
@@ -208,9 +208,10 @@ type
     destructor Destroy; override;
     procedure disconnect();
     procedure addHeader(s:ansistring; overwrite:boolean=TRUE); // set an additional header line. If overwrite=false will always append.
-    function  setHeaderIfNone(s:string):boolean; // set header if not already existing
+    function  setHeaderIfNone(s:ansistring):boolean; // set header if not already existing
     procedure removeHeader(name:ansistring);
-    function  getHeader(h:string):string;  // extract the value associated to the specified header field
+    function  getHeader(h:ansistring):string;  // extract the value associated to the specified header field
+    function  getHeaderA(h:ansistring):ansistring;  // extract the value associated to the specified header field
     function  getCookie(k:string):string;
     procedure setCookie(k, v:string; pairs:array of string; extra:string='');
     procedure delCookie(k:string);
@@ -310,7 +311,7 @@ function chopLine(var s:string):string; overload;
 // decode/decode url
 function decodeURL(url:ansistring; utf8:boolean=TRUE):string;
 function encodeURL(url:string; nonascii:boolean=TRUE; spaces:boolean=TRUE;
-  unicode:boolean=FALSE):string;
+  htmlEncoding:boolean=FALSE):string;
 // returns true if address is not suitable for the internet
 function isLocalIP(ip:string):boolean;
 // base64 encoding
@@ -330,7 +331,7 @@ function ipos(ss, s:string; ofs:integer=1):integer; overload;
 implementation
 
 uses
-  Windows;
+  Windows, ansistrings;
 const
   CRLF = #13#10;
   MAX_REQUEST_LENGTH = 64*1024;
@@ -477,6 +478,15 @@ else
 end; // base64encode
 
 function base64decode(s:ansistring):ansistring;
+
+  function if_(cond:boolean; c:ansichar):ansistring;
+  begin
+  if cond then
+    result:=c
+  else
+    result:=''
+  end;
+
 const
   TABLE:array[#43..#122] of byte=(
   	62,0,0,0,63,52,53,54,55,56,57,58,59,60,61,0,0,0,0,0,0,0,0,1,2,3,4,5,6,7,
@@ -484,15 +494,18 @@ const
     29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51);
 var
   i: integer;
+  p1, p2: byte;
 begin
 result:='';
 i:=1;
 while i <= length(s) do
   begin
+  p1:=TABLE[s[i+1]];
+  p2:=TABLE[s[i+2]];
 	result:=result
-  	+ansichar(TABLE[s[i]] shl 2+TABLE[s[i+1]] shr 4)
-    +ifThen(s[i+2]<>'=', ansichar(TABLE[s[i+1]] shl 4+TABLE[s[i+2]] shr 2))
-    +ifThen(s[i+3]<>'=', ansichar(TABLE[s[i+2]] shl 6+TABLE[s[i+3]]));
+  	+ansichar(TABLE[s[i]] shl 2+p1 shr 4)
+    +if_(s[i+2]<>'=', ansichar(p1 shl 4+p2 shr 2))
+    +if_(s[i+3]<>'=', ansichar(p2 shl 6+TABLE[s[i+3]]));
   inc(i,4);
   end;
 end; // base64decode
@@ -527,24 +540,25 @@ else
 end; // decodeURL
 
 function encodeURL(url:string; nonascii:boolean=TRUE; spaces:boolean=TRUE;
-  unicode:boolean=FALSE):string;
+  htmlEncoding:boolean=FALSE):string;
 var
   i: integer;
-  encodePerc, encodeUni: set of char;
+  encodePerc, encodeHTML: set of char;
   a: ansistring;
 begin
 result:='';
 if url = '' then
   exit;
-encodeUni:=[];
-if nonascii then encodeUni:=[#128..#255];
+encodeHTML:=[];
+if nonascii then
+  encodeHTML:=[#128..#255];
 encodePerc:=[#0..#31,'#','%','?','"','''','&','<','>',':'];
 // actually ':' needs encoding only in relative url
 if spaces then include(encodePerc,' ');
-if not unicode then
+if not htmlEncoding then
   begin
-  encodePerc:=encodePerc+encodeUni;
-  encodeUni:=[];
+  encodePerc:=encodePerc+encodeHTML;
+  encodeHTML:=[];
   end;
 if nonascii then
   begin
@@ -557,7 +571,7 @@ if nonascii then
 for i:=1 to length(url) do
 	if charInSet(url[i], encodePerc) then
     result:=result+'%'+intToHex(ord(url[i]),2)
-  else if charInSet(url[i], encodeUni) then
+  else if charInSet(url[i], encodeHTML) then
     result:=result+'&#'+intToStr(charToUnicode(url[i]))+';'
   else
     result:=result+url[i];
@@ -583,7 +597,8 @@ end; // getIP
 function replyHeader_IntPositive(name:ansistring; int:int64):ansistring;
 begin
 result:='';
-if int >= 0 then result:=name+': '+intToStr(int)+CRLF;
+if int >= 0 then
+  result:=name+': '+ansistring(intToStr(int))+CRLF;
 end;
 
 function replyHeader_Str(name:ansistring; str:ansistring):ansistring;
@@ -993,12 +1008,19 @@ state:=HCS_DISCONNECTED;
 srv.disconnecting.Add(self);
 end;
 
-function ThttpConn.getHeader(h:string):string;
+function ThttpConn.getHeader(h:ansistring):string;
 begin
 result:='';
-if request.method = HM_UNK then exit;
-result:=trim(request.headers.values[h]);
+if request.method <> HM_UNK then
+  result:=trim(UTF8toString(rawByteString(request.headers.values[h])));
 end; // getHeader
+
+function ThttpConn.getHeaderA(h:ansistring):ansistring;
+begin
+result:='';
+if request.method <> HM_UNK then
+  result:=ansistrings.trim(ansistring(request.headers.values[h]));
+end; // getHeaderA
 
 function ThttpConn.getBuffer():ansistring;
 begin result:=buffer end;
@@ -1031,7 +1053,7 @@ while i < length(pairs)-1 do
   v:=v+lowerCase(pairs[i])+'='+pairs[i+1]+'; ';
   inc(i,2);
   end;
-addHeader(v+extra);
+addHeader(UTF8encode(v+extra));
 end; // setCookie
 
 procedure ThttpConn.clearRequest();
@@ -1087,13 +1109,13 @@ procedure ThttpConn.processInputBuffer();
 
   request.url:=chop(' ', r);
 
-  s:=uppercase(chopLine(r));
+  s:=ansiUppercase(chopLine(r));
   // if 'HTTP/' is not found, chop returns S
   if chop('HTTP/',s) = '' then request.ver:=s;
 
   request.headers.text:=r;
 
-  s:=getHeader('Range');
+  s:=getHeaderA('Range');
   if ansiStartsText('bytes=',s) then
     begin
     delete(s,1,6);
@@ -1104,20 +1126,20 @@ procedure ThttpConn.processInputBuffer();
     except end;
     end;
 
-  s:=getHeader('Authorization');
+  s:=getHeaderA('Authorization');
   if AnsiStartsText('Basic',s) then
     begin
     delete(s,1,6);
-    u:=UTF8decode(base64decode(s));
+    u:=UTF8toString(base64decode(s));
     request.user:=trim(chop(':',u));
     request.pwd:=u;
     end;
 
-  s:=getHeader('Connection');
+  s:=getHeaderA('Connection');
   persistent:=srv.persistentConnections and
     (ansiStartsText('Keep-Alive',s) or (request.ver >= '1.1') and (ipos('close',s)=0));
 
-  s:=getHeader('Content-Type');
+  s:=ansistring(getHeader('Content-Type'));
   if ansiStartsText('application/x-www-form-urlencoded', s) then
     post.mode:=PM_URLENCODED
   else if ansiStartsText('multipart/form-data', s) then
@@ -1214,8 +1236,8 @@ procedure ThttpConn.processInputBuffer();
       while l > '' do
         begin
         c:=chop(nonQuotedPos(';', l), l);
-        k:=UTF8decode(trim(chop('=', c)));
-        c:=UTF8decode(ansiDequotedStr(c,'"'));
+        k:=UTF8toString(rawByteString(trim(chop('=', c))));
+        c:=UTF8toString(rawByteString(ansiDequotedStr(c,'"')));
         if sameText(k, 'filename') then
           begin
           delete(c, 1, lastDelimiter('/\',c));
@@ -1292,17 +1314,17 @@ procedure ThttpConn.processInputBuffer();
   handlePostData();
   end; // handleHeaderData
 
-  function replyHeader_OK(contentLength:int64=-1):string;
+  function replyHeader_OK(contentLength:int64=-1):ansistring;
   begin
   result:=replyheader_code(200)
-    +format('Content-Length: %d'+CRLF, [contentLength]);
+    +ansistring(format('Content-Length: %d'+CRLF, [contentLength]));
   end; // replyHeader_OK
 
-  function replyHeader_PARTIAL( firstB, lastB, totalB:int64):string;
+  function replyHeader_PARTIAL( firstB, lastB, totalB:int64):ansistring;
   begin
   result:=replyheader_code(206)
-    +format('Content-Range: bytes %d-%d/%d'+CRLF+'Content-Length: %d'+CRLF,
-          [firstB, lastB, totalB, lastB-firstB+1 ])
+    +ansistring(format('Content-Range: bytes %d-%d/%d'+CRLF+'Content-Length: %d'+CRLF,
+          [firstB, lastB, totalB, lastB-firstB+1 ]))
   end; // replyheader_PARTIAL
 
 begin
@@ -1344,9 +1366,9 @@ case reply.mode of
   HRM_DENY: sendHeader( replyheader_mode(reply.mode) );
   HRM_UNAUTHORIZED:
     sendHeader(replyheader_mode(reply.mode)
-      +replyHeader_Str('WWW-Authenticate','Basic realm="'+reply.realm+'"') );
+      +replyHeader_Str('WWW-Authenticate','Basic realm="'+UTF8encode(reply.realm)+'"') );
   HRM_REDIRECT, HRM_MOVED:
-    sendHeader(replyheader_mode(reply.mode)+'Location: '+reply.url );
+    sendHeader(replyheader_mode(reply.mode)+'Location: '+UTF8encode(reply.url) );
   HRM_REPLY, HRM_REPLY_HEADER:
     if stream = NIL then
       sendHeader( replyHeader_code(404) )
@@ -1364,7 +1386,7 @@ end; // processInputBuffer
 
 procedure ThttpConn.dataavailable(Sender: TObject; Error: Word);
 var
-  s: string;
+  s: ansistring;
 begin
 if error <> 0 then exit;
 s:=sock.ReceiveStrA();
@@ -1426,9 +1448,9 @@ if (state = HCS_REPLYING_HEADER) and (reply.mode <> HRM_REPLY_HEADER) then
   if ((stream = NIL) or (stream.size = 0)) and (reply.mode <> HRM_REPLY) then
     begin
     reply.bodyMode:=RBM_STRING;
-    reply.body:=HRM2BODY[reply.mode];
+    reply.body:=UTF8encode(HRM2BODY[reply.mode]);
     if reply.mode in [HRM_REDIRECT, HRM_MOVED] then
-      reply.body:=replaceStr(reply.body, '%url%', reply.url);
+      reply.body:=ansistrings.replaceStr(reply.body, '%url%', UTF8encode(reply.url));
     initInputStream();
     end;
   end;
@@ -1491,7 +1513,6 @@ end; // partialBodySize
 function ThttpConn.initInputStream():boolean;
 var
   i: integer;
-  buf: ansistring;
 begin
 result:=FALSE;
 FreeAndNil(stream);
@@ -1605,15 +1626,16 @@ end; // replycode2reason
 
 function ThttpConn.replyHeader_code(code:integer):ansistring;
 begin
-if reply.reason = '' then reply.reason:=replycode2reason(code);
-result:=format('HTTP/1.1 %d %s'+CRLF, [code,reply.reason])
+if reply.reason = '' then
+  reply.reason:=replycode2reason(code);
+result:=UTF8encode(format('HTTP/1.1 %d %s'+CRLF, [code,reply.reason]))
   + replyHeader_Str('Content-Type',reply.contentType)
 end;
 
 function ThttpConn.replyHeader_mode(mode:ThttpReplyMode):ansistring;
 begin result:=replyHeader_code(HRM2CODE[mode]) end;
 
-function getNameOf(s:ansistring):string; // colon included
+function getNameOf(s:ansistring):ansistring; // colon included
 begin result:=copy(s, 1, pos(':', s)) end;
 
 // return 0 if not found
@@ -1627,9 +1649,9 @@ result:=from;
 end; // namePos
 
 // return true if the operation succeded
-function ThttpConn.setHeaderIfNone(s:string):boolean;
+function ThttpConn.setHeaderIfNone(s:ansistring):boolean;
 var
-  name: string;
+  name: ansistring;
 begin
 name:=getNameOf(s);
 if name = '' then

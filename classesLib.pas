@@ -39,7 +39,7 @@ type
 
   PcachedIcon = ^TcachedIcon;
   TcachedIcon = record
-    data: ansistring;
+    data: string;
     idx: integer;
     time: Tdatetime;
     end;
@@ -47,11 +47,11 @@ type
   TiconsCache = class
     n: integer;
     icons: array of TcachedIcon;
-    function get(data:ansistring):PcachedIcon;
-    procedure put(data:ansistring; idx:integer; time:Tdatetime);
+    function get(data:string):PcachedIcon;
+    procedure put(data:string; idx:integer; time:Tdatetime);
     procedure clear();
     procedure purge(olderThan:Tdatetime);
-    function idxOf(data:shortstring):integer;
+    function idxOf(data:string):integer;
     end;
 
   TusersInVFS = class
@@ -105,7 +105,7 @@ type
     function fsInit():boolean;
     procedure headerInit(); // fill block with header
     procedure padInit(full:boolean=FALSE); // fill block with pad
-    function headerLengthForFilename(fn:ansistring):integer;
+    function headerLengthForFilename(ufn:string):integer;
     procedure calculate(); override;
   public
     fileNamesOEM: boolean;
@@ -316,7 +316,7 @@ end; // match
 
 //////////// TiconsCache
 
-function TiconsCache.idxOf(data:shortstring):integer;
+function TiconsCache.idxOf(data:string):integer;
 var
   b, e, c: integer;
 begin
@@ -335,7 +335,7 @@ e:=n-1;
 result:=b;
 end; // idxOf
 
-function TiconsCache.get(data:ansistring):PcachedIcon;
+function TiconsCache.get(data:string):PcachedIcon;
 var
   i: integer;
 begin
@@ -345,7 +345,7 @@ if (i >= 0) and (i < n) and (icons[i].data = data) then
   result:=@icons[i];
 end; // get
 
-procedure TiconsCache.put(data:ansistring; idx:integer; time:Tdatetime);
+procedure TiconsCache.put(data:string; idx:integer; time:Tdatetime);
 var
   i, w: integer;
 begin
@@ -569,7 +569,7 @@ var
 begin
 ufn:=replaceStr(flist[cur].dst,'\','/');
 if fileNamesOEM then
-  CharToOem(pWideChar(ufn), pAnsiChar(fn))
+  fn:=strToOem(ufn)
 else
   fn:=UTF8encode(ufn);
 pre:='';
@@ -612,8 +612,14 @@ block.WriteString(dupeString(#0, if_(full,512,gap512(pos)) ));
 block.Seek(0, soBeginning);
 end; // padInit
 
-function TtarStream.headerLengthForFilename(fn:ansistring):integer;
+function TtarStream.headerLengthForFilename(ufn:string):integer;
+var
+  fn: ansistring;
 begin
+if fileNamesOEM then
+  fn:=strToOem(ufn)
+else
+  fn:=UTF8encode(ufn);
 result:=length(fn);
 result:=512*if_(result<100, 1, 3+result div 512);
 end; // headerLengthForFilename

@@ -48,7 +48,7 @@ procedure resetLog();
 implementation
 
 uses windows, utilLib, trayLib, parserLib, graphics, classes, sysutils, StrUtils,
-  hslib, comctrls, math, controls, forms, clipbrd, MMsystem, OverbyteicsMD5, OverbyteIcsSha1;
+  hslib, comctrls, math, controls, forms, clipbrd, MMsystem;
 
 const
   HEADER = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><style>'
@@ -58,7 +58,6 @@ const
 var
   stopOnMacroRename: boolean; // this ugly global var is used to avoid endless recursion on a renaming rename event. this method won't work on a multithreaded system, but i opted for it because otherwise the changes would have been big.
   cachedTpls: TcachedTpls;
-  flog: ^file;
 
 function macrosLog(textIn, textOut:string; ts:boolean=FALSE):boolean;
 var
@@ -68,26 +67,11 @@ s:='';
 if ts then
     s:='<hr>'+dateTimeToStr(now())+CRLF;
 s:=s+#13'<dt>'+htmlEncode(textIn)+'</dt><dd>'+htmlEncode(textOut)+'</dd>';
-if flog = NIL then
-  begin
-  new(flog);
-  assignFile(flog^, MACROS_LOG_FILE);
-  reset(flog^, 1);
-  if IOresult() <> 0 then rewrite(flog^,1)
-  else seek(flog^,fileSize(flog^));
-  end;
-result:=saveFile(flog^, s)
+result:=appendTextFile(MACROS_LOG_FILE, s);
 end; // macrosLog
 
 procedure resetLog();
-begin
-try
-  closeFile(flog^);
-  dispose(flog);
-  flog:=NIL;
-except end;
-deleteFile(MACROS_LOG_FILE);
-end; // resetLog
+begin deleteFile(MACROS_LOG_FILE) end;
 
 function expandLinkedAccounts(account:Paccount):TStringDynArray;
 var
@@ -679,8 +663,10 @@ var
 
   procedure convert();
   begin
-  if sameText(p, 'ansi') and sameText(par(1), 'utf-8') then result:=ansiToUTF8(par(2))
-  else if sameText(p, 'utf-8') and sameText(par(1), 'ansi') then result:=utf8ToAnsi(par(2))
+  if sameText(p, 'ansi') and sameText(par(1), 'utf-8') then
+    result:=ansiToUTF8(ansistring(par(2)))
+  else if sameText(p, 'utf-8') and sameText(par(1), 'ansi') then
+    result:=utf8ToAnsi(ansistring(par(2)))
   end; // convert
 
   procedure encodeuri();
@@ -695,7 +681,7 @@ var
       -strToCharset(par('add'))+strToCharset(par('not'));
     end;
   for i:=1 to length(p) do
-    if p[i] in cs then
+    if charInSet(p[i], cs) then
       result:=result+p[i]
     else
       result:=result+'%'+intToHex(ord(p[i]),2)
@@ -1120,7 +1106,7 @@ var
     if not satisfied(space) then exit;
 
     i:=space.indexOfName(s);
-    if i < 0 then exit; // this var doesn't exit. won't write.
+    if i < 0 then exit; // this var doesn't exit. don't write.
     encode:=FALSE;
     // if this is used as table, and has newlines, we must encode it to preserve associations
     h:=space.objects[i] as THashedStringList;
@@ -1143,7 +1129,7 @@ var
         finally free end;
     end;
   // now we have in 's' the content to be saved
-  spaceIf(saveFile(uri2diskMaybeFolder(p), s, name='append'));
+  spaceIf(saveTextFile(uri2diskMaybeFolder(p), s, name='append'));
   end; // save
 
   procedure replace();
@@ -1459,7 +1445,7 @@ var
       t: Tdatetime;
     begin
     try
-      if getFirstChar(v) in ['+','-'] then
+      if charInSet(getFirstChar(v), ['+','-']) then
         t:=now()+strToFloat(v)
       else
         try t:=maybeUnixTime(strToFloat(v));
@@ -1946,13 +1932,13 @@ try
       result:=jsEncode(p, first(par(1),'''"'));
 
     if name = 'base64' then
-      result:=base64encode(p);
+      result:=base64encode(UTF8encode(p));
     if name = 'base64decode' then
-      result:=base64decode(p);
+      result:=utf8ToString(base64decode(ansistring(p)));
     if name = 'md5' then
       result:=strMD5(p);
     if name = 'sha1' then
-      result:=SHA1toHex(sha1OfStr(p));
+      result:=strSHA1(p);
 
     if name = 'vfs select' then
       if pars.count = 0 then
@@ -2025,7 +2011,7 @@ try
       encodeuri();
 
     if name = 'decodeuri' then
-      result:=decodeURL(p);
+      result:=decodeURL(ansistring(p));
 
     if name = 'set cfg' then
       trueIf(mainfrm.setcfg(p));
@@ -2101,7 +2087,7 @@ try
 
     if name = 'header' then
       if satisfied(md.cd) then
-        try result:=noMacrosAllowed(md.cd.conn.getHeader(p)) except end;
+        try result:=noMacrosAllowed(md.cd.conn.getHeader(ansistring(p))) except end;
 
     if name = 'urlvar' then
       result:=urlvar(p);
@@ -2233,7 +2219,8 @@ try
     if name = 'mime' then
       begin
       result:='';
-      if satisfied(md.cd) then md.cd.conn.reply.contentType:=p;
+      if satisfied(md.cd) then
+        md.cd.conn.reply.contentType:=ansistring(p);
       end;
 
     if name = 'calc' then
@@ -2292,22 +2279,22 @@ try
         result:='';
         // macro 'mime' should be used for content-type, but this test will save precious time to those who will be fooled by the presence this macro
         if ansiStartsText('Content-Type:', p) then
-          md.cd.conn.reply.contentType:=trim(substr(p, ':'))
+          md.cd.conn.reply.contentType:=ansistring(trim(substr(p, ':')))
         else if ansiStartsText('Location:', p) then
           with md.cd.conn.reply do
             begin
             mode:=HRM_REDIRECT;
-            url:=trim(substr(p, ':'))
+            url:=UTF8encode(trim(substr(p, ':')))
             end
         else
-          md.cd.conn.addHeader(p, isTrue(par('overwrite',true,'1')));
+          md.cd.conn.addHeader(ansistring(p), isTrue(par('overwrite',true,'1')));
         end;
 
     if name = 'remove header' then
       if satisfied(md.cd) then
         begin
         result:='';
-        md.cd.conn.removeHeader(p);
+        md.cd.conn.removeHeader(ansistring(p));
         end;
 
     if name = 'get ini' then
@@ -2571,10 +2558,5 @@ freeAndNIL(eventScripts);
 freeAndNIL(defaultAlias);
 freeAndNIL(currentCFGhashed);
 staticVars.free;
-if assigned(flog) then
-  begin
-  closeFile(flog^);
-  dispose(flog);
-  end;
 
 end.

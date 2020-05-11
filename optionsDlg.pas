@@ -759,7 +759,7 @@ begin
 if renamingAccount then
   exit;
 key:=upcase(key);
-if key in ['0'..'9','A'..'Z'] then
+if charInSet(key, ['0'..'9','A'..'Z']) then
   begin
   s:=accountsBox.ItemIndex;
   n:=length(tempAccounts);

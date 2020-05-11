@@ -357,7 +357,7 @@ type
     postVars  // as $_POST in php
       : THashedStringList;
     tplCounters: TstringToIntHash;
-    workaroundForIEutf8: (toDetect, yes, no);
+    workaroundForIEutf8: (WI_toDetect, WI_yes, WI_no);
     { here we put just a pointer because the file type would triplicate
     { the size of this record, while it is NIL for most connections }
     f: ^file; // uploading file handle
@@ -1937,12 +1937,6 @@ while i < srv.conns.count do
 result:=length(ips);
 end; // countIPs
 
-function strSHA256(s:string):string;
-begin result:=upperCase( THashSHA2.GetHashString(s) ) end;
-
-function strMD5(s:string):string;
-begin result:=uppercase( THashMD5.GetHashString(s) ) end;
-
 function idx_img2ico(i:integer):integer;
 begin
 if (i < startingImagesCount) or (i >= USER_ICON_MASKS_OFS) then result:=i
@@ -2688,10 +2682,10 @@ else
       result:=ICON_FILE;
 end; // getIconForTreeview
 
-function encodeURL(s:string; fullEncode:boolean=FALSE):string;
+function encodeURL(s:string; forceEncodedSpaces:boolean=FALSE):string;
 begin
 result:=HSlib.encodeURL(s, mainFrm.encodeNonasciiChk.checked,
-  fullEncode or mainFrm.encodeSpacesChk.checked)
+  forceEncodedSpaces or mainFrm.encodeSpacesChk.checked)
 end; // encodeURL
 
 function protoColon():string;
@@ -3464,7 +3458,6 @@ var
   buildTime: Tdatetime;
   listing: TfileListing;
   diffTpl: Ttpl;
-  isDMbrowser: boolean;
   hasher: Thasher;
   fullEncode, recur, oneAccessible: boolean;
   md: TmacroData;
@@ -3632,7 +3625,6 @@ try
   if otpl <> filelistTpl then
     diffTpl.fullText:=folder.getRecursiveDiffTplAsStr();
 
-  isDMbrowser:= otpl = dmBrowserTpl;
   fullEncode:=FALSE;
   ofsRelUrl:=length(folder.url(fullEncode))+1;
   ofsRelItemUrl:=length(folder.pathTill())+1;
@@ -3920,7 +3912,7 @@ try
   else s:=first(data.banReason, data.disconnectReason);
   addArray(md.table, ['%reason%', s]);
 
-  data.conn.reply.contentType:=name2mimetype(sectionName, 'text/html');
+  data.conn.reply.contentType:=ansistring(name2mimetype(sectionName, 'text/html'));
   if sectionName = 'ban' then data.conn.reply.mode:=HRM_DENY;
   if sectionName = 'deny' then data.conn.reply.mode:=HRM_DENY;
   if sectionName = 'not found' then data.conn.reply.mode:=HRM_NOT_FOUND;
@@ -3976,9 +3968,9 @@ if result then
   conn.reply.mode:=HRM_NOT_MODIFIED;
   exit;
   end;
-conn.addHeader('ETag: '+etag);
+conn.addHeader('ETag: '+UTF8encode(etag));
 if ts > '' then
-  conn.addHeader('Last-Modified: '+ts);
+  conn.addHeader('Last-Modified: '+UTF8encode(ts));
 end; // notModified
 
 function notModified(conn:ThttpConn; f:string):boolean; overload;
@@ -4194,7 +4186,7 @@ if (logFile.filename > '') and (logFile.apacheFormat = '') then
   else s:=s+CRLF+rest;
 
   includeTrailingString(s,CRLF);
-  appendFile(getDynLogFilename(cd), s);
+  appendTextFile(getDynLogFilename(cd), s);
   end;
 
 if not logOnVideoChk.checked then exit;
@@ -4382,7 +4374,7 @@ try
     's': res:=code;
     'B': res:=intToStr(cd.conn.bytesSentLastItem);
     'b': if cd.conn.bytesSentLastItem = 0 then res:='-' else res:=intToStr(cd.conn.bytesSentLastItem);
-    'i': res:=cd.conn.getHeader(par);
+    'i': res:=cd.conn.getHeader(ansistring(par));
     'm': res:=METHOD2STR[cd.conn.request.method];
     'c': if (cd.conn.bytesToSend > 0) and (cd.conn.state = HCS_DISCONNECTED) then res:='X'
           else if cd.disconnectAfterReply then res:='-'
@@ -4746,7 +4738,7 @@ var
     '\\', '\'
   ]);
   s:=reCB('%(!?[0-9,]+)?(\{([^}]+)\})?>?([a-z])', s, apacheLogCb, data);
-  appendFile(getDynLogFilename(data), s+CRLF);
+  appendTextFile(getDynLogFilename(data), s+CRLF);
   end; // doLog
 
   function limitsExceededOnConnection():boolean;
@@ -4795,7 +4787,7 @@ var
   s:=replaceStr(s,'+',' ');
   data.urlvars.text:=s;
   for i:=0 to data.urlvars.count-1 do
-    data.urlvars[i]:=decodeURL(data.urlvars[i]);
+    data.urlvars[i]:=decodeURL(ansistring(data.urlvars[i]));
   end; // extractParams
 
   procedure closeUploadingFile();
@@ -4840,7 +4832,7 @@ var
   result:=trim(stripChars(runEventScript(event, table), [TAB,#10,#13]));
   // turn illegal chars into underscores
   for i:=1 to length(result) do
-    if result[i] in ILLEGAL_FILE_CHARS-[':','\'] then
+    if charInSet(result[i], ILLEGAL_FILE_CHARS-[':','\']) then
       result[i]:='_';
   end; // eventToFilename
 
@@ -4884,9 +4876,9 @@ var
   procedure addContentDisposition(attach:boolean=TRUE);
   var s:ansistring;
   begin
-  s:=HSlib.encodeURL(data.lastFN);
-  conn.addHeader( 'Content-Disposition: '+if_(attach, 'attachment; ')
-    +'filename*=UTF-8'''''+s+'; filename='+s);
+  s:=ansistring(HSlib.encodeURL(data.lastFN));
+  conn.addHeader( ansistring('Content-Disposition: '+if_(attach, 'attachment; ')
+    +'filename*=UTF-8'''''+s+'; filename='+s));
   end;
 
   procedure sessionSetup();
@@ -5124,7 +5116,7 @@ var
       end;
     
     if conn.reply.contentType = '' then
-      conn.reply.contentType:=if_(trim(getTill('<', s))='', 'text/html', 'text/plain');
+      conn.reply.contentType:=ansistring(if_(trim(getTill('<', s))='', 'text/html', 'text/plain'));
     conn.reply.mode:=HRM_REPLY;
     conn.reply.bodyMode:=RBM_STRING;
     conn.reply.body:=UTF8encode(s);
@@ -5147,11 +5139,9 @@ var
     for i:=0 to data.postvars.count-1 do
       if sameText('selection', data.postvars.names[i]) then
         begin
-        asUrl:=decodeURL(getTill('#', data.postvars.valueFromIndex[i])); // omit #anchors
+        asUrl:=getTill('#', data.postvars.valueFromIndex[i]); // omit #anchors
         s:=uri2disk(asUrl, f);
-        if s = '' then continue;
-
-        if not fileOrDirExists(s) then continue; // ignore
+        if (s = '') or not fileOrDirExists(s) then continue; // ignore
 
         runEventScript('file deleting', ['%item-deleting%', s]);
         moveToBin(toSA([s, s+'.md5', s+COMMENT_FILE_EXT]) , TRUE);
@@ -5279,7 +5269,7 @@ var
 
   url:=conn.request.url;
   extractParams();
-  url:=decodeURL(url);
+  url:=decodeURL(ansistring(url));
 
   data.lastFN:=extractFileName( replaceStr(url,'/','\') );
   data.agent:=getAgentID(conn);
@@ -5437,7 +5427,8 @@ var
     if conn.request.user = '' then
       begin // issue a login dialog
       getPage('unauthorized', data);
-      if loginRealm > '' then conn.reply.realm:=loginRealm;
+      if loginRealm > '' then
+        conn.reply.realm:=loginRealm;
       exit;
       end
     else
@@ -5578,7 +5569,7 @@ var
 
   setupDownloadIcon(data);
   data.eta.idx:=0;
-  conn.reply.contentType:=name2mimetype(f.name, DEFAULT_MIME);
+  conn.reply.contentType:=ansistring(name2mimetype(f.name, DEFAULT_MIME));
   conn.reply.bodyMode:=RBM_FILE;
   conn.reply.bodyFile:=f.resource;
   data.downloadingWhat:=DW_FILE;
@@ -6409,10 +6400,13 @@ if act then startServer();
 end; // changePort
 
 function b64utf8(const s:string):ansistring;
-begin result:=base64encode(UTF8encode(s)); end;
+begin result:=base64encode(UTF8encode(s)) end;
 
-function decodeB64utf8(const s:ansistring):string;
-begin result:=UTF8decode(base64decode(s)); end;
+function decodeB64utf8(const s:ansistring):string; overload;
+begin result:=UTF8toString(base64decode(s)) end;
+
+function decodeB64utf8(const s:string):string; overload;
+begin result:=decodeB64utf8(ansistring(s)) end;
 
 function zCompressStr(const s: ansistring;  level:TCompressionLevel=clMax; type_:TzStreamType=zsZlib): ansistring;
 var
@@ -6459,16 +6453,17 @@ type
   Tencoding=(E_PLAIN,E_B64,E_ZIP);
 
   function encode(s:string; encoding:Tencoding):string;
+  var
+    a, c: ansistring;
   begin
   case encoding of
     E_PLAIN: result:=s;
     E_B64: result:=b64utf8(s);
     E_ZIP:
       begin
-      result:=zCompressStr(s, clMax);
-      if length(result) > round(0.9*length(s)) then
-        result:=s;
-      result:=base64encode(result);
+      a:=UTF8encode(s);
+      c:=zCompressStr(a, clMax);
+      result:=base64encode(if_( length(c) < round(0.8*length(a)), c, a));
       end;
     end;
   end;
@@ -6831,7 +6826,7 @@ var
       else if p = 'link' then 
         a.link:=split(':',t)
       else if p = 'notes' then
-        a.notes:=UTF8ToString(unzipCfgProp(t))
+        a.notes:=UTF8ToString(unzipCfgProp(ansistring(t)))
       end;
     end;
   end; // strToAccounts
@@ -6857,7 +6852,7 @@ var
   while l > '' do
     begin
     iFrom:=strTointDef(chop(':', l), -1);
-    iTo:=str2pic(unzipCfgProp(chop('|', l)));
+    iTo:=str2pic(unzipCfgProp(ansistring(chop('|', l))));
     for i:=0 to length(iconMasks)-1 do
       if iconMasks[i].int = iFrom then
         iconMasks[i].int:=iTo;
@@ -10961,13 +10956,13 @@ s:=cd.conn.reply.body;
 if s = '' then exit;
 if ipos('gzip', cd.conn.getHeader('Accept-Encoding')) = 0 then exit;
 // workaround for IE6 pre-SP2 bug
-if (cd.workaroundForIEutf8  = toDetect) and (cd.agent > '') then
+if (cd.workaroundForIEutf8  = WI_toDetect) and (cd.agent > '') then
   if reMatch(cd.agent, '^MSIE [4-6]\.', '!') > 0 then // version 6 and before
-    cd.workaroundForIEutf8:=yes
+    cd.workaroundForIEutf8:=WI_yes
   else
-    cd.workaroundForIEutf8:=no;
+    cd.workaroundForIEutf8:=WI_no;
 s:=ZcompressStr(s, clFastest, zsGzip);
-if (cd.workaroundForIEutf8  = yes) and (length(s) < BAD_IE_THRESHOLD) then exit;
+if (cd.workaroundForIEutf8  = WI_yes) and (length(s) < BAD_IE_THRESHOLD) then exit;
 cd.conn.addHeader('Content-Encoding: gzip');
 //cd.conn.addHeader('Content-Length: '+intToStr(length(s)));
 cd.conn.reply.body:=s;
@@ -12205,7 +12200,7 @@ if ipos('<html>', dyndns.lastResult) = 0 then
   msgDlg(dyndns.lastResult);
   exit;
   end;
-fn:=saveTempFile(UTF8encode(dyndns.lastResult));
+fn:=saveTempFile(dyndns.lastResult);
 if fn = '' then
   begin
   msgDlg(MSG_NO_TEMP, MB_ICONERROR);
@@ -12240,7 +12235,7 @@ while current > '' do
   if defV = v then continue;
   if k = 'dynamic-dns-updater' then
     begin // remove login data
-    v:=decodeB64utf8(v);
+    v:=decodeB64utf8(ansistring(v));
     chop('//',v);
     v:=chop('/',v);
     if ansiContainsStr(v, '@') then chop('@',v);

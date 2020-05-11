@@ -100,6 +100,7 @@ function compare_(i1,i2:int64):integer; overload;
 function compare_(i1,i2:integer):integer; overload;
 function msgDlg(msg:string; code:integer=0; title:string=''):integer;
 function if_(v:boolean; v1:string; v2:string=''):string; overload; inline;
+function if_(v:boolean; v1:ansistring; v2:ansistring=''):ansistring; overload; inline;
 function if_(v:boolean; v1:int64; v2:int64=0):int64; overload; inline;
 function if_(v:boolean; v1:integer; v2:integer=0):integer; overload; inline;
 function if_(v:boolean; v1:Tobject; v2:Tobject=NIL):Tobject; overload; inline;
@@ -123,13 +124,14 @@ function createShellLink(linkFN:WideString; destFN:string):boolean;
 function readShellLink(linkFN:WideString):string;
 function getShellFolder(id:string):string;
 function getTempFilename():string;
-function saveTempFile(data:ansistring):string;
+function saveTempFile(data:ansistring):string; overload;
+function saveTempFile(data:string):string; overload;
 function fileOrDirExists(fn:string):boolean;
 function sizeOfFile(fn:string):int64; overload;
 function sizeOfFile(fh:Thandle):int64; overload;
 function loadFile(fn:string; from:int64=0; size:int64=-1):ansistring;
 function loadTextFile(fn:string):string;
-function saveTextFile(fn:string; text:string):boolean;
+function saveTextFile(fn:string; text:string; append:boolean=FALSE):boolean;
 function saveFile(fn:string; data:ansistring; append:boolean=FALSE):boolean; overload;
 function saveFile(var f:file; data:ansistring):boolean; overload;
 function moveFile(src, dst:string; op:UINT=FO_MOVE):boolean;
@@ -140,6 +142,7 @@ function validFilepath(fn:string; acceptUnits:boolean=TRUE):boolean;
 function match(mask, txt:pchar; fullMatch:boolean=TRUE; charsNotWildcard:Tcharset=[]):integer;
 function filematch(mask, fn:string):boolean;
 function appendFile(fn:string; data:ansistring):boolean;
+function appendTextFile(fn:string; text:string):boolean;
 function getFilename(var f:file):string;
 function filenameToDriveByte(fn:string):byte;
 function selectFile(var fn:string; title:string=''; filter:string=''; options:TOpenOptions=[]):boolean;
@@ -221,6 +224,7 @@ function first(a,b:integer):integer; overload;
 function first(a,b:double):double; overload;
 function first(a,b:pointer):pointer; overload;
 function first(a,b:string):string; overload;
+function first(a,b:ansistring):ansistring; overload;
 function first(a:array of string):string; overload;
 function stripChars(s:string; cs:Tcharset; invert:boolean=FALSE):string;
 function isOnlyDigits(s:string):boolean;
@@ -231,7 +235,7 @@ function reduceSpaces(s:string; replacement:string=' '; spaces:TcharSet=[]):stri
 function replace(var s:string; ss:string; start,upTo:integer):integer;
 function countSubstr(ss:string; s:string):integer;
 function trim2(s:string; chars:Tcharset):string;
-procedure urlToStrings(s:string; sl:Tstrings);
+procedure urlToStrings(s:ansistring; sl:Tstrings);
 function reCB(expr, subj:string; cb:TreCB; data:pointer=NIL):string;
 function reMatch(s, exp:string; mods:string='m'; ofs:integer=1; subexp:PstringDynArray=NIL):integer;
 function reReplace(subj, exp, repl:string; mods:string='m'):string;
@@ -247,15 +251,34 @@ function escapeNL(s:string):string;
 function unescapeNL(s:string):string;
 function htmlEncode(s:string):string;
 procedure enforceNUL(var s:string);
+function strSHA256(s:string):string;
+function strSHA1(s:string):string;
+function strMD5(s:string):string;
+function strToOem(s:string):ansistring;
 
 implementation
 
 uses
-  clipbrd, JclNTFS, JclWin32, parserLib, newuserpassDlg, winsock, OverbyteicsMD5;
+  clipbrd, JclNTFS, JclWin32, parserLib, newuserpassDlg, winsock, System.Hash, ansistrings;
 
 var
   ipToInt_cache: ThashedStringList;
   onlyDotsRE: TRegExpr;
+
+function strSHA256(s:string):string;
+begin result:=upperCase( THashSHA2.GetHashString(s) ) end;
+
+function strSHA1(s:string):string;
+begin result:=upperCase( THashSHA1.GetHashString(s) ) end;
+
+function strMD5(s:string):string;
+begin result:=UpperCase( THashMD5.GetHashString(s) ) end;
+
+function strToOem(s:string):ansistring;
+begin
+setLength(result, length(s));
+CharToOemBuff(pWideChar(s), pAnsiChar(result), length(s));
+end; // strToOem
 
 // method TregExpr.ReplaceEx does the same thing, but doesn't allow the extra data field (sometimes necessary).
 // Moreover, here i use the TfastStringAppend that will give us good performance with many replacements.
@@ -749,7 +772,7 @@ setLength(ansi, l);
 move(p^, ansi[1], l);
 UnlockResource(h2);
 FreeResource(h2);
-result:=ansi;
+result:=UTF8toString(ansi);
 end; // getRes
 
 function compare_(i1,i2:int64):integer; overload;
@@ -929,7 +952,7 @@ result:=(fn > '')
 end;
 
 function loadTextFile(fn:string):string;
-begin result:=UTF8decode(loadfile(fn)) end;
+begin result:=UTF8toString(loadfile(fn)) end;
 
 function loadFile(fn:string; from:int64=0; size:int64=-1):ansistring;
 var
@@ -1018,14 +1041,20 @@ try
 except end;
 end; // saveFile
 
-function saveTextFile(fn:string; text:string):boolean;
-begin result:=saveFile(fn, UTF8encode(text)) end;
+function saveTextFile(fn:string; text:string; append:boolean=FALSE):boolean;
+begin result:=saveFile(fn, UTF8encode(text), append) end;
 
 function appendFile(fn:string; data:ansistring):boolean;
 begin result:=saveFile(fn, data, TRUE) end;
 
+function appendTextFile(fn:string; text:string):boolean;
+begin result:=saveTextFile(fn, text, TRUE) end;
+
 function getTempFilename():string;
 begin result:=TPath.GetRandomFileName() end;
+
+function saveTempFile(data:string):string;
+begin result:=saveTempFile(UTF8encode(data)) end;
 
 function saveTempFile(data:ansistring):string;
 begin
@@ -1257,6 +1286,9 @@ function if_(v:boolean; v1:boolean; v2:boolean=FALSE):boolean;
 begin if v then result:=v1 else result:=v2 end;
 
 function if_(v:boolean; v1, v2:string):string;
+begin if v then result:=v1 else result:=v2 end;
+
+function if_(v:boolean; v1:ansistring; v2:ansistring=''):ansistring; overload; inline;
 begin if v then result:=v1 else result:=v2 end;
 
 function if_(v:boolean; v1,v2:int64):int64;
@@ -1927,7 +1959,7 @@ begin
 i:=ipToInt_cache.Add(ip);
 result:=dword(ipToInt_cache.Objects[i]);
 if result <> 0 then exit;
-result:=WSocket_ntohl(WSocket_inet_addr(pchar(ip)));
+result:=WSocket_ntohl(WSocket_inet_addr(ansistring(ip)));
 ipToInt_cache.Objects[i]:=Tobject(result);
 end; // ipToInt
 
@@ -2095,6 +2127,9 @@ end; // first
 function first(a,b:string):string;
 begin if a = '' then result:=b else result:=a end;
 
+function first(a,b:ansistring):ansistring;
+begin if a = '' then result:=b else result:=a end;
+
 function first(a,b:integer):integer;
 begin if a = 0 then result:=b else result:=a end;
 
@@ -2161,7 +2196,7 @@ try
     until (Apprunning <> WAIT_TIMEOUT) or (now() >= timeout);
   Buffer[TotalBytesRead]:= #0;
   OemToCharA(PansiChar(Buffer),Buffer);
-  output:=strPas(Buffer);
+  output:=string(ansistrings.strPas(Buffer));
 finally
   GetExitCodeProcess(ProcessInfo.hProcess, exitcode);
   TerminateProcess(ProcessInfo.hProcess, 0);
@@ -2393,17 +2428,20 @@ end; // trim2
 function boolOnce(var b:boolean):boolean;
 begin result:=b; b:=FALSE end;
 
-procedure urlToStrings(s:string; sl:Tstrings);
+procedure urlToStrings(s:ansistring; sl:Tstrings);
 var
   i, l, p: integer;
   t: string;
+  a: ansistring;
 begin
 i:=1;
 l:=length(s);
 while i <= l do
   begin
-  p:=posEx('&',s,i);
-  t:=decodeURL(replaceStr(substr(s,i,if_(p=0,0,p-1)), '+',' ')); // TODO should we instead try to decode utf-8? doing so may affect calls to {.force ansi.} in the template
+  p:=ansistrings.posEx('&',s,i);
+  a:=copy(s,i,if_(p=0,length(s),p-i));
+  a:=ansistrings.replaceStr(a, '+',' ');
+  t:=decodeURL(a); // TODO should we instead try to decode utf-8? doing so may affect calls to {.force ansi.} in the template
   sl.add(t);
   if p = 0 then exit;
   i:=p+1;
