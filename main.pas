@@ -1938,10 +1938,10 @@ result:=length(ips);
 end; // countIPs
 
 function strSHA256(s:string):string;
-begin result:=THashSHA2.GetHashString(s) end;
+begin result:=upperCase( THashSHA2.GetHashString(s) ) end;
 
 function strMD5(s:string):string;
-begin result:=THashMD5.GetHashString(s) end;
+begin result:=uppercase( THashMD5.GetHashString(s) ) end;
 
 function idx_img2ico(i:integer):integer;
 begin
