@@ -7,6 +7,5 @@ filelistTpl TEXT filelist.tpl
 uploadDisabled TEXT upload_disabled.txt
 uploadHowTo TEXT upload_how.txt
 alias TEXT alias.txt
-shell GIF shell.gif
 IPservices TEXT ipservices.txt
 jquery TEXT jquery.min.js
