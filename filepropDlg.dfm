@@ -33,6 +33,10 @@ object filepropFrm: TfilepropFrm
     object permTab: TTabSheet
       Caption = 'Permissions'
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object actionTabs: TTabControl
         Left = 0
         Top = 0
@@ -124,6 +128,10 @@ object filepropFrm: TfilepropFrm
     object flagsTab: TTabSheet
       Caption = 'Flags'
       ImageIndex = 2
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object hiddenChk: TCheckBox
         Left = 32
         Top = 24
@@ -210,6 +218,10 @@ object filepropFrm: TfilepropFrm
     object diffTab: TTabSheet
       Caption = 'Diff template'
       ImageIndex = 3
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object difftplBox: TMemo
         Left = 0
         Top = 0
@@ -227,6 +239,10 @@ object filepropFrm: TfilepropFrm
     object commentTab: TTabSheet
       Caption = 'Comment'
       ImageIndex = 4
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object commentBox: TMemo
         Left = 0
         Top = 0
@@ -241,6 +257,10 @@ object filepropFrm: TfilepropFrm
     object maskTab: TTabSheet
       Caption = 'File masks'
       ImageIndex = 5
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       DesignSize = (
         385
         338)
@@ -321,6 +341,10 @@ object filepropFrm: TfilepropFrm
     object otherTab: TTabSheet
       Caption = 'Other'
       ImageIndex = 5
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       DesignSize = (
         385
         338)
@@ -356,7 +380,6 @@ object filepropFrm: TfilepropFrm
         Height = 22
         ItemsEx = <>
         Style = csExDropDownList
-        ItemHeight = 16
         TabOrder = 1
         Images = mainFrm.images
       end

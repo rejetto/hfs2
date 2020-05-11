@@ -7,11 +7,7 @@ object mainFrm: TmainFrm
   Color = clBtnFace
   Constraints.MinHeight = 260
   Constraints.MinWidth = 390
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
-  Font.Height = -11
-  Font.Name = 'Tahoma'
-  Font.Style = []
+  ParentFont = True
   KeyPreview = True
   OldCreateOrder = False
   Position = poDesigned
@@ -286,7 +282,6 @@ object mainFrm: TmainFrm
           AutoSize = True
           BevelOuter = bvNone
           TabOrder = 1
-          ExplicitLeft = 204
           object collapsedPnl: TPanel
             Left = 0
             Top = 0
@@ -524,7 +519,6 @@ object mainFrm: TmainFrm
                 Max = 30000
                 TabOrder = 1
                 OnClick = logUpDownClick
-                ExplicitLeft = 151
               end
             end
           end
