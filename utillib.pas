@@ -2993,6 +2993,8 @@ var
   i: integer;
 begin
 result:=NIL;
+if user = '' then
+  exit;
 for i:=0 to length(accounts)-1 do
   if sameText(user, accounts[i].user) then
     begin

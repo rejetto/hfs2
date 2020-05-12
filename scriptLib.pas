@@ -1628,7 +1628,7 @@ var
 
   if assigned(md.cd) then
     begin
-    usr:=md.cd.usr;
+    usr:=md.cd.user;
     if name = '%host%' then
       result:=getSafeHost(md.cd)
     else if name = '%ip%' then
@@ -2467,7 +2467,7 @@ try
     if mainfrm.macrosLogChk.checked then
       begin
       if not fileExists(MACROS_LOG_FILE) then
-        saveFile(MACROS_LOG_FILE, HEADER);
+        saveTextFile(MACROS_LOG_FILE, HEADER);
       macrosLog(fullMacro, result, md.logTS);
       md.logTS:=FALSE;
       end;

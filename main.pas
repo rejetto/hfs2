@@ -295,7 +295,7 @@ type
     vars: THashedStringList;
     created, ttl, expires: Tdatetime;
   public
-    id: string;
+    id, user: string;
     constructor create(const sid:string='');
     destructor Destroy; override;
     procedure setVar(const k,v:string);
@@ -325,7 +325,7 @@ type
     agent: string;
     conn: ThttpConn;
     account: Paccount;
-    usr, pwd: string;
+    user, pwd: string;
     acceptedCredentials: boolean;
     limiter: TspeedLimiter;
     tpl: Ttpl;
@@ -1326,7 +1326,7 @@ if (action = FA_UPLOAD) and not f.isRealFolder() then exit;
 
 result:=TRUE;
 if stringExists(USER_ANYONE, a, TRUE) then exit;
-result:=(cd.usr = '') and stringExists(USER_ANONYMOUS, a, TRUE)
+result:=(cd.user = '') and stringExists(USER_ANONYMOUS, a, TRUE)
   or assigned(cd.account) and stringExists(USER_ANY_ACCOUNT, a, TRUE)
   or (NIL <> findEnabledLinkedAccount(cd.account, a, TRUE));
 end; // accountAllowed
@@ -1562,7 +1562,7 @@ var
   function allowedTo(f:Tfile):boolean;
   begin
   if cd = NIL then result:=FALSE
-  else result:=(not (FA_VIS_ONLY_ANON in f.flags) or (cd.usr = ''))
+  else result:=(not (FA_VIS_ONLY_ANON in f.flags) or (cd.user = ''))
     and (seeProtected or f.accessFor(cd))
     and not (forArchive and f.isDLforbidden())
   end; // allowedTo
@@ -1912,7 +1912,7 @@ while i < srv.conns.count do
   if isDownloading(d)
   and ((f = NIL) or (assigned(d.lastFile) and d.lastFile.same(f)))
   and ((ip = '') or addressMatch(ip, d.address))
-  and ((user = '') or sameText(user, d.usr))
+  and ((user = '') or sameText(user, d.user))
   then
     inc(result);
   inc(i);
@@ -1931,7 +1931,7 @@ while i < srv.conns.count do
   begin
   d:=conn2data(i);
   if not onlyDownloading or isDownloading(d) then
-    addUniqueString(if_(usersInsteadOfIps, d.usr, d.address), ips);
+    addUniqueString(if_(usersInsteadOfIps, d.user, d.address), ips);
   inc(i);
   end;
 result:=length(ips);
@@ -2362,7 +2362,8 @@ end; // disconnect
 procedure TconnData.logout();
 begin
 freeAndNIL(session);
-usr:='';
+account:=NIL;
+user:='';
 pwd:='';
 conn.delCookie(SESSION_COOKIE);
 end; // logout
@@ -3071,7 +3072,7 @@ begin result:=hasRecursive([attribute], FALSE, outInherited) end;
 function Tfile.accessFor(cd:TconnData):boolean;
 begin
 if cd = NIL then result:=accessFor('', '')
-else result:=accessFor(cd.usr, cd.pwd)
+else result:=accessFor(cd.user, cd.pwd)
 end; // accessFor
 
 function Tfile.accessFor(username, password:string):boolean;
@@ -3539,11 +3540,11 @@ var
     s:=url;
     end
   else
-    if pwdInPagesChk.Checked and (cd.usr > '') then
+    if pwdInPagesChk.Checked and (cd.user > '') then
       begin
       if encodePwdUrlChk.checked then s:=totallyEncoded(cd.pwd)
       else s:=encodeURL(cd.pwd);
-      s:=f.fullURL( encodeURL(cd.usr)+':'+s, getSafeHost(cd) )+fingerprint;
+      s:=f.fullURL( encodeURL(cd.user)+':'+s, getSafeHost(cd) )+fingerprint;
       url:=s
       end
     else
@@ -3823,7 +3824,7 @@ var
     fn:=macroQuote(fn);
     // apply fields
     files:=files+xtpl(t, [
-      '%item-user%', macroQuote(d.usr),
+      '%item-user%', macroQuote(d.user),
       '%perc%',intToStr( trunc(perc*100) ),
       '%filename%', fn,
       '%filename-js%', jsEncode(fn, '''"'),
@@ -3908,6 +3909,7 @@ try
   addUploadSymbols();
   addProgressSymbols();
   addUploadResultsSymbols();
+  //addArray(md.table, ['%folder%', data.f.]);
   if data = NIL then s:=''
   else s:=first(data.banReason, data.disconnectReason);
   addArray(md.table, ['%reason%', s]);
@@ -4122,7 +4124,7 @@ var
 begin
 decodeDateFully(now(), y,m,d,w);
 if cd = NIL then u:=''
-else u:=nonEmptyConcat('(', cd.usr, ')');
+else u:=nonEmptyConcat('(', cd.user, ')');
 result:=xtpl(logFile.filename, [
   '%d%', int0(d,2),
   '%m%', int0(m,2),
@@ -4168,18 +4170,15 @@ else
 
 addr:='';
 if assigned(cd) and assigned(cd.conn) then
-  begin
-  addr:=cd.address+':'+cd.conn.port
+  addr:=nonEmptyConcat('', cd.user, '@')
+    +cd.address+':'+cd.conn.port
     +nonEmptyConcat(' {', localDNSget(cd.address), '}');
-  if freeLoginChk.checked or cd.acceptedCredentials then
-    addr:=nonEmptyConcat('', cd.usr, '@')+addr;
-  end;
 
 if (logFile.filename > '') and (logFile.apacheFormat = '') then
   begin
   s:=ts;
   if (cd = NIL) or (cd.conn = nil) then s:=s+TAB+''+TAB+''+TAB+''+TAB+''
-  else s:=s+TAB+cd.usr+TAB+cd.address+TAB+cd.conn.port+TAB+localDNSget(cd.address);
+  else s:=s+TAB+cd.user+TAB+cd.address+TAB+cd.conn.port+TAB+localDNSget(cd.address);
   s:=s+TAB+first;
 
   if tabOnLogFileChk.checked then s:=s+stripChars(reReplace(lines, '^', TAB),[#13,#10])
@@ -4365,7 +4364,7 @@ try
   case cmd of
     'a', 'h': res:=cd.address;
     'l': res:='-';
-    'u': res:=first(cd.usr, '-');
+    'u': res:=first(cd.user, '-');
     't': res:='['
       +replaceStr(formatDatetime(APACHE_TIMESTAMP_FORMAT, now()),
         '!!!',MONTH2STR[monthOf(now())])
@@ -4887,6 +4886,8 @@ var
   begin
   if data = NIL then
     exit;
+  data.user:='';
+  data.pwd:='';
   if data.session = NIL then
     begin
     sid:=conn.getCookie(SESSION_COOKIE);
@@ -4901,18 +4902,18 @@ var
         end;
     end;
   data.session.keepAlive();
-  if data.usr = '' then
+  if conn.request.user > '' then // priority
     begin
-    data.usr:=data.session.getVar('user');
-    data.pwd:=data.session.getVar('password');
-    end;
-  if (data.usr = '') and (conn.request.user > '') then
-    begin
-    data.usr:=conn.request.user;
+    data.user:=conn.request.user;
     data.pwd:=conn.request.pwd;
+    data.account:=NIL;
+    exit;
     end;
-  if (data.usr = '') <> (data.account = NIL) then
-    data.account:=getAccount(data.usr);
+  data.account:=getAccount(data.session.user);
+  if data.account = NIL then
+    exit;
+  data.user:=data.account.user;
+  data.pwd:=data.account.pwd;
   end; // sessionSetup
 
   procedure serveTar();
@@ -5059,6 +5060,7 @@ var
   var
     dlForbiddenForWholeFolder, specialGrant: boolean;
     urlCmd: string;
+    acc: Paccount;
 
     function accessGranted(forceFile:Tfile=NIL):boolean;
     resourcestring
@@ -5087,11 +5089,17 @@ var
       freeIfTemp(Ftemp);
       end;
     if result then exit;
+    if f.isFolder() then
+      begin
+      conn.reply.mode:=HRM_REPLY;
+      getPage('login', data, f);
+      exit;
+      end;
     conn.reply.realm:=f.getShownRealm();
     runEventScript('unauthorized');
     getPage('unauthorized', data);
     // log anyone trying to guess the password
-    if (forceFile = NIL) and stringExists(data.usr, getAccountList(TRUE, FALSE))
+    if (forceFile = NIL) and stringExists(data.user, getAccountList(TRUE, FALSE))
     and logOtherEventsChk.checked then
       add2log(FAILED, data);
     end; // accessGranted
@@ -5190,13 +5198,14 @@ var
 
     function goodPassword(s:string; func:ThashFunc):boolean;
     begin
-    s:=data.postVars.values[s];
-    result:=(s > '') and (s = func(func(data.account.pwd)+data.session.id))
+    s:=data.postVars.values['password'+s];
+    // Instead of hash(pwd+session) I replaced pwd with hash(pwd) so that in the future this may work even if we stored hashed password on the server
+    result:=(s > '') and (s = func(func(acc.pwd)+data.session.id))
     end;
 
   var
     b: boolean;
-    s: string;
+    s, mode: string;
     i: integer;
     section: PtplSection;
   begin
@@ -5270,6 +5279,7 @@ var
   url:=conn.request.url;
   extractParams();
   url:=decodeURL(ansistring(url));
+  mode:= data.urlvars.values['mode'];
 
   data.lastFN:=extractFileName( replaceStr(url,'/','\') );
   data.agent:=getAgentID(conn);
@@ -5281,50 +5291,31 @@ var
     end;
 
   sessionSetup();
-  if data.postVars.indexOfName('__USER') >= 0 then
+  if mode = 'logout' then
     begin
-    s:=data.postVars.values['__USER'];
-    data.account:=getAccount(s);
-    if data.account = NIL then
-      if s = '' then // logout
-        begin
-        s:='ok';
-        data.logout();
-        end
-      else
-        s:='username not found'
+    data.logout();
+    replyWithString('ok');
+    exit;
+    end;
+  if mode = 'login' then
+    begin
+    acc:=getAccount(data.postVars.values['user']);
+    if acc = NIL then
+      s:='username not found'
     else
-      begin
-      data.usr:=s;
-      { I opted to use double hashing for this authentication method so that in the
-        future this may work even if we stored hashed password on the server,
-        thus being unable to calculate hash(pwd+sessionID).
-        By relying on hash(pwd) instead of pwd we avoid such problem. }
-      if goodPassword('__PASSWORD_SHA256', strSHA256)
-      or goodPassword('__PASSWORD_MD5', strMD5)
-      or (data.postVars.values['__PASSWORD'] = data.account.pwd) then
+      if goodPassword('SHA256', strSHA256)
+      or goodPassword('MD5', strMD5)
+      or (data.postVars.values['password'] = acc.pwd) then
         begin
+        data.session.user:=acc.user;
         s:='ok';
-        data.pwd:=data.account.pwd;
-        data.session.setVar('user', data.usr);
-        data.session.setVar('password', data.pwd);
         end
       else
-        begin
         s:='bad password'; //TODO shouldn't this change http code?
-        data.account:=NIL;
-        data.usr:='';
-        end;
-      end;
-    if data.postVars.values['__AJAX'] = '1' then
-      begin
-      replyWithString(s);
-      exit;
-      end;
+    replyWithString(s);
+    exit;
     end;
 
-  // this is better to be refresh, because a user may be deleted meantime
-  data.account:=getAccount(data.usr);
   conn.ignoreSpeedLimit:=noLimitsFor(data.account);
 
   // all URIs must begin with /
@@ -5349,7 +5340,7 @@ var
       getPage('not found', data);
     exit;
     end;
-  if data.urlvars.values['mode'] = 'jquery' then
+  if mode = 'jquery' then
     begin
     if notModified(conn,'jquery'+FloatToStr(uptime), '') then
       exit;
@@ -5360,9 +5351,9 @@ var
 
   // forbid using invalid credentials
   if not freeLoginChk.checked and not specialGrant then
-    if (data.usr>'')
+    if (data.user>'')
     and ((data.account=NIL) or (data.account.pwd <> data.pwd))
-    and not usersInVFS.match(data.usr, data.pwd) then
+    and not usersInVFS.match(data.user, data.pwd) then
       begin
       data.acceptedCredentials:=FALSE;
       runEventScript('unauthorized');
@@ -5401,7 +5392,7 @@ var
     conn.reply.url:=f.url(); // we use f.url() instead of just appending a "/" to url because of problems with non-ansi chars http://www.rejetto.com/forum/?topic=7837
     exit;
     end;
-  if f.isFolder() and (urlCmd = '') and (data.urlvars.indexOfName('mode')<0) then
+  if f.isFolder() and (urlCmd = '') and (mode='') then
     switchToDefaultFile();
   if enableNoDefaultChk.checked and (urlCmd = '~nodefault') then
     urlCmd:='';
@@ -5465,7 +5456,7 @@ var
     end;
 
   // provide access to any [section] in the tpl, included [progress]
-  if data.urlvars.values['mode'] = 'section' then
+  if mode = 'section' then
     s:=first(data.urlvars.values['id'], 'no-id') // no way, you must specify the id
   else if (f = rootFile) and (urlCmd > '') then
     s:=substr(urlCmd,2)
@@ -5500,7 +5491,7 @@ var
     end;
 
   if (urlCmd = '~folder.tar')
-  or (data.urlvars.values['mode'] = 'archive') then
+  or (mode = 'archive') then
     begin
     serveTar();
     exit;
@@ -8963,7 +8954,7 @@ if quitting then exit;
 if item = NIL then exit;
 data:=conn2data(item);
 if data = NIL then exit;
-item.caption:=nonEmptyConcat('', data.usr, '@')+data.address+':'+data.conn.port;
+item.caption:=nonEmptyConcat('', data.user, '@')+data.address+':'+data.conn.port;
 while item.subitems.count < 5 do
   item.subitems.add('');
 
@@ -9477,7 +9468,7 @@ while not tlv.isOver() do
     FK_USERPWD:
     	begin
       data:=base64decode(data);
-      f.user:=chop(pos(':',data),1,data);
+      f.user:=chop(':',data);
       f.pwd:=data;
       usersInVFS.track(f.user, f.pwd);
       end;

@@ -119,6 +119,10 @@ object optionsFrm: ToptionsFrm
     object accountsPage: TTabSheet
       Caption = 'Accounts'
       ImageIndex = 29
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       DesignSize = (
         797
         385)
