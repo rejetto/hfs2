@@ -3,11 +3,15 @@ object mainFrm: TmainFrm
   Top = 219
   Caption = 'HFS ~ HTTP File Server'
   ClientHeight = 391
-  ClientWidth = 783
+  ClientWidth = 913
   Color = clBtnFace
   Constraints.MinHeight = 260
   Constraints.MinWidth = 390
-  ParentFont = True
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Tahoma'
+  Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
   Position = poDesigned
@@ -19,11 +23,11 @@ object mainFrm: TmainFrm
   OnResize = FormResize
   OnShow = FormShow
   PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 14
   object graphSplitter: TSplitter
     Left = 0
     Top = 78
-    Width = 783
+    Width = 913
     Height = 5
     Cursor = crVSplit
     Align = alTop
@@ -38,10 +42,16 @@ object mainFrm: TmainFrm
   object graphBox: TPaintBox
     Left = 0
     Top = 48
-    Width = 783
+    Width = 913
     Height = 30
     Hint = 'Pink = Out'#13#10'Yellow = In'
     Align = alTop
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -12
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
     ParentShowHint = False
     PopupMenu = graphMenu
     ShowHint = True
@@ -52,16 +62,24 @@ object mainFrm: TmainFrm
   object topToolbar: TToolBar
     Left = 0
     Top = 0
-    Width = 783
+    Width = 913
     Height = 24
     AutoSize = True
-    ButtonWidth = 138
+    ButtonWidth = 150
     Caption = 'topToolbar'
     EdgeBorders = [ebBottom]
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -12
+    Font.Name = 'Tahoma'
+    Font.Style = []
     Images = images
     List = True
+    ParentFont = False
     ShowCaptions = True
     TabOrder = 1
+    ExplicitWidth = 783
+    ExplicitHeight = 55
     object menuBtn: TToolButton
       Left = 0
       Top = 0
@@ -74,7 +92,7 @@ object mainFrm: TmainFrm
       OnClick = menuBtnClick
     end
     object ToolButton4: TToolButton
-      Left = 57
+      Left = 61
       Top = 0
       Width = 9
       Caption = 'ToolButton4'
@@ -82,7 +100,7 @@ object mainFrm: TmainFrm
       Style = tbsSeparator
     end
     object portBtn: TToolButton
-      Left = 66
+      Left = 70
       Top = 0
       AutoSize = True
       Caption = 'Port: any'
@@ -90,7 +108,7 @@ object mainFrm: TmainFrm
       OnClick = portBtnClick
     end
     object ToolButton2: TToolButton
-      Left = 142
+      Left = 151
       Top = 0
       Width = 8
       Caption = 'ToolButton2'
@@ -98,7 +116,7 @@ object mainFrm: TmainFrm
       Style = tbsSeparator
     end
     object modeBtn: TToolButton
-      Left = 150
+      Left = 159
       Top = 0
       Hint = 'Click to switch'#13#10'F5 on keyboard'
       AutoSize = True
@@ -109,7 +127,7 @@ object mainFrm: TmainFrm
       OnClick = modeBtnClick
     end
     object ToolButton1: TToolButton
-      Left = 284
+      Left = 309
       Top = 0
       Width = 9
       Caption = 'ToolButton1'
@@ -117,7 +135,7 @@ object mainFrm: TmainFrm
       Style = tbsSeparator
     end
     object startBtn: TToolButton
-      Left = 293
+      Left = 318
       Top = 0
       Hint = 'Click to switch ON'#13'F4 on keyboard'
       AutoSize = True
@@ -128,7 +146,7 @@ object mainFrm: TmainFrm
       OnClick = startBtnClick
     end
     object abortBtn: TToolButton
-      Left = 435
+      Left = 472
       Top = 0
       AutoSize = True
       Caption = 'Abort file addition'
@@ -137,7 +155,7 @@ object mainFrm: TmainFrm
       OnClick = abortBtnClick
     end
     object restoreCfgBtn: TToolButton
-      Left = 551
+      Left = 600
       Top = 0
       Caption = 'Restore my options'
       ImageIndex = 34
@@ -145,7 +163,7 @@ object mainFrm: TmainFrm
       OnClick = restoreCfgBtnClick
     end
     object updateBtn: TToolButton
-      Left = 689
+      Left = 750
       Top = 0
       AutoSize = True
       Caption = 'Update now'
@@ -157,16 +175,24 @@ object mainFrm: TmainFrm
   object urlToolbar: TToolBar
     Left = 0
     Top = 24
-    Width = 783
+    Width = 913
     Height = 24
     AutoSize = True
-    ButtonWidth = 111
+    ButtonWidth = 122
     EdgeBorders = [ebBottom]
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -12
+    Font.Name = 'Tahoma'
+    Font.Style = []
     Images = images
     List = True
+    ParentFont = False
     ShowCaptions = True
     TabOrder = 2
     Wrapable = False
+    ExplicitTop = 55
+    ExplicitWidth = 783
     object browseBtn: TToolButton
       Left = 0
       Top = 0
@@ -176,7 +202,7 @@ object mainFrm: TmainFrm
       OnClick = browseBtnClick
     end
     object urlBox: TEdit
-      Left = 110
+      Left = 122
       Top = 0
       Width = 433
       Height = 22
@@ -184,7 +210,7 @@ object mainFrm: TmainFrm
       OnChange = urlBoxChange
     end
     object copyBtn: TToolButton
-      Left = 543
+      Left = 555
       Top = 0
       AutoSize = True
       Caption = 'Copy to clipboard'
@@ -195,11 +221,20 @@ object mainFrm: TmainFrm
   object centralPnl: TPanel
     Left = 0
     Top = 83
-    Width = 783
+    Width = 913
     Height = 308
     Align = alClient
     BevelOuter = bvNone
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -12
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
     TabOrder = 0
+    ExplicitTop = 114
+    ExplicitWidth = 783
+    ExplicitHeight = 277
     object splitV: TSplitter
       Left = 313
       Top = 0
@@ -214,7 +249,7 @@ object mainFrm: TmainFrm
     object splitH: TSplitter
       Left = 0
       Top = 197
-      Width = 783
+      Width = 913
       Height = 5
       Cursor = crVSplit
       Align = alBottom
@@ -228,20 +263,22 @@ object mainFrm: TmainFrm
     object logPnl: TPanel
       Left = 316
       Top = 0
-      Width = 467
+      Width = 597
       Height = 197
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
+      ExplicitWidth = 467
+      ExplicitHeight = 166
       object logBox: TRichEdit
         Left = 0
         Top = 23
-        Width = 467
+        Width = 597
         Height = 174
         Align = alClient
         Font.Charset = ANSI_CHARSET
         Font.Color = clWindowText
-        Font.Height = -11
+        Font.Height = -12
         Font.Name = 'Tahoma'
         Font.Style = []
         HideSelection = False
@@ -254,27 +291,31 @@ object mainFrm: TmainFrm
         Zoom = 100
         OnChange = logBoxChange
         OnMouseDown = logBoxMouseDown
+        ExplicitWidth = 467
+        ExplicitHeight = 143
       end
       object logTitle: TPanel
         Left = 0
         Top = 0
-        Width = 467
+        Width = 597
         Height = 23
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 1
+        ExplicitWidth = 467
         object titlePnl: TPanel
           Left = 0
           Top = 0
-          Width = 211
+          Width = 341
           Height = 23
           Align = alClient
           BevelOuter = bvNone
           Caption = 'Log'
           TabOrder = 0
+          ExplicitWidth = 211
         end
         object logToolbar: TPanel
-          Left = 211
+          Left = 341
           Top = 0
           Width = 256
           Height = 23
@@ -282,6 +323,7 @@ object mainFrm: TmainFrm
           AutoSize = True
           BevelOuter = bvNone
           TabOrder = 1
+          ExplicitLeft = 211
           object collapsedPnl: TPanel
             Left = 0
             Top = 0
@@ -444,7 +486,7 @@ object mainFrm: TmainFrm
               OnClick = openLogBtnClick
             end
             object collapseBtn: TSpeedButton
-              Left = 0
+              Left = -4
               Top = 0
               Width = 21
               Height = 23
@@ -471,36 +513,39 @@ object mainFrm: TmainFrm
               ParentShowHint = False
               ShowHint = True
               OnClick = collapseBtnClick
+              ExplicitLeft = 0
             end
             object Bevel1: TBevel
-              Left = 21
+              Left = 17
               Top = 0
               Width = 2
               Height = 23
               Align = alRight
+              ExplicitLeft = 21
             end
             object searchPnl: TPanel
-              Left = 23
+              Left = 19
               Top = 0
-              Width = 160
+              Width = 164
               Height = 23
               Align = alRight
               AutoSize = True
               BevelOuter = bvNone
               Padding.Left = 5
               TabOrder = 0
+              ExplicitLeft = 23
               DesignSize = (
-                160
+                164
                 23)
               object logSearchBox: TLabeledEdit
-                Left = 41
+                Left = 45
                 Top = 1
                 Width = 103
-                Height = 21
+                Height = 22
                 Hint = 'Wildcards allowed'
                 Anchors = [akTop, akRight]
-                EditLabel.Width = 33
-                EditLabel.Height = 13
+                EditLabel.Width = 37
+                EditLabel.Height = 14
                 EditLabel.Caption = 'Search'
                 LabelPosition = lpLeft
                 ParentShowHint = False
@@ -510,7 +555,7 @@ object mainFrm: TmainFrm
                 OnKeyPress = logSearchBoxKeyPress
               end
               object logUpDown: TUpDown
-                Left = 144
+                Left = 148
                 Top = 0
                 Width = 16
                 Height = 24
@@ -534,6 +579,7 @@ object mainFrm: TmainFrm
       BevelOuter = bvNone
       Caption = 'filesPnl'
       TabOrder = 0
+      ExplicitHeight = 166
       object filesBox: TTreeView
         Left = 0
         Top = 23
@@ -574,6 +620,7 @@ object mainFrm: TmainFrm
         OnMouseEnter = filesBoxMouseEnter
         OnMouseLeave = filesBoxMouseLeave
         OnMouseUp = filesBoxMouseUp
+        ExplicitHeight = 143
       end
       object filesTitle: TPanel
         Left = 0
@@ -589,15 +636,17 @@ object mainFrm: TmainFrm
     object connPnl: TPanel
       Left = 0
       Top = 202
-      Width = 783
+      Width = 913
       Height = 106
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 2
+      ExplicitTop = 171
+      ExplicitWidth = 783
       object sbar: TStatusBar
         Left = 0
         Top = 87
-        Width = 783
+        Width = 913
         Height = 19
         Panels = <
           item
@@ -605,11 +654,12 @@ object mainFrm: TmainFrm
           end>
         OnDblClick = sbarDblClick
         OnMouseDown = sbarMouseDown
+        ExplicitWidth = 783
       end
       object connBox: TListView
         Left = 0
         Top = 0
-        Width = 783
+        Width = 913
         Height = 87
         Align = alClient
         Columns = <
@@ -656,6 +706,7 @@ object mainFrm: TmainFrm
         ViewStyle = vsReport
         OnAdvancedCustomDrawSubItem = connBoxAdvancedCustomDrawSubItem
         OnData = connBoxData
+        ExplicitWidth = 886
       end
     end
   end
