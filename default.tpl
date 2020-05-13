@@ -437,23 +437,8 @@ z-index:1; /* without this .item-menu will be over*/ }
 	{.123 if 2|<div class='comment'><i class="fa fa-quote-left"></i><span class="comment-text">|{.commentNL|%item-comment%.}|</span></div>.}
 </div>
 
-[login]
-{.$common-head.}
-	<title>{.!HFS.} %folder%</title>
-</head>
-<body onload="showLogin({ closable:false })">
-</body>
-</html>
-
 [error-page]
-<!DOCTYPE html>
-<html>
-<head>
-	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style type="text/css">
-  {.$style.css.}
-  </style>
+{.$common-head.}
   </head>
 <body>
 %content%
@@ -463,6 +448,10 @@ z-index:1; /* without this .item-menu will be over*/ }
 </div>
 </body>
 </html>
+
+[login]
+<h1>{.!Login required.}</h1>
+<script>showLogin({ closable:false })</script>
 
 [not found]
 <h1>{.!Not found.}</h1>

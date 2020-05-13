@@ -2495,7 +2495,7 @@ var
   left, right: real;
   leftS, rightS: string;
 
-  function getOperate(dir:integer):string;
+  function getOperand(dir:integer):string;
   var
     j: integer;
   begin
@@ -2511,7 +2511,7 @@ var
   swapMem(i, j, sizeOf(i), dir > 0);
   j:=j-i+1;
   result:=copy(s, i, j);
-  end; // getOperate
+  end; // getOperand
 
 begin
   repeat
@@ -2546,8 +2546,8 @@ begin
     exit;
     end;
   // determine operates
-  leftS:=getOperate(-1);
-  rightS:=getOperate(+1);
+  leftS:=getOperand(-1);
+  rightS:=getOperand(+1);
   left:=StrToFloatDef(trim(leftS), 0);
   right:=strToFloat(trim(rightS));
   // calculate

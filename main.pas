@@ -3917,6 +3917,7 @@ try
   data.conn.reply.contentType:=ansistring(name2mimetype(sectionName, 'text/html'));
   if sectionName = 'ban' then data.conn.reply.mode:=HRM_DENY;
   if sectionName = 'deny' then data.conn.reply.mode:=HRM_DENY;
+  if sectionName = 'login' then data.conn.reply.mode:=HRM_DENY;
   if sectionName = 'not found' then data.conn.reply.mode:=HRM_NOT_FOUND;
   if sectionName = 'unauthorized' then data.conn.reply.mode:=HRM_UNAUTHORIZED;
   if sectionName = 'overload' then data.conn.reply.mode:=HRM_OVERLOAD;
@@ -5089,15 +5090,9 @@ var
       freeIfTemp(Ftemp);
       end;
     if result then exit;
-    if f.isFolder() then
-      begin
-      conn.reply.mode:=HRM_REPLY;
-      getPage('login', data, f);
-      exit;
-      end;
     conn.reply.realm:=f.getShownRealm();
     runEventScript('unauthorized');
-    getPage('unauthorized', data);
+    getPage('login', data, f);
     // log anyone trying to guess the password
     if (forceFile = NIL) and stringExists(data.user, getAccountList(TRUE, FALSE))
     and logOtherEventsChk.checked then
