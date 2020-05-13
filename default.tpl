@@ -845,6 +845,8 @@ function selectionMask() {
 }//selectionMask
 
 function showLogin(options) {
+	if (!HFS.sid) // the session was just deleted
+		return location.reload() // but it's necessary for login
 	var d = dialog('\
 		<form style="line-height:1.9em">\
 			Username\

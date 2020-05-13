@@ -5060,7 +5060,7 @@ var
   procedure handleRequest();
   var
     dlForbiddenForWholeFolder, specialGrant: boolean;
-    urlCmd: string;
+    mode, urlCmd: string;
     acc: Paccount;
 
     function accessGranted(forceFile:Tfile=NIL):boolean;
@@ -5081,13 +5081,12 @@ var
     result:=f.accessFor(data);
     // ok, you are referring a section of the template, which virtually resides in the root because of the url starting with /~
     // but you don't have access rights to the root. We'll let you pass if it's actually a section and you are using it from a folder that you have access to.
-    if not result and (f = rootFile) and ansiStartsStr('~', urlCmd) and tpl.sectionExist(copy(urlCmd,2,MAXINT))
+    if not result and (f = rootFile)
+    and ((mode='section') or ansiStartsStr('~', urlCmd) and tpl.sectionExist(copy(urlCmd,2,MAXINT)))
     and (0 < reMatch(conn.getHeader('Referer'), '://([^@]*@)?'+getSafeHost(data)+'(/.*)', 'i', 1, @m)) then
       begin
-      fTemp:=findFileByUrl(m[2]);
-      result:=assigned(fTemp) and fTemp.accessFor(data);
-      specialGrant:=result;
-      freeIfTemp(Ftemp);
+      result:=TRUE;
+      specialGrant:=TRUE;
       end;
     if result then exit;
     conn.reply.realm:=f.getShownRealm();
@@ -5200,7 +5199,7 @@ var
 
   var
     b: boolean;
-    s, mode: string;
+    s: string;
     i: integer;
     section: PtplSection;
   begin
