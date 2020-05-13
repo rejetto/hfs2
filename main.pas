@@ -2800,7 +2800,7 @@ var
 begin
 result:=TstringList.create;
 result.CaseSensitive:=FALSE;
-if findFirst(exePath+'hfs.diff.*.tpl', faAnyFile, sr) = 0 then
+if findFirst(exePath+'*.diff.tpl', faAnyFile, sr) = 0 then
   try
     repeat result.add(sr.name)
     until findNext(sr) <> 0;
