@@ -100,43 +100,43 @@ COMMENT with the ones above you can disable some features of the template. They 
 	</div>
 	<div id="menu-bar">
 		{.if| {.length|%user%.}
-		| <button class='pure-button' onclick='showAccount()'><i class='fa fa-user-circle'></i><span>%user%</span></button>
-		| <button class='pure-button' title="{.!Login.}" onclick='showLogin()'><i class='fa fa-user'></i><span>{.!Login.}</span></button>
+		| <button onclick='showAccount()'><i class='fa fa-user-circle'></i><span>%user%</span></button>
+		| <button title="{.!Login.}" onclick='showLogin()'><i class='fa fa-user'></i><span>{.!Login.}</span></button>
 		.}
 		{.if| {.get|can recur.} |
-		<button class='pure-button' onclick="{.if|{.length|{.?search.}.}| location = '.'| $('#search-panel').toggle().find(':input:first').focus().}">
+		<button onclick="{.if|{.length|{.?search.}.}| location = '.'| $('#search-panel').toggle().find(':input:first').focus().}">
 			<i class='fa fa-search'></i><span>{.!Search.}</span>
 		</button>
 		/if.}
-		<button id="multiselection" class='pure-button' title="{.!Enable multi-selection.}"  onclick='toggleSelection()'>
+		<button id="multiselection" title="{.!Enable multi-selection.}"  onclick='toggleSelection()'>
 			<i class='fa fa-check'></i>
 			<span>{.!Selection.}</span>
 		</button>
 		{.if|{.can mkdir.}|
-			<button title="{.!New folder.}" class='pure-button' id='newfolderBtn' onclick='ask(this.innerHTML, "text", name=> ajax("mkdir", { name:name }))'>
+			<button title="{.!New folder.}" id='newfolderBtn' onclick='ask(this.innerHTML, "text", name=> ajax("mkdir", { name:name }))'>
 				<i class="fa fa-folder"></i>
 				<span>{.!New folder.}</span>
 			</button>
 		.}
-		<button id="toggleTs" class='pure-button' title="{.!Display timestamps.}"  onclick="toggleTs()">
+		<button id="toggleTs" title="{.!Display timestamps.}"  onclick="toggleTs()">
 			<i class='fa fa-clock-o'></i>
 			<span>{.!Toggle timestamp.}</span>
 		</button>
 
 		{.if|{.get|can archive.}|
-		<button id='archiveBtn' class='pure-button' onclick='ask("{.!Download these files as a single archive?.}", function() { submit({ selection: getSelectedItemsName() }, "{.get|url|mode=archive|recursive.}") })'>
+		<button id='archiveBtn' onclick='ask("{.!Download these files as a single archive?.}", function() { submit({ selection: getSelectedItemsName() }, "{.get|url|mode=archive|recursive.}") })'>
 			<i class="fa fa-file-archive"></i>
 			<span>{.!Archive.}</span>
 		</button>
 		.}
 		{.if| {.get|can upload.} |{:
-			<button id="upload" onclick="upload()" class='pure-button' title="{.!Upload.}">
+			<button id="upload" onclick="upload()" title="{.!Upload.}">
 				<i class='fa fa-upload'></i>
 				<span>{.!Upload.}</span>
 			</button>
 		:}.}
 
-		<button id="sort" onclick="changeSort()" class='pure-button'>
+		<button id="sort" onclick="changeSort()">
 			<i class='fa fa-sort'></i>
 			<span></span>
 		</button>
@@ -148,10 +148,10 @@ COMMENT with the ones above you can disable some features of the template. They 
 		<div id="selection-panel" class="additional-panel" style="display:none">
 			<label><span id="selected-counter">0</span> {.!selected.}</label>
 			<span class="buttons">
-				<button id="select-mask" class="pure-button"><i class="fa fa-asterisk"></i><span>{.!Mask.}</span></button>
-				<button id="select-invert" class="pure-button"><i class="fa fa-retweet"></i><span>{.!Invert.}</span></button>
-				<button id="delete-selection" class="pure-button"><i class="fa fa-trash"></i><span>{.!Delete.}</span></button>
-				<button id="move-selection" class="pure-button"><i class="fa fa-truck"></i><span>{.!Move.}</span></button>
+				<button id="select-mask"><i class="fa fa-asterisk"></i><span>{.!Mask.}</span></button>
+				<button id="select-invert"><i class="fa fa-retweet"></i><span>{.!Invert.}</span></button>
+				<button id="delete-selection"><i class="fa fa-trash"></i><span>{.!Delete.}</span></button>
+				<button id="move-selection"><i class="fa fa-truck"></i><span>{.!Move.}</span></button>
 			</span>
 		</div>
     </div>
@@ -191,7 +191,7 @@ $(function(){
 
 [folder panel]
 <div id='folder-path'>
-	{.breadcrumbs|{:<a class='pure-button' href="%bread-url%"/> {.if|{.length|%bread-name%.}|/ %bread-name%|<i class='fa fa-home'></i>.}</a>:} .}
+	{.breadcrumbs|{:<button onclick="location.href='%bread-url%' "> {.if|{.length|%bread-name%.}|/ %bread-name%|<i class='fa fa-home'></i>.}</button>:} .}
 </div>
 {.if|%number%|
 <div id='folder-stats'>
@@ -210,7 +210,7 @@ $(function(){
 		{.!Uploading....} <span id="progress-text"></span>
 		<progress max="1"></progress>
 	</div>
-	<button class="pure-button" onclick="reload()"><i class="fa fa-refresh"></i> {.!Reload page.}</button>
+	<button onclick="reload()"><i class="fa fa-refresh"></i> {.!Reload page.}</button>
 </div>
 
 [search panel]
@@ -220,7 +220,7 @@ $(function(){
 		<br><input type='radio' name='where' value='fromhere' checked='true' />  {.!this folder and sub-folders.}
 		<br><input type='radio' name='where' value='here' />  {.!this folder only.}
 		<br><input type='radio' name='where' value='anywhere' />  {.!entire server.}
-		<button type="submit" class="pure-button">{.!Go.}</button>
+		<button type="submit">{.!Go.}</button>
 	</form>
 </div>
 <style>
@@ -300,15 +300,12 @@ confirm=Are you sure?
 
 {.$icons.css.}
 
-.pure-button {
-	background-color: #cde; padding: .5em 1em; color: #444; color: rgba(0,0,0,.8); border: 1px solid #999; border: transparent; text-decoration: none; box-sizing: border-box;
-	border-radius: 2px; display: inline-block; zoom: 1; white-space: nowrap; vertical-align: middle; text-align: center; cursor: pointer; user-select: none;
-}
+button { background-color: #cde; color: #444; padding: .5em 1em; border: transparent; text-decoration: none; border-radius: .3em; vertical-align: middle; cursor:pointer; }
 body { font-family:tahoma, verdana, arial, helvetica, sans; transition:background-color 1s ease; }
 a { text-decoration:none; color:#26c; border:1px solid transparent; padding:0 0.1em; }
 #folder-path { float:left; margin-bottom: 0.2em; }
-#folder-path a { padding: .5em; }
-#folder-path a:first-child { padding:.28em } #folder-path i.fa { font-size:135% }
+#folder-path button { padding: .4em; }
+#folder-path button:first-child { padding: .2em .4em;} #folder-path i.fa { font-size:135% }
 button i.fa { font-size:110% }
 .item { margin-bottom:.3em; padding:.3em  .8em; border-top:1px solid #ddd;  }
 .item:hover { background:#f8f8f8; }
@@ -366,9 +363,8 @@ button i.fa { font-size:110% }
 body.dark-theme { background:#222; color:#aaa; }
 body.dark-theme #title-bar { color:#bbb }
 body.dark-theme a { color:#79b }
-body.dark-theme a.pure-button { color:#444 }
 body.dark-theme .item:hover { background:#111; }
-body.dark-theme .pure-button { background:#89a; }
+body.dark-theme button { background:#89a; }
 body.dark-theme .item .comment { background-color:#444; color:#888; }
 body.dark-theme #foldercomment { background-color:#333; color:#999; }
 body.dark-theme .dialog-overlay { background:rgba(100,100,100,.5) }
@@ -428,7 +424,7 @@ z-index:1; /* without this .item-menu will be over*/ }
 [+file=folder=link]
 		{.if|{.get|is new.}|<i class='fa fa-star' title="{.!NEW.}"></i>.}
 [+file=folder]
-        <button class='item-menu pure-button' title="{.!More options.}"><i class="fa fa-menu"></i></button>
+        <button class='item-menu' title="{.!More options.}"><i class="fa fa-menu"></i></button>
 [+file=folder=link]
  	</div>
 	<div class='clearer'></div>
@@ -715,7 +711,7 @@ function showMsg(content, options) {
 		.append(
 			bs===false ? null 
 			: $('<div class="buttons">').html(bs ||
-				$('<button class="pure-button">').text("{.!Ok.}")	
+				$('<button>').text("{.!Ok.}")	
 					.click(ev=> ret.close() ) ) )
 	return ret
 }//showMsg
@@ -738,9 +734,9 @@ function ask(msg, options, cb) {
     msg += '<br />';
     var v = options.type
 	if (!v)
-	    msg += '<br><button class="pure-button">{.!Ok.}</button>'
+	    msg += '<br><button>{.!Ok.}</button>'
 	else if (v == 'textarea')
-		msg += '<textarea name="txt" cols="30" rows="8">'+options.value+'</textarea><br><button type="submit" class="pure-button">Ok</button>';
+		msg += '<textarea name="txt" cols="30" rows="8">'+options.value+'</textarea><br><button type="submit">Ok</button>';
 	else
 		msg += '<input name="txt" type="'+v+'" value="'+(options.value||'')+'" />';
 	var ret = dialog($('<form class="ask">')
@@ -855,7 +851,7 @@ function showLogin(options) {
 			<br><input name=usr />\
 			<br>Password\
 			<br><input name=pwd type=password />\
-			<br><br><input type=submit value="Login" class="pure-button" />\
+			<br><br><button type=submit>Login</button>\
 		</form>', options)
 	
 	d.find('form').submit(function(){
@@ -888,8 +884,8 @@ function showAccount() {
 	dialog('<div style="line-height:3em">\
 			<h1>{.!Account panel.}</h1>\
 			<span>{.!User.}: '+HFS.user+'</span>\
-			<br><button class="pure-button" onclick="changePwd()"><i class="fa fa-key"></i> {.!Change password.}</button>\
-			<br><button class="pure-button" onclick="logout()"><i class="fa fa-logout"></i> {.!Logout.}</button>\
+			<br><button onclick="changePwd()"><i class="fa fa-key"></i> {.!Change password.}</button>\
+			<br><button onclick="logout()"><i class="fa fa-logout"></i> {.!Logout.}</button>\
         </div>')
 } // showAccount
 
@@ -977,7 +973,7 @@ function changeSort(){
     dialog([
         $('<h3>').text('{.!Sort by.}'),
         $('<div class="buttons">').html(objToArr(sortOptions, function(label,code){
-            return $('<button class="pure-button">')
+            return $('<button>')
 				.text(label)
 				.prepend(urlParams.sort===code ? '<i class="fa fa-sort-alt-'+(urlParams.rev?'down':'up')+'"></i> ' : '')
                 .click(function(){
@@ -1137,14 +1133,14 @@ $(function(){
             it.find('.item-ts').clone(),
             $('<div class="buttons">').html([
                 it.closest('.can-delete').length > 0
-				&& $('<button class="pure-button"><i class="fa fa-trash"></i> {.!Delete.}</button>')
+				&& $('<button><i class="fa fa-trash"></i> {.!Delete.}</button>')
 					.click(function() { deleteFiles([name]) }),
                 it.closest('.can-rename').length > 0
-				&& $('<button class="pure-button"><i class="fa fa-edit"></i> {.!Rename.}</button>').click(renameItem),
+				&& $('<button><i class="fa fa-edit"></i> {.!Rename.}</button>').click(renameItem),
                 it.closest('.can-comment').length > 0
-				&& $('<button class="pure-button"><i class="fa fa-quote-left"></i> {.!Comment.}</button>').click(setComment),
+				&& $('<button><i class="fa fa-quote-left"></i> {.!Comment.}</button>').click(setComment),
                 it.closest('.can-move').length > 0
-				&& $('<button class="pure-button"><i class="fa fa-truck"></i> {.!Move.}</button>')
+				&& $('<button><i class="fa fa-truck"></i> {.!Move.}</button>')
 					.click(function(){  moveFiles([name]) })
             ])
         ]).addClass('item-menu-dialog')
