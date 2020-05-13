@@ -2525,7 +2525,7 @@ begin
     ch:=s[i];
     v:=0;
     case ch of
-      '*','/','%': v:=5+ofsImp;
+      '*','/','%','[',']': v:=5+ofsImp;
       '+','-': v:=3+ofsImp;
       '(': inc(ofsImp, PAR_VAL);
       ')': dec(ofsImp, PAR_VAL);
@@ -2562,6 +2562,8 @@ begin
     '%':
       if right <> 0 then result:=trunc(left) mod trunc(right)
       else raise Exception.create('division by zero');
+    '[': result:=round(left) shl round(right);
+    ']': result:=round(left) shr round(right);
     else raise Exception.create('operator not supported: '+ch);
     end;
   // replace sub-expression with result
