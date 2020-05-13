@@ -5,9 +5,10 @@ Here below you'll find some options affecting the template.
 Consider 1 is used for "yes", and 0 is used for "no".
 
 DO NOT EDIT this template just to change options. It's a very bad way to do it, and you'll pay for it!
-Correct way: in Virtual file system, right click on home/root, properties, diff template,
-put this text [+special:strings]
+Correct way: create a new text file 'hfs.diff.tpl' in the same folder of the program. 
+Add this as first line [+special:strings]
 and following all the options you want to change, using the same syntax you see here.
+That's all. To know more about diff templates read the documentation.
 
 [+special:strings]
 
@@ -15,7 +16,7 @@ option.newfolder=1
 option.move=1
 option.comment=1
 option.rename=1
-COMMENT with these you can disable some features of the template. Please note this is not about user permissions, this is global!
+COMMENT with the ones above you can disable some features of the template. They apply to all users.
 
 [common-head]
 <!DOCTYPE html>
@@ -26,7 +27,7 @@ COMMENT with these you can disable some features of the template. Please note th
 	<link rel="shortcut icon" href="/favicon.ico">
 	<link rel="stylesheet" href="/?mode=section&id=style.css" type="text/css">
     <script type="text/javascript" src="/?mode=jquery"></script>
-    <script>HFS = { user:'%user%', folder:'{.js encode|%folder%.}' }</script>
+    <script>HFS = { user:'%user%', folder:'{.js encode|%folder%.}', sid:"{.cookie|HFS_SID_.}" }</script>
 	<script type="text/javascript" src="/?mode=section&id=lib.js"></script>
 
 []
@@ -69,10 +70,10 @@ COMMENT with these you can disable some features of the template. Please note th
 
     function changePwd() {
         {.if|{.can change pwd.}
-        | ask(this.innerHTML, 'password', function(s){
+        | ask('<i class="fa fa-key"></i> {.!Change password.}', 'password', function(s){
             s && ajax('changepwd', {'new':s}, getStdAjaxCB(function(){
-                showMsg("{.!Password changed, you'll have to login again..}")
-                location = '~login'
+				showLoading(false)				
+                showMsg("{.!Password changed.}")
             }))
         })
         | showError("{.!Sorry, you lack permissions for this action.}")
@@ -869,19 +870,12 @@ function showLogin(options) {
 			<br><br><input type=submit value="Login" class="pure-button" />\
 		</form>', options)
 	
-	var data
 	d.find('form').submit(function(){
 		var vals = d.find('[name]').get().map(x=> x.value.trim())
-		var sid = "{.cookie|HFS_SID_.}"
-		var p = vals[1]
-		data = { user:vals[0] }
-		try { eval("(async ()=> send('passwordSHA256', await digest(await digest(p)+sid) ) )()") }
-		catch(e) { send('password', p) }
-		return false
-	})
-	
-	function send(k,v){
-		data[k] = v
+		var data = { 
+			user: vals[0],
+			passwordSHA256: sha256(sha256(vals[1])+HFS.sid)  // hash must be lowercase. Double-hashing is causing case sensitiv
+		}  
 		$.post("?mode=login", data, function(res){
 			if (res !== 'ok')
 				return showError(res)
@@ -889,7 +883,8 @@ function showLogin(options) {
 			showLoading()
 			location.reload()
 		});
-	}
+		return false
+	})
 } // showLogin
 
 function showLoading(show){
@@ -905,21 +900,17 @@ function showAccount() {
 	dialog('<div style="line-height:3em">\
 			<h1>{.!Account panel.}</h1>\
 			<span>{.!User.}: '+HFS.user+'</span>\
-			<br><button class="pure-button" onclick="changePwd.call(this)"><i class="fa fa-key"></i> {.!Change password.}</button>\
+			<br><button class="pure-button" onclick="changePwd()"><i class="fa fa-key"></i> {.!Change password.}</button>\
 			<br><button class="pure-button" onclick="logout()"><i class="fa fa-logout"></i> {.!Logout.}</button>\
         </div>')
 } // showAccount
 
 function logout(){
+	showLoading()
 	$.post('?mode=logout', function(){
 		location.reload()
 	});
 }
-
-function digest(data, method='SHA-256') {
-	return crypto.subtle.digest(method, new TextEncoder().encode(data)).then(x=> 
-		Array.from(new Uint8Array(x)).map(b => b.toString(16).padStart(2, '0')).join('').toUpperCase() )
-} // digest
 
 function setCookie(name,value,days) {
     if (days) {
@@ -1124,6 +1115,11 @@ function encodeURL(obj) {
 	}
 	return ret.join('&')
 }//encodeURL
+
+// from https://github.com/AndersLindman/SHA256
+SHA256={K:[1116352408,1899447441,3049323471,3921009573,961987163,1508970993,2453635748,2870763221,3624381080,310598401,607225278,1426881987,1925078388,2162078206,2614888103,3248222580,3835390401,4022224774,264347078,604807628,770255983,1249150122,1555081692,1996064986,2554220882,2821834349,2952996808,3210313671,3336571891,3584528711,113926993,338241895,666307205,773529912,1294757372,1396182291,1695183700,1986661051,2177026350,2456956037,2730485921,2820302411,3259730800,3345764771,3516065817,3600352804,4094571909,275423344,430227734,506948616,659060556,883997877,958139571,1322822218,1537002063,1747873779,1955562222,2024104815,2227730452,2361852424,2428436474,2756734187,3204031479,3329325298],Uint8Array:function(r){return new("undefined"!=typeof Uint8Array?Uint8Array:Array)(r)},Int32Array:function(r){return new("undefined"!=typeof Int32Array?Int32Array:Array)(r)},setArray:function(r,n){if("undefined"!=typeof Uint8Array)r.set(n);else{for(var t=0;t<n.length;t++)r[t]=n[t];for(t=n.length;t<r.length;t++)r[t]=0}},digest:function(r){var n=1779033703,t=3144134277,e=1013904242,a=2773480762,i=1359893119,o=2600822924,A=528734635,f=1541459225,y=SHA256.K;if("string"==typeof r){var v=unescape(encodeURIComponent(r));r=SHA256.Uint8Array(v.length);for(var g=0;g<v.length;g++)r[g]=255&v.charCodeAt(g)}var u=r.length,h=64*Math.floor((u+72)/64),l=h/4,s=8*u,d=SHA256.Uint8Array(h);SHA256.setArray(d,r),d[u]=128,d[h-4]=s>>>24,d[h-3]=s>>>16&255,d[h-2]=s>>>8&255,d[h-1]=255&s;var S=SHA256.Int32Array(l),H=0;for(g=0;g<S.length;g++){var c=d[H]<<24;c|=d[H+1]<<16,c|=d[H+2]<<8,c|=d[H+3],S[g]=c,H+=4}for(var U=SHA256.Int32Array(64),p=0;p<l;p+=16){for(g=0;g<16;g++)U[g]=S[p+g];for(g=16;g<64;g++){var I=U[g-15],w=I>>>7|I<<25;w^=I>>>18|I<<14,w^=I>>>3;var C=(I=U[g-2])>>>17|I<<15;C^=I>>>19|I<<13,C^=I>>>10,U[g]=U[g-16]+w+U[g-7]+C&4294967295}for(var K=n,b=t,m=e,M=a,R=i,j=o,k=A,q=f,g=0;g<64;g++){C=R>>>6|R<<26,C^=R>>>11|R<<21;var x=q+(C^=R>>>25|R<<7)+(R&j^~R&k)+y[g]+U[g]&4294967295,w=K>>>2|K<<30;w^=K>>>13|K<<19;var z=K&b^K&m^b&m,q=k,k=j,j=R,R=M+x&4294967295,M=m,m=b,b=K,K=x+((w^=K>>>22|K<<10)+z&4294967295)&4294967295}n=n+K&4294967295,t=t+b&4294967295,e=e+m&4294967295,a=a+M&4294967295,i=i+R&4294967295,o=o+j&4294967295,A=A+k&4294967295,f=f+q&4294967295}var B=SHA256.Uint8Array(32);for(g=0;g<4;g++)B[g]=n>>>8*(3-g)&255,B[g+4]=t>>>8*(3-g)&255,B[g+8]=e>>>8*(3-g)&255,B[g+12]=a>>>8*(3-g)&255,B[g+16]=i>>>8*(3-g)&255,B[g+20]=o>>>8*(3-g)&255,B[g+24]=A>>>8*(3-g)&255,B[g+28]=f>>>8*(3-g)&255;return B},hash:function(r){var n=SHA256.digest(r),t="";for(i=0;i<n.length;i++){var e="0"+n[i].toString(16);t+=2<e.length?e.substring(1):e}return t}};
+
+function sha256(s) { return SHA256.hash(s) }
 
 urlParams = decodeURL(location.search.substring(1))
 sortOptions = {

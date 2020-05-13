@@ -266,13 +266,13 @@ var
   onlyDotsRE: TRegExpr;
 
 function strSHA256(s:string):string;
-begin result:=upperCase( THashSHA2.GetHashString(s) ) end;
+begin result:=THashSHA2.GetHashString(UTF8encode(s)) end;
 
 function strSHA1(s:string):string;
-begin result:=upperCase( THashSHA1.GetHashString(s) ) end;
+begin result:=THashSHA1.GetHashString(UTF8encode(s)) end;
 
 function strMD5(s:string):string;
-begin result:=UpperCase( THashMD5.GetHashString(s) ) end;
+begin result:=THashMD5.GetHashString(UTF8encode(s)) end;
 
 function strToOem(s:string):ansistring;
 begin
