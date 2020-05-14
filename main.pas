@@ -1,4 +1,4 @@
-﻿{
+{
 Copyright (C) 2002-2014  Massimo Melina (www.rejetto.com)
 
 This file is part of HFS ~ HTTP File Server.
@@ -295,7 +295,7 @@ type
     vars: THashedStringList;
     created, ttl, expires: Tdatetime;
   public
-    id, user: string;
+    id, user, ip: string;
     constructor create(const sid:string='');
     destructor Destroy; override;
     procedure setVar(const k,v:string);
@@ -4881,10 +4881,11 @@ var
     +'filename*=UTF-8'''''+s+'; filename='+s));
   end;
 
-  procedure sessionSetup();
+  function sessionSetup():boolean;
   var
     sid: string;
   begin
+  result:=TRUE;
   if data = NIL then
     exit;
   data.user:='';
@@ -4897,11 +4898,21 @@ var
     if sid = '' then
       begin
       data.session:=Tsession.create();
+      data.session.ip:=conn.address;
       conn.setCookie(SESSION_COOKIE, data.session.id, ['path','/'], 'HttpOnly'); // the session is site-wide, even if this request was related to a folder
       end
     else
-      try data.session:=sessions[sid]
-      except data.session:=Tsession.create(sid) // probably expired
+      try
+        data.session:=sessions[sid];
+        if data.session.ip <> conn.address then
+          begin
+          conn.reply.mode:=HRM_DENY;
+          result:=FALSE;
+          exit;
+          end;
+      except
+        data.session:=Tsession.create(sid); // probably expired
+        data.session.ip:=conn.address;
         end;
     end;
   data.session.keepAlive();
@@ -5286,7 +5297,8 @@ var
     exit;
     end;
 
-  sessionSetup();
+  if not sessionSetup() then
+    exit;
   if mode = 'logout' then
     begin
     data.logout();
