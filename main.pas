@@ -1157,7 +1157,6 @@ var
   selfTesting: boolean;
   tplIsCustomized: boolean;
   fakingMinimize: boolean; // user clicked the [X] but we simulate the [_]
-  sysidx2index: array of record sysidx, idx:integer; end; // maps system imagelist icons to internal imagelist
   loginRealm: string;
   serializedConnColumns: string;
   VFScounterMod: boolean; // if any counter has changed
@@ -1981,7 +1980,8 @@ begin
 result:='';
 if idx < 0 then exit;
 idx:=idx_ico2img(idx);
-if length(imagescache) < idx+1 then setlength(imagescache, idx+1);
+if length(imagescache) < idx+1 then
+  setlength(imagescache, idx+1);
 result:=imagescache[idx];
 if result > '' then exit;
 pic:=Tbitmap.create();
@@ -2017,9 +2017,12 @@ try
 finally gif.free end;
 end; // str2pic
 
+type Tint2int = Tdictionary<integer,integer>;
+var sysidx2index: Tint2int; // maps system imagelist icons to internal imagelist
+
 function getImageIndexForFile(fn:string):integer;
 var
-  i, n: integer;
+  i, j: integer;
   ico: Ticon;
   shfi: TShFileInfo;
   s: ansistring;
@@ -2037,41 +2040,31 @@ if shfi.iIcon = 0 then
 if shfi.hIcon <> 0 then
   destroyIcon(shfi.hIcon);
 
-// have we already met this sysidx before?
-for i:=0 to length(sysidx2index)-1 do
-  if sysidx2index[i].sysidx = shfi.iIcon then
-  	begin
-    result:=sysidx2index[i].idx;
-    exit;
-    end;
-// found not, let's check deeper: byte comparison.
-// we first add the ico to the list, so we can use pic2str()
-ico:=Ticon.create();
-try
-  systemimages.getIcon(shfi.iIcon, ico);
-  i:=mainfrm.images.addIcon(ico);
-  s:=pic2str(i);
-  etags.values['icon.'+intToStr(i)] := strMD5(s);
-finally ico.free end;
-// now we can search if the icon was already there, by byte comparison
-n:=0;
-while n < length(sysidx2index) do
-  begin
-  if pic2str(sysidx2index[n].idx) = s then
-    begin // found, delete the duplicate
-    mainfrm.images.delete(i);
-    setlength(imagescache, i);
-    i:=sysidx2index[n].idx;
-    break;
-    end;
-  inc(n);
+if sysidx2index = NIL then // firt time
+  sysidx2index:=Tint2int.Create();
+try result:=sysidx2index[shfi.iIcon]; // already met?
+except
+  // found not, let's check deeper: byte comparison.
+  // we first add the ico to the list, so we can use pic2str()
+  ico:=Ticon.create();
+  try
+    systemimages.getIcon(shfi.iIcon, ico);
+    i:=mainfrm.images.addIcon(ico);
+    s:=pic2str(i);
+    etags.values['icon.'+intToStr(i)] := strMD5(s);
+  finally ico.free end;
+  // now we can search if the icon was already there, by byte comparison
+  for j in sysidx2index.Values do
+    if pic2str(j) = s then
+      begin // found, delete the duplicate
+      mainfrm.images.delete(i);
+      setlength(imagescache, i);
+      i:=j;
+      break;
+      end;
+  sysidx2index.Add(shfi.iIcon, i);
+  result:=i;
   end;
-
-n:=length(sysidx2index);
-setlength(sysidx2index, n+1);
-sysidx2index[n].sysidx:=shfi.iIcon;
-sysidx2index[n].idx:=i;
-result:=i;
 end; // getImageIndexForFile
 
 function getBaseTrayIcon(perc:real=0):Tbitmap;
@@ -12470,6 +12463,7 @@ Form := Screen.ActiveCustomForm;
 if (Form=NIL) or (Form.ClassName<>'TInputQueryForm') then
   Exit;
 
+edit:=NIL; prompt:=NIL; // hush compiler warning
 for I := 0 to Form.ControlCount-1 do
   begin
   Ctrl := Form.Controls[i];
@@ -12478,7 +12472,7 @@ for I := 0 to Form.ControlCount-1 do
   else if Ctrl is TEdit then
     Edit := TEdit(Ctrl);
   end;
-
+  
 Edit.SetBounds(Prompt.Left, Prompt.Top + Prompt.Height + 5, max(200, Prompt.Width), Edit.Height);
 Form.ClientWidth := (Edit.Left * 2) + Edit.Width;
 ButtonTop := Edit.Top + Edit.Height + 15;
