@@ -1,4 +1,4 @@
-{
+﻿{
 Copyright (C) 2002-2014  Massimo Melina (www.rejetto.com)
 
 This file is part of HFS ~ HTTP File Server.
@@ -3050,7 +3050,7 @@ end; // recursiveApply
 
 function Tfile.hasRecursive(attributes: TfileAttributes; orInsteadOfAnd:boolean=FALSE; outInherited:Pboolean=NIL):boolean;
 var
-  f: Tfile;
+  f, p: Tfile;
 begin
 result:=FALSE;
 f:=self;
@@ -3060,7 +3060,10 @@ while assigned(f) do
   result:=orInsteadOfAnd and (attributes*f.flags <> [])
     or (attributes*f.flags = attributes);
   if result then exit;
-  f:=f.parent;
+  p:=f.parent;
+  if f = p then // i noticed some hangs lately, possibly an infinite loop here. Trying to debug it
+    raise Exception.Create('invalid hierarchy '+f.name);
+  f:=p;
   if assigned(outInherited) then outInherited^:=TRUE;
   end;
 if assigned(outInherited) then outInherited^:=FALSE; // grant it is set only if result=TRUE
