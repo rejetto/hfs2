@@ -4893,6 +4893,8 @@ var
     begin
     sid:=conn.getCookie(SESSION_COOKIE);
     if sid = '' then
+      sid:=data.urlvars.Values[SESSION_COOKIE];
+    if sid = '' then
       begin
       data.session:=Tsession.create();
       conn.setCookie(SESSION_COOKIE, data.session.id, ['path','/'], 'HttpOnly'); // the session is site-wide, even if this request was related to a folder

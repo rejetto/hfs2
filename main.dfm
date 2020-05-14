@@ -78,8 +78,6 @@ object mainFrm: TmainFrm
     ParentFont = False
     ShowCaptions = True
     TabOrder = 1
-    ExplicitWidth = 783
-    ExplicitHeight = 55
     object menuBtn: TToolButton
       Left = 0
       Top = 0
@@ -191,8 +189,6 @@ object mainFrm: TmainFrm
     ShowCaptions = True
     TabOrder = 2
     Wrapable = False
-    ExplicitTop = 55
-    ExplicitWidth = 783
     object browseBtn: TToolButton
       Left = 0
       Top = 0
@@ -232,9 +228,6 @@ object mainFrm: TmainFrm
     Font.Style = []
     ParentFont = False
     TabOrder = 0
-    ExplicitTop = 114
-    ExplicitWidth = 783
-    ExplicitHeight = 277
     object splitV: TSplitter
       Left = 313
       Top = 0
@@ -268,8 +261,6 @@ object mainFrm: TmainFrm
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitWidth = 467
-      ExplicitHeight = 166
       object logBox: TRichEdit
         Left = 0
         Top = 23
@@ -291,8 +282,6 @@ object mainFrm: TmainFrm
         Zoom = 100
         OnChange = logBoxChange
         OnMouseDown = logBoxMouseDown
-        ExplicitWidth = 467
-        ExplicitHeight = 143
       end
       object logTitle: TPanel
         Left = 0
@@ -302,7 +291,6 @@ object mainFrm: TmainFrm
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 1
-        ExplicitWidth = 467
         object titlePnl: TPanel
           Left = 0
           Top = 0
@@ -312,7 +300,6 @@ object mainFrm: TmainFrm
           BevelOuter = bvNone
           Caption = 'Log'
           TabOrder = 0
-          ExplicitWidth = 211
         end
         object logToolbar: TPanel
           Left = 341
@@ -323,9 +310,8 @@ object mainFrm: TmainFrm
           AutoSize = True
           BevelOuter = bvNone
           TabOrder = 1
-          ExplicitLeft = 211
           object collapsedPnl: TPanel
-            Left = 0
+            Left = -4
             Top = 0
             Width = 21
             Height = 23
@@ -333,6 +319,7 @@ object mainFrm: TmainFrm
             AutoSize = True
             BevelOuter = bvNone
             TabOrder = 0
+            ExplicitLeft = 0
             object expandBtn: TSpeedButton
               Left = 0
               Top = 0
@@ -365,16 +352,17 @@ object mainFrm: TmainFrm
             end
           end
           object expandedPnl: TPanel
-            Left = 21
+            Left = 17
             Top = 0
-            Width = 235
+            Width = 239
             Height = 23
             Align = alRight
             AutoSize = True
             BevelOuter = bvNone
             TabOrder = 1
+            ExplicitLeft = 21
             object openFilteredLog: TSpeedButton
-              Left = 209
+              Left = 213
               Top = 0
               Width = 26
               Height = 23
@@ -439,7 +427,7 @@ object mainFrm: TmainFrm
               OnClick = openLogBtnClick
             end
             object openLogBtn: TSpeedButton
-              Left = 183
+              Left = 187
               Top = 0
               Width = 26
               Height = 23
@@ -486,7 +474,7 @@ object mainFrm: TmainFrm
               OnClick = openLogBtnClick
             end
             object collapseBtn: TSpeedButton
-              Left = -4
+              Left = 0
               Top = 0
               Width = 21
               Height = 23
@@ -513,18 +501,16 @@ object mainFrm: TmainFrm
               ParentShowHint = False
               ShowHint = True
               OnClick = collapseBtnClick
-              ExplicitLeft = 0
             end
             object Bevel1: TBevel
-              Left = 17
+              Left = 21
               Top = 0
               Width = 2
               Height = 23
               Align = alRight
-              ExplicitLeft = 21
             end
             object searchPnl: TPanel
-              Left = 19
+              Left = 23
               Top = 0
               Width = 164
               Height = 23
@@ -533,7 +519,6 @@ object mainFrm: TmainFrm
               BevelOuter = bvNone
               Padding.Left = 5
               TabOrder = 0
-              ExplicitLeft = 23
               DesignSize = (
                 164
                 23)
@@ -579,7 +564,6 @@ object mainFrm: TmainFrm
       BevelOuter = bvNone
       Caption = 'filesPnl'
       TabOrder = 0
-      ExplicitHeight = 166
       object filesBox: TTreeView
         Left = 0
         Top = 23
@@ -620,7 +604,6 @@ object mainFrm: TmainFrm
         OnMouseEnter = filesBoxMouseEnter
         OnMouseLeave = filesBoxMouseLeave
         OnMouseUp = filesBoxMouseUp
-        ExplicitHeight = 143
       end
       object filesTitle: TPanel
         Left = 0
@@ -641,8 +624,6 @@ object mainFrm: TmainFrm
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 2
-      ExplicitTop = 171
-      ExplicitWidth = 783
       object sbar: TStatusBar
         Left = 0
         Top = 87
@@ -654,7 +635,6 @@ object mainFrm: TmainFrm
           end>
         OnDblClick = sbarDblClick
         OnMouseDown = sbarMouseDown
-        ExplicitWidth = 783
       end
       object connBox: TListView
         Left = 0
@@ -706,7 +686,6 @@ object mainFrm: TmainFrm
         ViewStyle = vsReport
         OnAdvancedCustomDrawSubItem = connBoxAdvancedCustomDrawSubItem
         OnData = connBoxData
-        ExplicitWidth = 886
       end
     end
   end
