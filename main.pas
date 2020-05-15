@@ -301,6 +301,7 @@ type
     procedure setVar(const k,v:string);
     function getVar(const k:string):string;
     procedure keepAlive();
+    procedure setTTL(t:Tdatetime);
     end;
   Tsessions = Tdictionary<string,Tsession>;
 
@@ -2293,6 +2294,12 @@ end;
 
 procedure Tsession.keepAlive();
 begin expires:=now() + ttl end;
+
+procedure Tsession.setTTL(t:Tdatetime);
+begin
+ttl:=t;
+keepAlive();
+end;
 
 function Tsession.getVar(const k:string):string;
 begin
@@ -5224,6 +5231,32 @@ var
     result:=(s > '') and (s = func(func(acc.pwd)+data.session.id))
     end;
 
+    // parameters: u(username), e(?expiration_UTC), s2(sha256(rest+pwd))
+    function urlAuth():string;
+    var
+      s, sign: string;      
+    begin
+    result:='';
+    if mode <> 'auth' then
+      exit;
+    acc:=getAccount(data.urlVars.values['u']);
+    if acc = NIL then
+      exit('username not found');
+    sign:=conn.request.url;
+    chop('?',sign);
+    s:=chop('&s2=',sign);
+    if strSHA256(s+acc.pwd)<>sign then
+      exit('bad sign');
+    try data.session.setTTL(TTimeZone.Local.ToLocalTime(StrToFloat(data.urlvars.Values['e'])) - now() )
+    except end;
+
+    if data.session.ttl < 0 then
+      exit('expired');    
+    data.account:=acc;
+    data.session.user:=acc.user;
+    data.session.redirect:=getAccountRedirect(acc);
+    end; //urlAuth
+    
   var
     b: boolean;
     s: string;
@@ -5335,6 +5368,13 @@ var
         end
       else
         s:='bad password'; //TODO shouldn't this change http code?
+    replyWithString(s);
+    exit;
+    end;
+  s:=urlAuth();
+  if s > '' then
+    begin
+    conn.reply.mode:=HRM_DENY;
     replyWithString(s);
     exit;
     end;
@@ -10471,7 +10511,7 @@ end;
 procedure Tmainfrm.copyURLwithPasswordMenuClick(sender:TObject);
 var
   a: Paccount;
-  user, pwd: string;
+  user, pwd, s: string;
   f: Tfile;
 begin
 if selectedFile = NIL then exit;
@@ -10489,10 +10529,10 @@ else
   if assigned(a) then pwd:=a.pwd
   else pwd:='';
   end;
-if encodePwdUrlChk.checked then pwd:=totallyEncoded(pwd)
-else pwd:=encodeURL(pwd);
 
-setClip( selectedFile.fullURL( encodeURL(user)+':'+pwd ) )
+s:='mode=auth&u='+encodeURL(user);
+setClip( selectedFile.fullURL()+'?'+s
+  +'&s2='+strSHA256(s+pwd) ) // sign with password
 end; // copyURLwithPasswordMenuClick
 
 procedure Tmainfrm.copyURLwithAddressMenuClick(sender:Tobject);
@@ -12584,7 +12624,6 @@ tempScriptFilename:=getTempDir()+'hfs script.tmp';
 
 logfile.apacheZoneString:=if_(GMToffset < 0, '-','+')
   +format('%.2d%.2d', [abs(GMToffset div 60), abs(GMToffset mod 60)]);
-
 
 FINALIZATION
 
