@@ -2591,10 +2591,25 @@ try
 except end;
 end; // setDynamicComment
 
+procedure fixTreeStructure(n: TTreeNode);
+var
+  i: integer;
+begin
+Tfile(n.data).node:=n;
+for i:=0 to n.count-1 do
+  fixTreeStructure(n.Item[i])
+end; // fixTreeStructure
+
 function Tfile.getParent():Tfile;
 begin
-if node = NIL then result:=NIL
-else if isTemp() then result:=nodeToFile(node)
+if node = NIL then 
+  begin
+  result:=NIL;
+  exit;
+  end;
+if node.data <> self then // the tree structure is unreliable, at least on DISPLAYCHANGE event. This will workaround it
+  fixTreeStructure(mainFrm.filesBox.Items[0]);
+if isTemp() then result:=nodeToFile(node)
 else if node.parent = NIL then result:=NIL
 else result:=node.parent.data
 end; // getParent
@@ -3043,7 +3058,7 @@ end; // recursiveApply
 
 function Tfile.hasRecursive(attributes: TfileAttributes; orInsteadOfAnd:boolean=FALSE; outInherited:Pboolean=NIL):boolean;
 var
-  f, p: Tfile;
+  f: Tfile;
 begin
 result:=FALSE;
 f:=self;
@@ -3053,10 +3068,7 @@ while assigned(f) do
   result:=orInsteadOfAnd and (attributes*f.flags <> [])
     or (attributes*f.flags = attributes);
   if result then exit;
-  p:=f.parent;
-  if f = p then // i noticed some hangs lately, possibly an infinite loop here. Trying to debug it
-    raise Exception.Create('invalid hierarchy '+f.name);
-  f:=p;
+  f:=f.parent;
   if assigned(outInherited) then outInherited^:=TRUE;
   end;
 if assigned(outInherited) then outInherited^:=FALSE; // grant it is set only if result=TRUE
@@ -5418,9 +5430,9 @@ var
     exit;
     end;
 
-  if urlCmd = '~login' then
+  if urlCmd = '~login' then // legacy method for login dialog
     if conn.request.user = '' then
-      begin // issue a login dialog
+      begin 
       getPage('unauthorized', data);
       if loginRealm > '' then
         conn.reply.realm:=loginRealm;
