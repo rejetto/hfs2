@@ -294,7 +294,7 @@ object mainFrm: TmainFrm
         object titlePnl: TPanel
           Left = 0
           Top = 0
-          Width = 341
+          Width = 337
           Height = 23
           Align = alClient
           BevelOuter = bvNone
@@ -302,16 +302,16 @@ object mainFrm: TmainFrm
           TabOrder = 0
         end
         object logToolbar: TPanel
-          Left = 341
+          Left = 337
           Top = 0
-          Width = 256
+          Width = 260
           Height = 23
           Align = alRight
           AutoSize = True
           BevelOuter = bvNone
           TabOrder = 1
           object collapsedPnl: TPanel
-            Left = -4
+            Left = 0
             Top = 0
             Width = 21
             Height = 23
@@ -319,7 +319,6 @@ object mainFrm: TmainFrm
             AutoSize = True
             BevelOuter = bvNone
             TabOrder = 0
-            ExplicitLeft = 0
             object expandBtn: TSpeedButton
               Left = 0
               Top = 0
@@ -352,7 +351,7 @@ object mainFrm: TmainFrm
             end
           end
           object expandedPnl: TPanel
-            Left = 17
+            Left = 21
             Top = 0
             Width = 239
             Height = 23
@@ -360,7 +359,6 @@ object mainFrm: TmainFrm
             AutoSize = True
             BevelOuter = bvNone
             TabOrder = 1
-            ExplicitLeft = 21
             object openFilteredLog: TSpeedButton
               Left = 213
               Top = 0

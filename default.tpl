@@ -27,7 +27,7 @@ COMMENT with the ones above you can disable some features of the template. They 
 	<link rel="shortcut icon" href="/favicon.ico">
 	<link rel="stylesheet" href="/?mode=section&id=style.css" type="text/css">
     <script type="text/javascript" src="/?mode=jquery"></script>
-    <script>HFS = { user:'%user%', folder:'{.js encode|%folder%.}', sid:"{.cookie|HFS_SID_.}" }</script>
+    <script>HFS = { user:'{.js encode|%user%.}', folder:'{.js encode|%folder%.}', sid:"{.cookie|HFS_SID_.}" }</script>
 	<script type="text/javascript" src="/?mode=section&id=lib.js"></script>
 
 []

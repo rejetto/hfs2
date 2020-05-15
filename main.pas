@@ -4923,7 +4923,6 @@ var
         data.session.ip:=conn.address;
         end;
     end;
-  data.session.keepAlive();
   if conn.request.user > '' then // priority
     begin
     data.user:=conn.request.user;
@@ -5872,6 +5871,8 @@ case event of
   // default case
   else refreshConn(data);
   end;//case
+if assigned(data.session) then
+  data.session.keepAlive();
 if event in [HE_CONNECTED, HE_DISCONNECTED, HE_OPEN, HE_CLOSE, HE_REQUESTED, HE_POST_END, HE_LAST_BYTE_DONE] then
   begin
   repaintTray();
