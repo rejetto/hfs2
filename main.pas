@@ -295,7 +295,7 @@ type
     vars: THashedStringList;
     created, ttl, expires: Tdatetime;
   public
-    id, user, ip: string;
+    id, user, ip, redirect: string;
     constructor create(const sid:string='');
     destructor Destroy; override;
     procedure setVar(const k,v:string);
@@ -4936,6 +4936,13 @@ var
     exit;
   data.user:=data.account.user;
   data.pwd:=data.account.pwd;
+  if data.session.redirect > '' then
+    begin    
+    conn.reply.mode:=HRM_REDIRECT;
+    conn.reply.url:=data.session.redirect;
+    data.session.redirect:=''; // only once
+    result:=FALSE;
+    end;
   end; // sessionSetup
 
   procedure serveTar();
@@ -5187,12 +5194,12 @@ var
       add2log('Failed deletion in '+url+CRLF+join(CRLF, errors), data);
     end; // deletion
 
-    function getAccountRedirect():string;
-    var
-      acc: Paccount;
+    function getAccountRedirect(acc:Paccount=NIL):string;
     begin
     result:='';
-    acc:=accountRecursion(data.account, ARSC_REDIR);
+    if acc = NIL then    
+      acc:=data.account;
+    acc:=accountRecursion(acc, ARSC_REDIR);
     if acc = NIL then exit;
     result:=acc.redir;
     if (result = '') or ansiContainsStr(result, '://') then exit;
@@ -5324,6 +5331,7 @@ var
       or (data.postVars.values['password'] = acc.pwd) then
         begin
         data.session.user:=acc.user;
+        data.session.redirect:=getAccountRedirect(acc);
         s:='ok';
         end
       else
