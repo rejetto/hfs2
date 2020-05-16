@@ -2932,11 +2932,6 @@ object mainFrm: TmainFrm
         AutoCheck = True
         Caption = 'Encode non-ASCII characters'
       end
-      object encodePwdUrlChk: TMenuItem
-        AutoCheck = True
-        Caption = 'Unreadable passwords in URLs'
-        Checked = True
-      end
       object pwdInPagesChk: TMenuItem
         AutoCheck = True
         Caption = 'Include password in pages (for download managers)'

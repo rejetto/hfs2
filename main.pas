@@ -238,7 +238,8 @@ type
     function  relativeURL(fullEncode:boolean=FALSE):string;
     function  pathTill(root:Tfile=NIL; delim:char='\'):string;
     function  parentURL():string;
-		function  fullURL(userpwd:string=''; ip:string=''):string;
+    function  fullURL(ip, user, pwd:string):string; overload;
+    function  fullURL(ip:string=''):string; overload;
     procedure setupImage(newIcon:integer); overload;
     procedure setupImage(); overload;
     function  getAccountsFor(action:TfileAction; specialUsernames:boolean=FALSE; outInherited:Pboolean=NIL):TstringDynArray;
@@ -615,7 +616,6 @@ type
     Fingerprints1: TMenuItem;
     saveNewFingerprintsChk: TMenuItem;
     Createfingerprintonaddition1: TMenuItem;
-    encodePwdUrlChk: TMenuItem;
     pwdInPagesChk: TMenuItem;
     deleteDontAskChk: TMenuItem;
     Updates1: TMenuItem;
@@ -2711,15 +2711,6 @@ begin
 result:=LUT[mainFrm.httpsUrlsChk.checked];
 end; // protoColon
 
-function totallyEncoded(s:string):string;
-var
-  i: integer;
-begin
-result:='';
-for i:=1 to length(s) do
-  result:=result+'%'+intToHex(ord(s[i]),2)
-end; // totallyEncoded
-
 function Tfile.relativeURL(fullEncode:boolean=FALSE):string;
 begin
 if isLink() then result:=replaceText(resource, '%ip%', defaultIP)
@@ -2777,15 +2768,36 @@ s:=copy( s, length(f.resource)+2, length(s) );
 result:=result+replaceStr(s, '\','/');
 end; // getFolder
 
-function Tfile.fullURL(userpwd:string=''; ip:string=''):string;
+type Tstr2str = Tdictionary<string,string>;
+var userPwdHashCache:Tstr2str;
+function Tfile.fullURL(ip, user, pwd:string):string;
+var s,k,base: string;
+begin
+if userPwdHashCache = NIL then
+  userPwdHashCache:=Tstr2str.Create();
+base:=fullURL(ip)+'?';
+k:=user+':'+pwd;
+try result:=base+userPwdHashCache[k]
+except
+  s:='mode=auth&u='+encodeURL(user);
+  s:=s+'&s2='+strSHA256(s+pwd); // sign with password
+  userPwdHashCache.add(k,s);
+  result:=base+s;
+  end;
+end; // fullURL
+
+function Tfile.fullURL(ip:string=''):string;
 begin
 result:=url();
-if isLink() then exit;
-if assigned(srv) and srv.active and (srv.port <> '80') and (pos(':',ip) = 0)
+if isLink() then
+  exit;
+if assigned(srv) and srv.active
+and (srv.port <> '80') and (pos(':',ip) = 0)
 and not mainfrm.noPortInUrlChk.checked then
   result:=':'+srv.port+result;
-if ip = '' then ip:=defaultIP;
-result:=protoColon()+nonEmptyConcat('',userpwd,'@')+ip+result
+if ip = '' then
+  ip:=defaultIP;
+result:=protoColon()+ip+result;
 end; // fullURL
 
 function Tfile.isDLforbidden():boolean;
@@ -3557,9 +3569,7 @@ var
   else
     if pwdInPagesChk.Checked and (cd.user > '') then
       begin
-      if encodePwdUrlChk.checked then s:=totallyEncoded(cd.pwd)
-      else s:=encodeURL(cd.pwd);
-      s:=f.fullURL( encodeURL(cd.user)+':'+s, getSafeHost(cd) )+fingerprint;
+      s:=f.fullURL(getSafeHost(cd), cd.user, cd.pwd )+fingerprint;
       url:=s
       end
     else
@@ -6676,7 +6686,6 @@ result:='HFS '+VERSION+' - Build #'+VERSION_BUILD+CRLF
 +'enable-fingerprints='+yesno[fingerprintsChk.checked]+CRLF
 +'save-fingerprints='+yesno[saveNewFingerprintsChk.checked]+CRLF
 +'auto-fingerprint='+intToStr(autoFingerprint)+CRLF
-+'encode-pwd-url='+yesno[encodePwdUrlChk.checked]+CRLF
 +'stop-spiders='+yesno[stopSpidersChk.checked]+CRLF
 +'backup-saving='+yesno[backupSavingChk.checked]+CRLF
 +'recursive-listing='+yesno[recursiveListingChk.checked]+CRLF
@@ -7064,7 +7073,6 @@ while cfg > '' do
     if h = 'enable-fingerprints' then fingerprintsChk.checked:=yes;
     if h = 'save-fingerprints' then saveNewFingerprintsChk.checked:=yes;
     if h = 'auto-fingerprint' then setAutoFingerprint(int);
-    if h = 'encode-pwd-url' then encodePwdUrlChk.checked:=yes;
     if h = 'log-toolbar-expanded' then setLogToolbar(yes);
     if h = 'last-update-check' then lastUpdateCheck:=real;
     if h = 'recursive-listing' then recursiveListingChk.checked:=yes;
@@ -10522,7 +10530,8 @@ f:=selectedFile;
 while assigned(f) and (f.accounts[FA_ACCESS] = NIL) and (f.user = '') do
   f:=f.parent;
 
-if f.user = user then pwd:=f.pwd
+if f.user = user then 
+  pwd:=f.pwd
 else
   begin
   a:=getAccount(user);
@@ -10530,9 +10539,7 @@ else
   else pwd:='';
   end;
 
-s:='mode=auth&u='+encodeURL(user);
-setClip( selectedFile.fullURL()+'?'+s
-  +'&s2='+strSHA256(s+pwd) ) // sign with password
+setClip( selectedFile.fullURL('',user,pwd) )
 end; // copyURLwithPasswordMenuClick
 
 procedure Tmainfrm.copyURLwithAddressMenuClick(sender:Tobject);
@@ -10545,7 +10552,7 @@ delete(addr, pos('&',addr), 1);
 
 s:='';
 for i:=0 to filesBox.SelectionCount-1 do
-  s:=s+nodeTofile(filesBox.Selections[i]).fullURL('', addr)+CRLF;
+  s:=s+nodeTofile(filesBox.Selections[i]).fullURL(addr)+CRLF;
 setLength(s, length(s)-2);
 
 setClip(s);

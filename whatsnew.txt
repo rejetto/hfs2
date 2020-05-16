@@ -1,4 +1,4 @@
-HFS - what's new
+﻿HFS - what's new
 
 LEGEND
 !   very important
@@ -11,8 +11,10 @@ VER 2.4
 propaganda
   New mobile-friendly template
   Unicode support
+  New encrypted login, and logout
 /propaganda
 + new default template
++ new login system, session based, with logout
 + {.set item|name.}
 + {.get item|icon.}
 + {.set cfg.}
