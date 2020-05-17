@@ -119,7 +119,7 @@ COMMENT with the ones above you can disable some features of the template. They 
 			</button>
 		.}
 		<button id="toggleTs" title="{.!Display timestamps.}"  onclick="toggleTs()">
-			<i class='fa fa-clock-o'></i>
+			<i class='fa fa-clock'></i>
 			<span>{.!Toggle timestamp.}</span>
 		</button>
 
@@ -419,7 +419,7 @@ z-index:1; /* without this .item-menu will be over*/ }
 		</a>
 	</div>
 	<div class='item-props'>
-		<span class="item-ts"><i class='fa fa-clock-o'></i> {.cut||-3|%item-modified%.}</span>
+		<span class="item-ts"><i class='fa fa-clock'></i> {.cut||-3|%item-modified%.}</span>
 [+file]
 		<span class="item-size"><i class='fa fa-download' title="{.!Download counter:.} %item-dl-count%"></i> %item-size%B</span>
 [+file=folder=link]
