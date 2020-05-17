@@ -221,6 +221,7 @@ $(function(){
 		<br><input type='radio' name='where' value='here' />  {.!this folder only.}
 		<br><input type='radio' name='where' value='anywhere' />  {.!entire server.}
 		<button type="submit">{.!Go.}</button>
+		<button onclick="return!(location='.')" style="margin-right: 0.3em;">Clear</button>
 	</form>
 </div>
 <style>
