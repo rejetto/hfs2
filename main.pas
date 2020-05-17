@@ -7503,7 +7503,12 @@ if saveCFG() then
 end;
 
 procedure TmainFrm.About1Click(Sender: TObject);
-begin msgDlg(format(getRes('copyright'), [VERSION,VERSION_BUILD])) end;
+const msg = 'HFS version %s'
+  +#13'Copyright (C) 2002-2020  Massimo Melina (www.rejetto.com)'
+  +#13#13'HFS comes with ABSOLUTELY NO WARRANTY under the license GNU GPL 3.0. For details click Menu -> Web links -> License'
+  +#13'This is FREE software, and you are welcome to redistribute it under certain conditions.'
+  +#13#13'Build #%s';
+begin msgDlg(format(msg, [VERSION,VERSION_BUILD])) end;
 
 procedure Tmainfrm.purgeConnections();
 var
@@ -10008,7 +10013,7 @@ procedure TmainFrm.FAQ1Click(Sender: TObject);
 begin openURL('http://www.rejetto.com/sw/?faq=hfs') end;
 
 procedure TmainFrm.License1Click(Sender: TObject);
-begin openURL('http://www.rejetto.com/sw/license.txt') end;
+begin openURL('https://www.gnu.org/licenses/gpl-3.0.html') end;
 
 procedure Tmainfrm.pasteFiles();
 begin

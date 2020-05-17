@@ -71,7 +71,7 @@ result:=appendTextFile(MACROS_LOG_FILE, s);
 end; // macrosLog
 
 procedure resetLog();
-begin deleteFile(MACROS_LOG_FILE) end;
+begin saveFile(MACROS_LOG_FILE, '') end;
 
 function expandLinkedAccounts(account:Paccount):TStringDynArray;
 var
