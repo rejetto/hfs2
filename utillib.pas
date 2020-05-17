@@ -24,7 +24,7 @@ unit utilLib;
 interface
 
 uses
-	IOUtils, main, hslib, regexpr, types, windows, graphics, dialogs, registry, classes, dateUtils, gifimage,
+	IOUtils, main, hslib, regexpr, types, windows, graphics, dialogs, registry, classes, dateUtils, Vcl.Imaging.GIFImg,
   shlobj, shellapi, activex, comobj, strutils, forms, stdctrls, controls, psAPI, menus, math,
   longinputDlg, OverbyteIcsWSocket, OverbyteIcshttpProt, comCtrls, iniFiles, richedit, sysutils, classesLib{, fastmm4};
 

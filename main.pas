@@ -29,7 +29,7 @@ uses
   Windows, Messages, SysUtils, Forms, Menus, Graphics, Controls, ComCtrls, Dialogs, math,
   registry, ExtCtrls, shellapi, ImgList, ToolWin, StdCtrls, strutils, AppEvnts, types,
   winsock, clipbrd, shlobj, activex, Buttons, FileCtrl, dateutils, iniFiles, Classes,
-  System.ImageList, system.Generics.Collections, GIFimage,
+  System.ImageList, system.Generics.Collections, Vcl.Imaging.GIFImg,
   // 3rd part libs. ensure you have all of these, the same version reported in dev-notes.txt
   OverbyteIcsWSocket, OverbyteIcsHttpProt, regexpr, OverbyteIcsZLibHigh, OverbyteIcsZLibObj,
   // rejetto libs
@@ -1956,9 +1956,6 @@ function gif2str(gif:TgifImage):ansistring;
 var
   stream: Tbytesstream;
 begin
-{ the gif component has a GDI object leak while reducing colors of
-{ transparent images. this seems to be not a big problem since the
-{ icon cache system was introduced, but a real fix would be nice. }
 stream:=Tbytesstream.create();
 gif.SaveToStream(stream);
 setLength(result, stream.size);
@@ -1973,7 +1970,6 @@ begin
 gif:=TGIFImage.Create();
 try
   gif.ColorReduction:=rmQuantize;
-  gif.Compression:=gcLZW;
   gif.Assign(bmp);
   result:=gif2str(gif);
 finally gif.free;

@@ -4,5 +4,4 @@ Icons are generated at http://fontello.com/ . Use fontello.json for further modi
 
 === LIBS USED
 ICS v8.58 by François PIETTE http://www.overbyte.be
-GIFimage v2.2r5 by Anders Melander http://www.tolderlund.eu/delphi/
 TRegExpr v0.952 by Andrey V. Sorokin http://www.regexpstudio.com/TRegExpr/TRegExpr.html
