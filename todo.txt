@@ -1,15 +1,11 @@
 * consider letting comment "protected" files. Can it really cause harm? 
 * flag to enable lnk files in a folder (disabled by default)
-experiment session login in place of http authentication
-+ add mkv mime type http://www.rejetto.com/forum/html-templates/online-video-mkv-player/msg1061237/?topicseen#msg1061237
 + sign exe http://www.rejetto.com/forum/hfs-~-http-file-server/'unsafe'/msg1061437/#msg1061437
 cache reReplace
-- comments are not updated when moving or renaming files http://www.rejetto.com/forum/bug-reports/descript-ion-and-comment-not-cleaned-up-after-moving-file/
 + hash&salt passwords
 - setInterval > setTimeout
 + target=_blank as an option on links
 - an unsaved VFS will be asked twice if a restart is caused by an update
-- while renaming a file, CTRL+C/V doesn't work on the text but is handled by the context menu action
 + more macros http://www.rejetto.com/forum/index.php/topic,10631.0.html
 - long folder names are overflowing the tree-box http://www.rejetto.com/forum/index.php/topic,10631.0.html
 + {.vfs delete.}

@@ -20,13 +20,15 @@ propaganda
 + {.set cfg.}
 + cache for jquery and template sections
 + new template commands: base64, base64decode, md5, sha1
-+ hfs.diff.*.tpl in exe's folder
++ *.diff.tpl in exe's folder
++ default mime-type for mkv
 - fixed template handling of section names with both '+' and '=' present
 - fixed LNK files to deleted items
 - fixed comments files were not updated upon deletion of files
 - fixed "requesting" forever with empty cookies http://rejetto.com/forum/index.php?topic=13112.0
 - fixed double "Content-Length" header on compressed pages
 - fixed log text base color not matching system settings http://rejetto.com/forum/index.php?topic=13233.0
+- fixed while renaming a file in the GUI, CTRL+C/V didn't work on the text
 
 VER 2.3m
 propaganda

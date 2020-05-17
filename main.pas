@@ -6199,6 +6199,7 @@ if node = NIL then exit;
 { disable shortcuts, to be used in editbox. Shortcuts need to be re-activated,
 { but when the node text is left unchanged, no event is notified, so we got to
 { use timerEvent to do the work. }
+copyURL1.ShortCut:=0;
 remove1.ShortCut:=0;
 Paste1.ShortCut:=0;
 
@@ -8042,6 +8043,7 @@ var
     begin
     remove1.ShortCut:=TextToShortCut('Del');
     Paste1.ShortCut:=TextToShortCut('Ctrl+V');
+    copyURL1.ShortCut:=TextToShortCut('Ctrl+C');
     end;
 
   with optionsFrm do
@@ -12620,7 +12622,8 @@ MIMEtypes:=toSA([
   '*.avi', 'video/x-msvideo',
   '*.txt', 'text/plain',
   '*.css', 'text/css',
-  '*.js',  'text/javascript'
+  '*.js',  'text/javascript',
+  '*.mkv', 'video/x-matroska'
 ]);
 
 systemimages:=getSystemimages();
