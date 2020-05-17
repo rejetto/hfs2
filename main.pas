@@ -2018,7 +2018,6 @@ try
 finally gif.free end;
 end; // str2pic
 
-type Tint2int = Tdictionary<integer,integer>;
 var sysidx2index: Tint2int; // maps system imagelist icons to internal imagelist
 
 function getImageIndexForFile(fn:string):integer;
@@ -2768,7 +2767,6 @@ s:=copy( s, length(f.resource)+2, length(s) );
 result:=result+replaceStr(s, '\','/');
 end; // getFolder
 
-type Tstr2str = Tdictionary<string,string>;
 var userPwdHashCache:Tstr2str;
 function Tfile.fullURL(ip, user, pwd:string):string;
 var s,k,base: string;
@@ -10519,7 +10517,7 @@ end;
 procedure Tmainfrm.copyURLwithPasswordMenuClick(sender:TObject);
 var
   a: Paccount;
-  user, pwd, s: string;
+  user, pwd: string;
   f: Tfile;
 begin
 if selectedFile = NIL then exit;

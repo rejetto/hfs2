@@ -23,7 +23,7 @@ unit classesLib;
 interface
 
 uses
-  iniFiles, types, hslib, strUtils, sysUtils, classes, math;
+  iniFiles, types, hslib, strUtils, sysUtils, classes, math, system.Generics.Collections;
 
 type
   TfastStringAppend = class
@@ -123,6 +123,10 @@ type
     function getHashFor(fn:string):string;
     end;
 
+  Tint2int = Tdictionary<integer,integer>;
+  Tstr2str = Tdictionary<string,string>;
+  Tstr2pointer = Tdictionary<string,pointer>;
+
   TstringToIntHash = class(ThashedStringList)
     constructor create;
     function getInt(s:string):integer;
@@ -143,17 +147,15 @@ type
     src: string;
     lastExt,   // cache for getTxtByExt()
     last: record section:string; idx:integer; end; // cache for getIdx()
-    fileExts: TStringDynArray;
     strTable: THashedStringList;
     fOver: Ttpl;
-    function  getIdx(section:string):integer;
+    sections: Tstr2pointer;
     function  getTxt(section:string):string;
     function  newSection(section:string):PtplSection;
     procedure fromString(txt:string);
     procedure setOver(v:Ttpl);
   public
     onChange: TNotifyEvent;
-    sections: array of TtplSection;
     constructor create(txt:string=''; over:Ttpl=NIL);
     destructor Destroy; override;
     property txt[section:string]:string read getTxt; default;
@@ -161,7 +163,7 @@ type
     property over:Ttpl read fOver write setOver;
     function sectionExist(section:string):boolean;
     function getTxtByExt(fileExt:string):string;
-    function getSection(section:string):PtplSection;
+    function getSection(section:string; inherit:boolean=TRUE):PtplSection;
     function getSections():TStringDynArray;
     procedure appendString(txt:string);
     function getStrByID(id:string):string;
@@ -869,13 +871,14 @@ end; // autoupdatedFiles_getCounter
 
 constructor Ttpl.create(txt:string=''; over:Ttpl=NIL);
 begin
+sections:=Tstr2pointer.Create();
 fullText:=txt;
 self.over:=over;
 end;
 
 destructor Ttpl.destroy;
 begin
-freeAndNIL(strTable);
+fullText:=''; // this will cause the disposing
 inherited;
 end; // destroy
 
@@ -891,106 +894,46 @@ if (result = '') and assigned(over) then
   result:=over.getStrByID(id)
 end; // getStrByID
 
-function Ttpl.getIdx(section:string):integer;
-begin
-if section <> last.section then
-  begin
-  last.section:=section;
-  for result:=0 to length(sections)-1 do
-    if sameText(sections[result].name, section) then
-      begin
-      last.idx:=result;
-      exit;
-      end;
-  last.idx:=-1;
-  end;
-result:=last.idx
-end; // getIdx
-
 function Ttpl.newSection(section:string):PtplSection;
-var
-  i: integer;
 begin
-// add
-i:=length(sections);
-setLength(sections, i+1);
-result:=@sections[i];
-result.name:=section;
-// getIdx just filled 'last' with not-found, so we must update
-last.section:=section;
-last.idx:=i;
-// manage file.EXT sections
-if not ansiStartsText('file.', section) then exit;
-i:=length(fileExts);
-setLength(fileExts, i+2);
-delete(section, 1, 4);
-fileExts[i]:=section;
-fileExts[i+1]:=str_(last.idx);
-lastExt.section:=section;
-lastExt.idx:=last.idx;
+new(result);
+sections.Add(section, result);
 end; // newSection
 
 function Ttpl.sectionExist(section:string):boolean;
 begin
-result:=getIdx(section)>=0;
+result:=assigned(getSection(section));
 if not result and assigned(over) then
   result:=over.sectionExist(section);
 end;
 
-function Ttpl.getSection(section:string):PtplSection;
-var
-  i: integer;
+function Ttpl.getSection(section:string; inherit:boolean=TRUE):PtplSection;
 begin
-result:=NIL;
-i:=getIdx(section);
-if i >= 0 then result:=@sections[i];
-if assigned(over) and ((result = NIL) or (trim(result.txt) = '')) then
+try result:=sections[section]
+except result:=NIL
+  end;
+if inherit and assigned(over) and ((result = NIL) or (trim(result.txt) = '')) then
   result:=over.getSection(section);
 end; // getSection
 
 function Ttpl.getTxt(section:string):string;
-var
-  i: integer;
 begin
-i:=getIdx(section);
-if i >= 0 then
-  result:=sections[i].txt
-else if assigned(over) then
-  result:=over[section]
-else
-  result:=''
+try result:=getSection(section).txt
+except result:=''
+  end;
 end; // getTxt
 
 function Ttpl.getTxtByExt(fileExt:string):string;
-var
-  i: integer;
-begin
-result:='';
-if (lastExt.section > '') and (fileExt = lastExt.section) then
-  begin
-  if lastExt.idx >= 0 then result:=sections[lastExt.idx].txt;
-  exit;
-  end;
-i:=idxOf(fileExt, fileExts);
-if (i < 0) and assigned(over) then
-  begin
-  result:=over.getTxtByExt(fileExt);
-  if result > '' then exit;
-  end;
-lastExt.section:=fileExt;
-lastExt.idx:=i;
-if i < 0 then exit;
-i:=int_(ansistring(fileExts[i+1]));
-lastExt.idx:=i;
-result:=sections[i].txt;
-end; // getTxtByExt
+begin result:=getTxt('file.'+fileExt) end;
 
 procedure Ttpl.fromString(txt:string);
+var
+  p: PtplSection;
 begin
 src:='';
-sections:=NIL;
-fileExts:=NIL;
-last.section:=#255'null'; // '' is a valid (and often used) section name. This is a better null value.
+for p in sections.values do
+  dispose(p);
+sections.clear();
 freeAndNIL(strTable);  // mod by mars
 
 appendString(txt);
@@ -1033,7 +976,7 @@ var
   var
     ss: TStringDynArray;
     s: string;
-    i, si: integer;
+    i: integer;
     base: TtplSection;
     till: pchar;
     append: boolean;
@@ -1066,20 +1009,17 @@ var
   for i:=0 to length(ss)-1 do
     begin
     s:=trim(ss[i]);
-    si:=getIdx(s);
+    sect:=getSection(s, FALSE);
     from:=NIL;
-    if si < 0 then // not found
+    if sect = NIL then // not found
       begin
       if append then
         from:=getSection(s);
       sect:=newSection(s);
       end
     else
-      begin
-      sect:=@sections[si];
       if append then
         from:=sect;
-      end;
     if from<>NIL then
       begin // inherit from it
       sect.txt:=from.txt+base.txt;
@@ -1126,14 +1066,7 @@ fOver:=v;
 end; // setOver
 
 function Ttpl.getSections():TStringDynArray;
-var
-  i: integer;
-begin
-i:=length(sections);
-setLength(result, i);
-for i:=0 to i-1 do
-  result[i]:=sections[i].name;
-end;
+begin result:=sections.Keys.ToArray() end;
 
 function Ttpl.me():Ttpl;
 begin result:=self end;
