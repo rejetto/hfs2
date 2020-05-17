@@ -29,9 +29,9 @@ uses
   Windows, Messages, SysUtils, Forms, Menus, Graphics, Controls, ComCtrls, Dialogs, math,
   registry, ExtCtrls, shellapi, ImgList, ToolWin, StdCtrls, strutils, AppEvnts, types,
   winsock, clipbrd, shlobj, activex, Buttons, FileCtrl, dateutils, iniFiles, Classes,
-  System.ImageList, system.Generics.Collections,
+  System.ImageList, system.Generics.Collections, GIFimage,
   // 3rd part libs. ensure you have all of these, the same version reported in dev-notes.txt
-  OverbyteIcsWSocket, OverbyteIcsHttpProt, GIFimage, regexpr, OverbyteIcsZLibHigh, OverbyteIcsZLibObj,
+  OverbyteIcsWSocket, OverbyteIcsHttpProt, regexpr, OverbyteIcsZLibHigh, OverbyteIcsZLibObj,
   // rejetto libs
   HSlib, traylib, monoLib, progFrmLib, classesLib;
 
@@ -1952,56 +1952,58 @@ end;
 function idx_label(i:integer):string;
 begin result:=intToStr(idx_img2ico(i)) end;
 
-function bmp2str(bmp:Tbitmap):ansistring;
+function gif2str(gif:TgifImage):ansistring;
 var
   stream: Tbytesstream;
-	gif: TGIFImage;
 begin
 { the gif component has a GDI object leak while reducing colors of
 { transparent images. this seems to be not a big problem since the
 { icon cache system was introduced, but a real fix would be nice. }
 stream:=Tbytesstream.create();
-gif:=TGIFImage.Create();
-
-gif.ColorReduction:=rmQuantize;
-gif.Compression:=gcLZW;
-gif.Assign(bmp);
 gif.SaveToStream(stream);
 setLength(result, stream.size);
 move(stream.bytes[0], result[1], stream.size);
-
-gif.free;
 stream.free;
+end; // gif2str
+
+function bmp2str(bmp:Tbitmap):ansistring;
+var
+	gif: TGIFImage;
+begin
+gif:=TGIFImage.Create();
+try
+  gif.ColorReduction:=rmQuantize;
+  gif.Compression:=gcLZW;
+  gif.Assign(bmp);
+  result:=gif2str(gif);
+finally gif.free;
+  end;
 end; // bmp2str
 
 function pic2str(idx:integer):ansistring;
 var
-  pic, pic2: Tbitmap;
+  ico: Ticon;
+  gif: TgifImage;
 begin
 result:='';
 if idx < 0 then exit;
 idx:=idx_ico2img(idx);
-if length(imagescache) < idx+1 then
+if length(imagescache) <= idx then
   setlength(imagescache, idx+1);
 result:=imagescache[idx];
 if result > '' then exit;
-pic:=Tbitmap.create();
-mainfrm.images.getBitmap(idx,pic);
-// pic2 is the transparent version of pic
-pic2:=Tbitmap.create();
-pic2.Width:=mainfrm.images.Width;
-pic2.height:=mainfrm.images.height;
-pic2.TransparentMode:=tmFixed;
 
-pic2.TransparentColor:=$2FFFFFF;
-pic2.Transparent:=TRUE;
-BitBlt(pic2.Canvas.Handle, 0,0,16,16, pic.Canvas.Handle, 0,0, SRCAND);
-BitBlt(pic2.Canvas.Handle, 0,0,16,16, pic.Canvas.Handle, 0,0, SRCPAINT);
-
-result:=bmp2str(pic2);
-pic2.free;
-pic.free;
-imagescache[idx]:=result;
+ico:=Ticon.Create;
+gif:=TGifImage.Create;
+try
+  mainfrm.images.getIcon(idx, ico);
+  gif.Assign(ico);
+  result:=gif2str(gif);
+  imagescache[idx]:=result;
+finally
+  gif.Free;
+  ico.free;
+  end;
 end; // pic2str
 
 function str2pic(s:ansistring):integer;
@@ -2037,8 +2039,7 @@ if shfi.iIcon = 0 then
   exit;
   end;
 // as reported by official docs
-if shfi.hIcon <> 0 then
-  destroyIcon(shfi.hIcon);
+destroyIcon(shfi.hIcon);
 
 if sysidx2index = NIL then // firt time
   sysidx2index:=Tint2int.Create();
