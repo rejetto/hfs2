@@ -9,9 +9,9 @@ AV  access violation
 
 VER 2.4
 propaganda
-  New mobile-friendly template
+  Mobile-friendly template
   Unicode support
-  New encrypted login, and logout
+  Encrypted login, and logout
 /propaganda
 + new default template
 + new login system, session based, with logout
