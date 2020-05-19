@@ -1783,10 +1783,7 @@ try
       end;
 
     if not mainfrm.enableMacrosChk.checked then
-      begin
-      result:=fullMacro;
-      exit;
-      end;
+      exit(fullMacro);
 
     if pars.count = 0 then exit;
     // extract first parameter as 'name'

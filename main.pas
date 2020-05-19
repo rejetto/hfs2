@@ -4781,6 +4781,8 @@ var
   end; // limitsExceededOnDownload
 
   procedure extractParams();
+  const
+    MAX = 1000;
   var
     s: string;
     i: integer;
@@ -4790,7 +4792,12 @@ var
   s:=replaceStr(s,'+',' ');
   data.urlvars.text:=s;
   for i:=0 to data.urlvars.count-1 do
-    data.urlvars[i]:=decodeURL(ansistring(data.urlvars[i]));
+    begin
+    s:=decodeURL(ansistring(data.urlvars[i]));
+    if length(s) > MAX then
+      setLength(s, MAX);
+    data.urlvars[i]:=s;
+    end;
   end; // extractParams
 
   procedure closeUploadingFile();

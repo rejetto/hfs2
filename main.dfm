@@ -2,8 +2,8 @@ object mainFrm: TmainFrm
   Left = 293
   Top = 219
   Caption = 'HFS ~ HTTP File Server'
-  ClientHeight = 391
-  ClientWidth = 913
+  ClientHeight = 483
+  ClientWidth = 879
   Color = clBtnFace
   Constraints.MinHeight = 260
   Constraints.MinWidth = 390
@@ -27,7 +27,7 @@ object mainFrm: TmainFrm
   object graphSplitter: TSplitter
     Left = 0
     Top = 78
-    Width = 913
+    Width = 879
     Height = 5
     Cursor = crVSplit
     Align = alTop
@@ -42,7 +42,7 @@ object mainFrm: TmainFrm
   object graphBox: TPaintBox
     Left = 0
     Top = 48
-    Width = 913
+    Width = 879
     Height = 30
     Hint = 'Pink = Out'#13#10'Yellow = In'
     Align = alTop
@@ -62,7 +62,7 @@ object mainFrm: TmainFrm
   object topToolbar: TToolBar
     Left = 0
     Top = 0
-    Width = 913
+    Width = 879
     Height = 24
     AutoSize = True
     ButtonWidth = 150
@@ -78,6 +78,7 @@ object mainFrm: TmainFrm
     ParentFont = False
     ShowCaptions = True
     TabOrder = 1
+    ExplicitWidth = 976
     object menuBtn: TToolButton
       Left = 0
       Top = 0
@@ -173,7 +174,7 @@ object mainFrm: TmainFrm
   object urlToolbar: TToolBar
     Left = 0
     Top = 24
-    Width = 913
+    Width = 879
     Height = 24
     AutoSize = True
     ButtonWidth = 122
@@ -189,6 +190,7 @@ object mainFrm: TmainFrm
     ShowCaptions = True
     TabOrder = 2
     Wrapable = False
+    ExplicitWidth = 976
     object browseBtn: TToolButton
       Left = 0
       Top = 0
@@ -217,8 +219,8 @@ object mainFrm: TmainFrm
   object centralPnl: TPanel
     Left = 0
     Top = 83
-    Width = 913
-    Height = 308
+    Width = 879
+    Height = 400
     Align = alClient
     BevelOuter = bvNone
     Font.Charset = DEFAULT_CHARSET
@@ -228,10 +230,11 @@ object mainFrm: TmainFrm
     Font.Style = []
     ParentFont = False
     TabOrder = 0
+    ExplicitWidth = 976
     object splitV: TSplitter
       Left = 313
       Top = 0
-      Height = 197
+      Height = 289
       Beveled = True
       Constraints.MaxWidth = 3
       Constraints.MinWidth = 3
@@ -241,8 +244,8 @@ object mainFrm: TmainFrm
     end
     object splitH: TSplitter
       Left = 0
-      Top = 197
-      Width = 913
+      Top = 289
+      Width = 879
       Height = 5
       Cursor = crVSplit
       Align = alBottom
@@ -256,16 +259,17 @@ object mainFrm: TmainFrm
     object logPnl: TPanel
       Left = 316
       Top = 0
-      Width = 597
-      Height = 197
+      Width = 563
+      Height = 289
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
+      ExplicitWidth = 660
       object logBox: TRichEdit
         Left = 0
         Top = 23
-        Width = 597
-        Height = 174
+        Width = 563
+        Height = 266
         Align = alClient
         Font.Charset = ANSI_CHARSET
         Font.Color = clWindowText
@@ -282,27 +286,30 @@ object mainFrm: TmainFrm
         Zoom = 100
         OnChange = logBoxChange
         OnMouseDown = logBoxMouseDown
+        ExplicitWidth = 660
       end
       object logTitle: TPanel
         Left = 0
         Top = 0
-        Width = 597
+        Width = 563
         Height = 23
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 1
+        ExplicitWidth = 660
         object titlePnl: TPanel
           Left = 0
           Top = 0
-          Width = 337
+          Width = 303
           Height = 23
           Align = alClient
           BevelOuter = bvNone
           Caption = 'Log'
           TabOrder = 0
+          ExplicitWidth = 400
         end
         object logToolbar: TPanel
-          Left = 337
+          Left = 303
           Top = 0
           Width = 260
           Height = 23
@@ -310,6 +317,7 @@ object mainFrm: TmainFrm
           AutoSize = True
           BevelOuter = bvNone
           TabOrder = 1
+          ExplicitLeft = 400
           object collapsedPnl: TPanel
             Left = 0
             Top = 0
@@ -557,7 +565,7 @@ object mainFrm: TmainFrm
       Left = 0
       Top = 0
       Width = 313
-      Height = 197
+      Height = 289
       Align = alLeft
       BevelOuter = bvNone
       Caption = 'filesPnl'
@@ -566,7 +574,7 @@ object mainFrm: TmainFrm
         Left = 0
         Top = 23
         Width = 313
-        Height = 174
+        Height = 266
         Align = alClient
         BevelInner = bvLowered
         BevelOuter = bvSpace
@@ -616,16 +624,17 @@ object mainFrm: TmainFrm
     end
     object connPnl: TPanel
       Left = 0
-      Top = 202
-      Width = 913
+      Top = 294
+      Width = 879
       Height = 106
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 2
+      ExplicitWidth = 976
       object sbar: TStatusBar
         Left = 0
         Top = 87
-        Width = 913
+        Width = 879
         Height = 19
         Panels = <
           item
@@ -633,11 +642,12 @@ object mainFrm: TmainFrm
           end>
         OnDblClick = sbarDblClick
         OnMouseDown = sbarMouseDown
+        ExplicitWidth = 976
       end
       object connBox: TListView
         Left = 0
         Top = 0
-        Width = 913
+        Width = 879
         Height = 87
         Align = alClient
         Columns = <
@@ -660,6 +670,7 @@ object mainFrm: TmainFrm
           item
             Alignment = taCenter
             Caption = 'Speed'
+            Width = 100
           end
           item
             Alignment = taCenter
@@ -684,6 +695,7 @@ object mainFrm: TmainFrm
         ViewStyle = vsReport
         OnAdvancedCustomDrawSubItem = connBoxAdvancedCustomDrawSubItem
         OnData = connBoxData
+        ExplicitWidth = 976
       end
     end
   end
@@ -3153,8 +3165,8 @@ object mainFrm: TmainFrm
   object connmenu: TPopupMenu
     Images = images
     OnPopup = connmenuPopup
-    Left = 248
-    Top = 320
+    Left = 264
+    Top = 408
     object Kickconnection1: TMenuItem
       Caption = 'Kick connection'
       OnClick = Kickconnection1Click
@@ -3272,7 +3284,6 @@ object mainFrm: TmainFrm
       object logRequestsChk: TMenuItem
         AutoCheck = True
         Caption = 'Requests'
-        Checked = True
       end
       object DumprequestsChk: TMenuItem
         AutoCheck = True
