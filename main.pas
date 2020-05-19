@@ -442,7 +442,6 @@ type
     trayicons1: TMenuItem;
     trayfordownloadChk: TMenuItem;
     N8: TMenuItem;
-    leavedisconnectedconnectionsChk: TMenuItem;
     Loadfilesystem1: TMenuItem;
     Savefilesystem1: TMenuItem;
     N1: TMenuItem;
@@ -766,7 +765,6 @@ type
     procedure Savefilesystem1Click(Sender: TObject);
     procedure filesBoxDeletion(Sender: TObject; Node: TTreeNode);
     procedure Loadfilesystem1Click(Sender: TObject);
-    procedure leavedisconnectedconnectionsChkClick(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure Officialwebsite1Click(Sender: TObject);
     procedure showmaintrayiconChkClick(Sender: TObject);
@@ -5819,18 +5817,9 @@ case event of
   HE_DISCONNECTED:
     begin
     closeUploadingFile_partial();
-    if leavedisconnectedconnectionsChk.checked then
-      begin
-      if assigned(data) then
-        data.averageSpeed:=safeDiv(conn.bytesSent,SECONDS*(now()-data.time));
-      setupDownloadIcon(data); // remove the tray icon anyway
-      end
-    else
-      begin
-      data.deleting:=TRUE;
-      toDelete.add(data);
-      with connBox.items do count:=count-1;
-      end;
+    data.deleting:=TRUE;
+    toDelete.add(data);
+    with connBox.items do count:=count-1;
     runEventScript('disconnected');
     connBox.invalidate();
     end;
@@ -6719,7 +6708,6 @@ result:='HFS '+VERSION+' - Build #'+VERSION_BUILD+CRLF
 +'address2name='+join('|',address2name)+CRLF
 +'recent-files='+join('|',recentFiles)+CRLF
 +'trusted-files='+join('|',trustedFiles)+CRLF
-+'leave-disconnected-connections='+yesno[leavedisconnectedconnectionsChk.checked]+CRLF
 +'accounts='+accountsToStr()+CRLF
 +'account-notes-wrap='+yesno[optionsFrm.notesWrapChk.checked]+CRLF
 +'tray-instead-of-quit='+yesno[trayInsteadOfQuitChk.checked]+CRLF
@@ -7070,7 +7058,6 @@ while cfg > '' do
 		if h = 'auto-save-vfs' then autosaveVFSchk.checked:=yes;
     if h = 'add-to-folder' then addToFolder:=l;
     if h = 'getright-template' then DMbrowserTplChk.checked:=yes;
-    if h = 'leave-disconnected-connections' then leavedisconnectedconnectionsChk.checked:=yes;
 		if h = 'speed-limit' then setSpeedLimit(real);
 		if h = 'speed-limit-ip' then setSpeedLimitIP(real);
     if h = 'no-download-timeout' then setNoDownloadTimeout(int);
@@ -9638,26 +9625,6 @@ if not checkVfsOnQuit() then exit;
 fn:='';
 if promptForFileName(fn, 'VirtualFileSystem|*.vfs', 'vfs', 'Open VFS file') then
   loadVFS(fn);
-end;
-
-procedure TmainFrm.leavedisconnectedconnectionsChkClick(Sender: TObject);
-var
-  i: integer;
-  data: TconnData;
-begin
-if leavedisconnectedconnectionsChk.checked then exit;
-i:=0;
-while i < connBox.items.count do
-  begin
-  data:=conn2data(i);
-  if data.conn.state = HCS_DISCONNECTED then
-    begin
-    toDelete.Add(data);
-    data.deleting:=TRUE;
-    end;
-  inc(i);
-  end;
-connBox.items.count:=srv.conns.count;
 end;
 
 procedure drawGraphOn(cnv:Tcanvas; colors:TIntegerDynArray=NIL);

@@ -8,189 +8,149 @@
   resources were bound to the produced executable.
 */
 
-#define main_MSG 64752
-#define main_MSG2 64753
-#define main_MSG 64754
-#define main_MSG 64755
-#define main_MSG 64756
-#define main_MSG 64757
-#define main_MSG 64758
-#define main_MSG_OK_PORT 64768
-#define main_MSG_3 64769
-#define main_MSG_6 64770
-#define main_MSG_7 64771
-#define main_MSG 64772
-#define main_MSG 64773
-#define main_HELP 64774
-#define main_CAPTION 64775
-#define main_MSG 64776
-#define main_REMOVE_SHELL 64777
-#define main_S_OFF 64778
-#define main_S_ON 64779
-#define main_LOG 64780
-#define main_MSG 64781
-#define main_MSG 64782
-#define main_MSG2 64783
-#define main_MSG 64784
-#define main_MSG 64785
-#define main_MSG 64786
-#define main_MSG 64787
-#define main_MSG 64788
-#define main_MSG 64789
-#define main_MSG 64790
-#define main_MSG 64791
-#define main_MSG 64792
-#define main_MSG 64793
-#define main_MSG 64794
-#define main_MSG 64795
-#define main_MSG 64796
-#define main_MSG 64797
-#define main_MSG_BEFORE 64798
-#define main_MSG_OK 64799
-#define main_MSG2 64800
-#define main_MSG 64801
-#define main_MSG 64802
-#define main_MSG_TITLE 64803
-#define main_MSG_OLD 64804
-#define main_MSG_UNK_FK 64805
-#define main_MSG_VIS_ONLY_ANON 64806
-#define main_MSG_AUTO_DISABLED 64807
-#define main_MSG_CORRUPTED 64808
-#define main_MSG_MACROS_FOUND 64809
-#define main_MSG_INFO 64810
-#define main_MSG_NEWER 64811
-#define main_ARE_EXPERT 64812
-#define main_ARE_EASY 64813
-#define main_SW2EXPERT 64814
-#define main_SW2EASY 64815
-#define main_MSG_BADCRC 64816
-#define main_MSG_NEWER 64817
-#define main_MSG_ZLIB 64818
-#define main_MSG_BAKAVAILABLE 64819
-#define main_LIMIT 64820
-#define main_TOP_SPEED 64821
-#define main_MSG_MAX_BW 64822
-#define main_ZEROMSG 64823
-#define main_LIMIT 64824
-#define main_MSG_MAX_BW_1 64825
-#define main_LIMIT1 64826
-#define main_NODL 64827
+#define main_MSG 64800
+#define main_REMOVE_SHELL 64801
+#define main_S_OFF 64802
+#define main_S_ON 64803
+#define main_LOG 64804
+#define main_MSG 64805
+#define main_MSG 64806
+#define main_MSG2 64807
+#define main_MSG 64808
+#define main_MSG2 64809
+#define main_MSG 64810
+#define main_MSG 64811
+#define main_MSG 64812
+#define main_MSG 64813
+#define main_MSG 64814
+#define main_MSG 64816
+#define main_MSG 64817
+#define main_MSG 64818
+#define main_MSG 64819
+#define main_MSG 64820
+#define main_MSG 64821
+#define main_MSG_BEFORE 64822
+#define main_MSG_OK 64823
+#define main_MSG_OK_PORT 64824
+#define main_MSG_3 64825
+#define main_MSG_6 64826
+#define main_MSG_7 64827
 #define main_MSG 64828
 #define main_MSG 64829
-#define main_MSG2 64830
-#define main_MSG 64831
-#define main_MSG_FROMDISK 64832
-#define main_COPY 64833
-#define main_ALREADY 64834
-#define main_NOSPACE 64835
-#define main_CONN 64836
-#define main_TOT_IN 64837
-#define main_TOT_OUT 64838
-#define main_OUT_SPEED 64839
-#define main_IN_SPEED 64840
-#define main_BANS 64841
-#define main_MEMORY 64842
-#define main_CUSTOMIZED 64843
-#define main_ITEMS 64844
-#define main_MSG1 64845
+#define main_HELP 64830
+#define main_CAPTION 64831
+#define main_MSG_CORRUPTED 64832
+#define main_MSG_MACROS_FOUND 64833
+#define main_MSG_INFO 64834
+#define main_MSG_NEWER 64835
+#define main_ARE_EXPERT 64836
+#define main_ARE_EASY 64837
+#define main_SW2EXPERT 64838
+#define main_SW2EASY 64839
+#define main_MSG 64840
+#define main_MSG 64841
+#define main_MSG 64842
+#define main_MSG 64843
+#define main_MSG 64844
+#define main_MSG 64845
 #define main_MSG 64846
-#define main_MSG_BETTERSTOP 64847
+#define main_MSG 64847
 #define main_LIMIT 64848
-#define main_LIMIT 64849
-#define main_LIMIT 64850
-#define main_LIMIT 64851
-#define main_LIMIT 64852
-#define main_FINGERPRINT 64853
-#define main_NO_FINGERPRINT 64854
+#define main_MSG_MAX_BW_1 64849
+#define main_LIMIT1 64850
+#define main_NODL 64851
+#define main_MSG 64852
+#define main_MSG 64853
+#define main_MSG2 64854
 #define main_MSG 64855
-#define main_AUTOSAVE 64856
+#define main_MSG2 64856
 #define main_MSG 64857
-#define main_MSG_MIN 64858
-#define main_MSG_BAN 64859
-#define main_MSG 64860
-#define main_MSG_SAVE_ERROR 64861
-#define main_MSG_LIMITED 64862
-#define main_MSG_UPDATE 64863
-#define main_MSG_DDNS_badauth 64864
-#define main_MSG_DDNS_notfqdn 64865
-#define main_MSG_DDNS_nohost 64866
-#define main_MSG_DDNS_notyours 64867
-#define main_MSG_DDNS_numhost 64868
-#define main_MSG_DDNS_abuse 64869
-#define main_MSG_DDNS_dnserr 64870
-#define main_MSG_DDNS_911 64871
-#define main_MSG_DDNS_notdonator 64872
-#define main_MSG_DDNS_badagent 64873
-#define main_MSG 64874
-#define main_MSG2 64875
-#define main_MSG 64876
-#define main_MSG2 64877
-#define main_FAILED 64878
-#define main_LIMIT 64879
-#define main_MSG_UNPROTECTED_LINKS 64880
-#define main_MSG_SAME_NAME 64881
-#define main_MSG_OPTIONS_SAVED 64882
-#define main_MSG_SOME_LOCKED 64883
-#define main_MSG_ITEM_LOCKED 64884
-#define main_MSG_INVALID_VALUE 64885
-#define main_MSG_EMPTY_NO_LIMIT 64886
-#define main_MSG_ADDRESSES_EXCEED 64887
-#define main_MSG_NO_TEMP 64888
-#define main_MSG_ERROR_REGISTRY 64889
-#define main_MSG_MANY_ITEMS 64890
-#define main_MSG_ADD_TO_HFS 64891
-#define main_MSG_SINGLE_INSTANCE 64892
-#define main_MSG_ENABLED 64893
-#define main_MSG_DISABLED 64894
-#define main_MSG_COMM_ERROR 64895
-#define Vcl_Imaging_GIFConsts_sInvalidColor 64896
-#define Vcl_Imaging_GIFConsts_sInvalidBitSize 64897
-#define Vcl_Imaging_GIFConsts_sEmptyColorMap 64898
-#define Vcl_Imaging_GIFConsts_sEmptyImage 64899
-#define Vcl_Imaging_GIFConsts_sMultipleGCE 64900
-#define Vcl_Imaging_GIFConsts_sNoPalette 64901
-#define Vcl_Imaging_GIFConsts_sGIFImageFile 64902
-#define Vcl_Imaging_GIFConsts_sProgressLoading 64903
-#define Vcl_Imaging_GIFConsts_sProgressSaving 64904
-#define Vcl_Imaging_GIFConsts_sProgressConverting 64905
-#define Vcl_Imaging_GIFConsts_sProgressRendering 64906
-#define Vcl_Imaging_GIFConsts_sProgressCopying 64907
-#define Vcl_Imaging_GIFConsts_sProgressOptimizing 64908
-#define main_S_PORT_LABEL 64909
-#define main_S_PORT_ANY 64910
-#define main_DISABLED 64911
-#define Vcl_Imaging_GIFConsts_sDecodeTooFewBits 64912
-#define Vcl_Imaging_GIFConsts_sDecodeCircular 64913
-#define Vcl_Imaging_GIFConsts_sBadTrailer 64914
-#define Vcl_Imaging_GIFConsts_sBadExtensionInstance 64915
-#define Vcl_Imaging_GIFConsts_sBadBlockSize 64916
-#define Vcl_Imaging_GIFConsts_sBadBlock 64917
-#define Vcl_Imaging_GIFConsts_sUnsupportedClass 64918
-#define Vcl_Imaging_GIFConsts_sInvalidData 64919
-#define Vcl_Imaging_GIFConsts_sBadSize 64920
-#define Vcl_Imaging_GIFConsts_sScreenSizeExceeded 64921
-#define Vcl_Imaging_GIFConsts_sNoColorTable 64922
-#define Vcl_Imaging_GIFConsts_sBadPixelCoordinates 64923
-#define Vcl_Imaging_GIFConsts_sInvalidPixelFormat 64924
-#define Vcl_Imaging_GIFConsts_sBadDimension 64925
-#define Vcl_Imaging_GIFConsts_sNoDIB 64926
-#define Vcl_Imaging_GIFConsts_sInvalidStream 64927
+#define main_MSG 64858
+#define main_MSG_TITLE 64859
+#define main_MSG_OLD 64860
+#define main_MSG_UNK_FK 64861
+#define main_MSG_VIS_ONLY_ANON 64862
+#define main_MSG_AUTO_DISABLED 64863
+#define main_IN_SPEED 64864
+#define main_BANS 64865
+#define main_MEMORY 64866
+#define main_CUSTOMIZED 64867
+#define main_ITEMS 64868
+#define main_MSG1 64869
+#define main_MSG 64870
+#define main_MSG_BETTERSTOP 64871
+#define main_MSG_BADCRC 64872
+#define main_MSG_NEWER 64873
+#define main_MSG_ZLIB 64874
+#define main_MSG_BAKAVAILABLE 64875
+#define main_LIMIT 64876
+#define main_TOP_SPEED 64877
+#define main_MSG_MAX_BW 64878
+#define main_ZEROMSG 64879
+#define main_AUTOSAVE 64880
+#define main_MSG 64881
+#define main_MSG_MIN 64882
+#define main_MSG_BAN 64883
+#define main_MSG 64884
+#define main_MSG_SAVE_ERROR 64885
+#define main_MSG_LIMITED 64886
+#define main_MSG_UPDATE 64887
+#define main_MSG_FROMDISK 64888
+#define main_COPY 64889
+#define main_ALREADY 64890
+#define main_NOSPACE 64891
+#define main_CONN 64892
+#define main_TOT_IN 64893
+#define main_TOT_OUT 64894
+#define main_OUT_SPEED 64895
+#define main_MSG_DDNS_notdonator 64896
+#define main_MSG_DDNS_badagent 64897
+#define main_MSG 64898
+#define main_MSG2 64899
+#define main_MSG 64900
+#define main_MSG2 64901
+#define main_FAILED 64902
+#define main_LIMIT 64903
+#define main_LIMIT 64904
+#define main_LIMIT 64905
+#define main_LIMIT 64906
+#define main_LIMIT 64907
+#define main_LIMIT 64908
+#define main_FINGERPRINT 64909
+#define main_NO_FINGERPRINT 64910
+#define main_MSG 64911
+#define main_MSG_NO_TEMP 64912
+#define main_MSG_ERROR_REGISTRY 64913
+#define main_MSG_MANY_ITEMS 64914
+#define main_MSG_ADD_TO_HFS 64915
+#define main_MSG_SINGLE_INSTANCE 64916
+#define main_MSG_ENABLED 64917
+#define main_MSG_DISABLED 64918
+#define main_MSG_COMM_ERROR 64919
+#define main_MSG_DDNS_badauth 64920
+#define main_MSG_DDNS_notfqdn 64921
+#define main_MSG_DDNS_nohost 64922
+#define main_MSG_DDNS_notyours 64923
+#define main_MSG_DDNS_numhost 64924
+#define main_MSG_DDNS_abuse 64925
+#define main_MSG_DDNS_dnserr 64926
+#define main_MSG_DDNS_911 64927
 #define JclResources_RsIntelCacheDescrFF 64928
 #define JclResources_RsOSVersionWin8 64929
 #define JclResources_RsOSVersionWinServer2012 64930
 #define JclResources_RsOSVersionWin81 64931
 #define JclResources_RsOSVersionWinServer2012R2 64932
-#define Vcl_Imaging_GIFConsts_sOutOfData 64933
-#define Vcl_Imaging_GIFConsts_sTooManyColors 64934
-#define Vcl_Imaging_GIFConsts_sBadColorIndex 64935
-#define Vcl_Imaging_GIFConsts_sBadColorIndexFixed 64936
-#define Vcl_Imaging_GIFConsts_sGIFErrorSaveEmpty 64937
-#define Vcl_Imaging_GIFConsts_sBadSignature 64938
-#define Vcl_Imaging_GIFConsts_sScreenBadColorSize 64939
-#define Vcl_Imaging_GIFConsts_sImageBadColorSize 64940
-#define Vcl_Imaging_GIFConsts_sUnknownExtension 64941
-#define Vcl_Imaging_GIFConsts_sBadExtensionLabel 64942
-#define Vcl_Imaging_GIFConsts_sOutOfMemDIB 64943
+#define main_S_PORT_LABEL 64933
+#define main_S_PORT_ANY 64934
+#define main_DISABLED 64935
+#define main_MSG_UNPROTECTED_LINKS 64936
+#define main_MSG_SAME_NAME 64937
+#define main_MSG_OPTIONS_SAVED 64938
+#define main_MSG_SOME_LOCKED 64939
+#define main_MSG_ITEM_LOCKED 64940
+#define main_MSG_INVALID_VALUE 64941
+#define main_MSG_EMPTY_NO_LIMIT 64942
+#define main_MSG_ADDRESSES_EXCEED 64943
 #define JclResources_RsIntelCacheDescrD1 64944
 #define JclResources_RsIntelCacheDescrD2 64945
 #define JclResources_RsIntelCacheDescrD6 64946
@@ -287,11 +247,11 @@
 #define JclResources_RsIntelCacheDescr2C 65037
 #define JclResources_RsIntelCacheDescr30 65038
 #define JclResources_RsIntelCacheDescr39 65039
-#define GIFImage_sProgressSaving 65040
-#define GIFImage_sProgressConverting 65041
-#define GIFImage_sProgressRendering 65042
-#define GIFImage_sProgressCopying 65043
-#define GIFImage_sProgressOptimizing 65044
+#define Vcl_Imaging_GIFConsts_sProgressConverting 65040
+#define Vcl_Imaging_GIFConsts_sProgressRendering 65041
+#define Vcl_Imaging_GIFConsts_sProgressCopying 65042
+#define Vcl_Imaging_GIFConsts_sProgressOptimizing 65043
+#define OverbyteIcsHttpContCod_ERR_GETCODING_OVERRIDE 65044
 #define JclResources_RsEReplacementChar 65045
 #define JclResources_RsUnableToOpenKeyRead 65046
 #define JclResources_RsUnableToAccessValue 65047
@@ -303,38 +263,38 @@
 #define JclResources_RsIntelCacheDescr03 65053
 #define JclResources_RsIntelCacheDescr04 65054
 #define JclResources_RsIntelCacheDescr05 65055
-#define GIFImage_sBadWidth 65056
-#define GIFImage_sFailedPaste 65057
-#define GIFImage_sScreenSizeExceeded 65058
-#define GIFImage_sNoColorTable 65059
-#define GIFImage_sBadPixelCoordinates 65060
-#define GIFImage_sInvalidPixelFormat 65061
-#define GIFImage_sBadDimension 65062
-#define GIFImage_sNoDIB 65063
-#define GIFImage_sInvalidStream 65064
-#define GIFImage_sInvalidColor 65065
-#define GIFImage_sInvalidBitSize 65066
-#define GIFImage_sEmptyColorMap 65067
-#define GIFImage_sEmptyImage 65068
-#define GIFImage_sInvalidReduction 65069
-#define GIFImage_sGIFImageFile 65070
-#define GIFImage_sProgressLoading 65071
-#define GIFImage_sBadVersion 65072
-#define GIFImage_sBadSignature 65073
-#define GIFImage_sScreenBadColorSize 65074
-#define GIFImage_sImageBadColorSize 65075
-#define GIFImage_sUnknownExtension 65076
-#define GIFImage_sBadExtensionLabel 65077
-#define GIFImage_sOutOfMemDIB 65078
-#define GIFImage_sDecodeTooFewBits 65079
-#define GIFImage_sDecodeCircular 65080
-#define GIFImage_sBadTrailer 65081
-#define GIFImage_sBadExtensionInstance 65082
-#define GIFImage_sBadBlockSize 65083
-#define GIFImage_sBadBlock 65084
-#define GIFImage_sUnsupportedClass 65085
-#define GIFImage_sInvalidData 65086
-#define GIFImage_sBadHeight 65087
+#define Vcl_Imaging_GIFConsts_sScreenSizeExceeded 65056
+#define Vcl_Imaging_GIFConsts_sNoColorTable 65057
+#define Vcl_Imaging_GIFConsts_sBadPixelCoordinates 65058
+#define Vcl_Imaging_GIFConsts_sInvalidPixelFormat 65059
+#define Vcl_Imaging_GIFConsts_sBadDimension 65060
+#define Vcl_Imaging_GIFConsts_sNoDIB 65061
+#define Vcl_Imaging_GIFConsts_sInvalidStream 65062
+#define Vcl_Imaging_GIFConsts_sInvalidColor 65063
+#define Vcl_Imaging_GIFConsts_sInvalidBitSize 65064
+#define Vcl_Imaging_GIFConsts_sEmptyColorMap 65065
+#define Vcl_Imaging_GIFConsts_sEmptyImage 65066
+#define Vcl_Imaging_GIFConsts_sMultipleGCE 65067
+#define Vcl_Imaging_GIFConsts_sNoPalette 65068
+#define Vcl_Imaging_GIFConsts_sGIFImageFile 65069
+#define Vcl_Imaging_GIFConsts_sProgressLoading 65070
+#define Vcl_Imaging_GIFConsts_sProgressSaving 65071
+#define Vcl_Imaging_GIFConsts_sGIFErrorSaveEmpty 65072
+#define Vcl_Imaging_GIFConsts_sBadSignature 65073
+#define Vcl_Imaging_GIFConsts_sScreenBadColorSize 65074
+#define Vcl_Imaging_GIFConsts_sImageBadColorSize 65075
+#define Vcl_Imaging_GIFConsts_sUnknownExtension 65076
+#define Vcl_Imaging_GIFConsts_sBadExtensionLabel 65077
+#define Vcl_Imaging_GIFConsts_sOutOfMemDIB 65078
+#define Vcl_Imaging_GIFConsts_sDecodeTooFewBits 65079
+#define Vcl_Imaging_GIFConsts_sDecodeCircular 65080
+#define Vcl_Imaging_GIFConsts_sBadTrailer 65081
+#define Vcl_Imaging_GIFConsts_sBadExtensionInstance 65082
+#define Vcl_Imaging_GIFConsts_sBadBlockSize 65083
+#define Vcl_Imaging_GIFConsts_sBadBlock 65084
+#define Vcl_Imaging_GIFConsts_sUnsupportedClass 65085
+#define Vcl_Imaging_GIFConsts_sInvalidData 65086
+#define Vcl_Imaging_GIFConsts_sBadSize 65087
 #define OverbyteIcsCharsetUtils_sJapaneseJIS 65088
 #define OverbyteIcsCharsetUtils_sKorean 65089
 #define OverbyteIcsCharsetUtils_sKoreanEUC 65090
@@ -347,10 +307,10 @@
 #define OverbyteIcsCharsetUtils_sVietnameseWindows 65097
 #define OverbyteIcsCharsetUtils_sWesternEuropeanISO 65098
 #define OverbyteIcsCharsetUtils_sWesternEuropeanWindows 65099
-#define OverbyteIcsHttpContCod_ERR_GETCODING_OVERRIDE 65100
-#define GIFImage_sOutOfData 65101
-#define GIFImage_sTooManyColors 65102
-#define GIFImage_sBadColorIndex 65103
+#define Vcl_Imaging_GIFConsts_sOutOfData 65100
+#define Vcl_Imaging_GIFConsts_sTooManyColors 65101
+#define Vcl_Imaging_GIFConsts_sBadColorIndex 65102
+#define Vcl_Imaging_GIFConsts_sBadColorIndexFixed 65103
 #define OverbyteIcsCharsetUtils_sCentralEuropeanISO 65104
 #define OverbyteIcsCharsetUtils_sCentralEuropeanWindows 65105
 #define OverbyteIcsCharsetUtils_sChineseTraditionalBig5 65106
@@ -785,21 +745,6 @@
 #define System_SysConst_SDiskFull 65535
 STRINGTABLE
 BEGIN
-	main_MSG,	L"Max simultaneous addresses downloading."
-	main_MSG2,	L"In this moment there are %d different addresses downloading"
-	main_MSG,	L"Max lines on screen"
-	main_MSG,	L"Here you can specify how to format the log file complying Apache standard.\rLeave blank to get bare copy of screen on file.\r\rExample:\r   %h %l %u %t \"%r\" %>s %b"
-	main_MSG,	L"This option creates an .md5 file for every new calculated fingerprint.\rUse with care to get not your disk invaded by these files."
-	main_MSG,	L"When you add files and no fingerprint is found, it is calculated.\rTo avoid long waitings, set a limit to file size (in KiloBytes).\rLeave empty to disable, and have no fingerprint created."
-	main_MSG,	L"This feature is INCOMPATIBLE with Internet Explorer."
-	main_MSG_OK_PORT,	L"Port %s is not working, but another working port has been found and set: %s."
-	main_MSG_3,	L"You may be behind a router or firewall."
-	main_MSG_6,	L"You are behind a router.\rEnsure it is configured to forward port %s to your computer."
-	main_MSG_7,	L"You may be behind a firewall.\rEnsure nothing is blocking HFS."
-	main_MSG,	L"\"Suggest\" the browser to open directly the specified files.\rOther files should pop up a save dialog."
-	main_MSG,	L"You should not use this option unless you really know its meaning.\rContinue?"
-	main_HELP,	L"For help on how to use this file please refer http://www.rejetto.com/wiki/?title=HFS:_Event_scripts"
-	main_CAPTION,	L"Edit resource"
 	main_MSG,	L"The current template is using macros.\rDo you want to cancel this action?"
 	main_REMOVE_SHELL,	L"Remove from shell context menu"
 	main_S_OFF,	L"Switch OFF"
@@ -808,14 +753,13 @@ BEGIN
 	main_MSG,	L"You are invited to re-insert your No-IP configuration, otherwise the updater won't work as expected."
 	main_MSG,	L"Max simultaneous addresses."
 	main_MSG2,	L"In this moment there are %d different addresses"
-	main_MSG,	L"Enter the number of MINUTES with no download after which the program automatically shuts down.\rLeave blank to get no timeout."
-	main_MSG,	L"This function does not save any previous information to the log file.\rInstead, it saves all information that appears in the log box in real-time (from when you click \"OK\", below).\rSpecify a filename for the log.\rIf you leave the filename blank, no log file is saved.\r\rHere are some symbols you can use in the filename to split the log:\r  %d% -- day of the month (1..31)\r  %m% -- month (1..12)\r  %y% -- year (2000..)\r  %dow% -- day of the week (0..6)\r  %w% -- week of the year (1..53)\r  %user% -- username surrounded by parenthesis"
-	main_MSG,	L"Please insert an URL for the link\r\rDo not forget to specify http:// or whatever.\r%%ip%% will be translated to your address"
-	main_MSG,	L"The realm string is shown on the user/pass dialog of the browser.\rHere you can customize the realm for the login button"
-	main_MSG,	L"The connection is kicked after a timeout.\rSpecify in seconds.\rLeave blank to get no timeout."
-	main_MSG,	L"All changes will be lost\rContinue?"
-	main_MSG,	L"Enter the number of MINUTES files stay flagged from their addition.\rLeave blank to disable."
-	main_MSG,	L"Any event from the following IP address mask will be not logged."
+	main_MSG,	L"Max simultaneous addresses downloading."
+	main_MSG2,	L"In this moment there are %d different addresses downloading"
+	main_MSG,	L"Max lines on screen"
+	main_MSG,	L"Here you can specify how to format the log file complying Apache standard.\rLeave blank to get bare copy of screen on file.\r\rExample:\r   %h %l %u %t \"%r\" %>s %b"
+	main_MSG,	L"This option creates an .md5 file for every new calculated fingerprint.\rUse with care to get not your disk invaded by these files."
+	main_MSG,	L"When you add files and no fingerprint is found, it is calculated.\rTo avoid long waitings, set a limit to file size (in KiloBytes).\rLeave empty to disable, and have no fingerprint created."
+	main_MSG,	L"This feature is INCOMPATIBLE with Internet Explorer."
 	main_MSG,	L"Specify your addresses, each per line"
 	main_MSG,	L"Can't find external address\r( %s )"
 	main_MSG,	L"This option makes pointless the option \"Find external address at startup\", which has now been disabled for your convenience."
@@ -824,14 +768,14 @@ BEGIN
 	main_MSG,	L"This string will be appended to the filename.\r\rIf you need more control, enter a string with %name% in it, and this symbol will be replaced by the original filename."
 	main_MSG_BEFORE,	L"Here you can test if your server does work on the Internet.\rIf you are not interested in serving files over the Internet, this is NOT for you.\r\rWe'll now perform a test involving network activity.\rIn order to complete this test, you may need to allow HFS's activity in your firewall, by clicking Allow on the warning prompt.\r\rWARNING: for the duration of the test, all ban rules and limits on the number of connections won't apply."
 	main_MSG_OK,	L"The test is successful. The server should be working fine."
-	main_MSG2,	L"In this moment there are %d active downloads"
-	main_MSG,	L"Max simultaneous connections to accept from a single IP address.\rMost people don't know this function well, and have problems. If you are unsure, please use the \"Max simultaneous downloads from a single IP address\"."
-	main_MSG,	L"Max simultaneous downloads from a single IP address."
-	main_MSG_TITLE,	L"Loading VFS"
-	main_MSG_OLD,	L"This file is old and uses different settings.\rThe \"let browse\" folder option will be reset.\rRe-saving the file will update its format."
-	main_MSG_UNK_FK,	L"This file has been created with a newer version.\rSome data was discarded because unknown.\rIf you save the file now, the discarded data will NOT be saved."
-	main_MSG_VIS_ONLY_ANON,	L"This VFS file uses the \"Visible only to anonymous users\" feature.\rThis feature is not available anymore.\rYou can achieve similar results by restricting access to @anonymous,\rthen enabling \"List protected items only for allowed users\"."
-	main_MSG_AUTO_DISABLED,	L"Because of the problems encountered in loading,\rautomatic saving has been disabled\runtil you save manually or load another one."
+	main_MSG_OK_PORT,	L"Port %s is not working, but another working port has been found and set: %s."
+	main_MSG_3,	L"You may be behind a router or firewall."
+	main_MSG_6,	L"You are behind a router.\rEnsure it is configured to forward port %s to your computer."
+	main_MSG_7,	L"You may be behind a firewall.\rEnsure nothing is blocking HFS."
+	main_MSG,	L"\"Suggest\" the browser to open directly the specified files.\rOther files should pop up a save dialog."
+	main_MSG,	L"You should not use this option unless you really know its meaning.\rContinue?"
+	main_HELP,	L"For help on how to use this file please refer http://www.rejetto.com/wiki/?title=HFS:_Event_scripts"
+	main_CAPTION,	L"Edit resource"
 	main_MSG_CORRUPTED,	L"This file does not contain valid data."
 	main_MSG_MACROS_FOUND,	L"!!!!!!!!! DANGER !!!!!!!!!\rThis file contains macros.\rDon't accept macros from people you don't trust.\r\rTrust this file?"
 	main_MSG_INFO,	L"Last stable version: %s\r\rLast untested version: %s\r"
@@ -840,14 +784,14 @@ BEGIN
 	main_ARE_EASY,	L"You are in Easy mode"
 	main_SW2EXPERT,	L"Switch to Expert mode"
 	main_SW2EASY,	L"Switch to Easy mode"
-	main_MSG_BADCRC,	L"This file is corrupted (CRC)."
-	main_MSG_NEWER,	L"This file has been created with a newer and incompatible version."
-	main_MSG_ZLIB,	L"This file is corrupted (ZLIB)."
-	main_MSG_BAKAVAILABLE,	L"This file is corrupted but a backup is available.\rContinue with backup?"
-	main_LIMIT,	L"Limit"
-	main_TOP_SPEED,	L"Top speed"
-	main_MSG_MAX_BW,	L"Max bandwidth (KB/s)."
-	main_ZEROMSG,	L"Zero is an effective limit.\rTo disable instead, leave empty."
+	main_MSG,	L"Enter the number of MINUTES with no download after which the program automatically shuts down.\rLeave blank to get no timeout."
+	main_MSG,	L"This function does not save any previous information to the log file.\rInstead, it saves all information that appears in the log box in real-time (from when you click \"OK\", below).\rSpecify a filename for the log.\rIf you leave the filename blank, no log file is saved.\r\rHere are some symbols you can use in the filename to split the log:\r  %d% -- day of the month (1..31)\r  %m% -- month (1..12)\r  %y% -- year (2000..)\r  %dow% -- day of the week (0..6)\r  %w% -- week of the year (1..53)\r  %user% -- username surrounded by parenthesis"
+	main_MSG,	L"Please insert an URL for the link\r\rDo not forget to specify http:// or whatever.\r%%ip%% will be translated to your address"
+	main_MSG,	L"The realm string is shown on the user/pass dialog of the browser.\rHere you can customize the realm for the login button"
+	main_MSG,	L"The connection is kicked after a timeout.\rSpecify in seconds.\rLeave blank to get no timeout."
+	main_MSG,	L"All changes will be lost\rContinue?"
+	main_MSG,	L"Enter the number of MINUTES files stay flagged from their addition.\rLeave blank to disable."
+	main_MSG,	L"Any event from the following IP address mask will be not logged."
 	main_LIMIT,	L"Speed limit"
 	main_MSG_MAX_BW_1,	L"Max bandwidth for single address (KB/s)."
 	main_LIMIT1,	L"Speed limit for single address"
@@ -856,14 +800,14 @@ BEGIN
 	main_MSG,	L"Max simultaneous connections to serve.\rMost people don't know this function well, and have problems. If you are unsure, please use the \"Max simultaneous downloads\"."
 	main_MSG2,	L"In this moment there are %d active connections"
 	main_MSG,	L"Max simultaneous downloads."
-	main_MSG_FROMDISK,	L"Update info has been read from local file.\rTo resume normal operation of the updater, delete the file hfs.updateinfo.txt from the HFS program folder."
-	main_COPY,	L"Copy to clipboard"
-	main_ALREADY,	L"Already in clipboard"
-	main_NOSPACE,	L"Out of space"
-	main_CONN,	L"Connections: %d"
-	main_TOT_IN,	L"Total In: %s"
-	main_TOT_OUT,	L"Total Out: %s"
-	main_OUT_SPEED,	L"Out: %.1f KB/s"
+	main_MSG2,	L"In this moment there are %d active downloads"
+	main_MSG,	L"Max simultaneous connections to accept from a single IP address.\rMost people don't know this function well, and have problems. If you are unsure, please use the \"Max simultaneous downloads from a single IP address\"."
+	main_MSG,	L"Max simultaneous downloads from a single IP address."
+	main_MSG_TITLE,	L"Loading VFS"
+	main_MSG_OLD,	L"This file is old and uses different settings.\rThe \"let browse\" folder option will be reset.\rRe-saving the file will update its format."
+	main_MSG_UNK_FK,	L"This file has been created with a newer version.\rSome data was discarded because unknown.\rIf you save the file now, the discarded data will NOT be saved."
+	main_MSG_VIS_ONLY_ANON,	L"This VFS file uses the \"Visible only to anonymous users\" feature.\rThis feature is not available anymore.\rYou can achieve similar results by restricting access to @anonymous,\rthen enabling \"List protected items only for allowed users\"."
+	main_MSG_AUTO_DISABLED,	L"Because of the problems encountered in loading,\rautomatic saving has been disabled\runtil you save manually or load another one."
 	main_IN_SPEED,	L"In: %.1f KB/s"
 	main_BANS,	L"Ban rules: %d"
 	main_MEMORY,	L"Mem"
@@ -872,14 +816,14 @@ BEGIN
 	main_MSG1,	L"%s item(s) already exists:\r%s\r\rContinue?"
 	main_MSG,	L"Leave empty to disable this feature.\rHere you can specify a mask.\rWhen a file is requested, if the mask doesn't match the \"Referer\" HTTP field, the request is rejected."
 	main_MSG_BETTERSTOP,	L"\rGoing on may lead to problems.\rIt is adviced to stop loading.\rStop?"
-	main_LIMIT,	L"Max simultaneous addresses downloading: %s ..."
-	main_LIMIT,	L"Max connections: %s ..."
-	main_LIMIT,	L"Max connections from single address: %s ..."
-	main_LIMIT,	L"Max simultaneous downloads: %s ..."
-	main_LIMIT,	L"Max simultaneous downloads from single address: %s ..."
-	main_FINGERPRINT,	L"Create fingerprint on addition under %d KB"
-	main_NO_FINGERPRINT,	L"Create fingerprint on addition: disabled"
-	main_MSG,	L"Please insert a comment for \"%s\".\rYou should use HTML: <br> for break line."
+	main_MSG_BADCRC,	L"This file is corrupted (CRC)."
+	main_MSG_NEWER,	L"This file has been created with a newer and incompatible version."
+	main_MSG_ZLIB,	L"This file is corrupted (ZLIB)."
+	main_MSG_BAKAVAILABLE,	L"This file is corrupted but a backup is available.\rContinue with backup?"
+	main_LIMIT,	L"Limit"
+	main_TOP_SPEED,	L"Top speed"
+	main_MSG_MAX_BW,	L"Max bandwidth (KB/s)."
+	main_ZEROMSG,	L"Zero is an effective limit.\rTo disable instead, leave empty."
 	main_AUTOSAVE,	L"Auto save every: "
 	main_MSG,	L"Auto-save %s.\rSpecify in seconds.\rLeave blank to disable."
 	main_MSG_MIN,	L"We don't accept less than %d"
@@ -888,14 +832,14 @@ BEGIN
 	main_MSG_SAVE_ERROR,	L"Cannot save the update"
 	main_MSG_LIMITED,	L"The auto-update feature cannot work because it requires the \"Only 1 instance\" option enabled.\r\rYour browser will now be pointed to the update, so you can install it manually."
 	main_MSG_UPDATE,	L"You are invited to use the new version.\r\rUpdate now?"
-	main_MSG_DDNS_badauth,	L"invalid user/password"
-	main_MSG_DDNS_notfqdn,	L"incomplete hostname, required form aaa.bbb.com"
-	main_MSG_DDNS_nohost,	L"specified hostname does not exist"
-	main_MSG_DDNS_notyours,	L"specified hostname belongs to another username"
-	main_MSG_DDNS_numhost,	L"too many or too few hosts found"
-	main_MSG_DDNS_abuse,	L"specified hostname is blocked for update abuse"
-	main_MSG_DDNS_dnserr,	L"server error"
-	main_MSG_DDNS_911,	L"server error"
+	main_MSG_FROMDISK,	L"Update info has been read from local file.\rTo resume normal operation of the updater, delete the file hfs.updateinfo.txt from the HFS program folder."
+	main_COPY,	L"Copy to clipboard"
+	main_ALREADY,	L"Already in clipboard"
+	main_NOSPACE,	L"Out of space"
+	main_CONN,	L"Connections: %d"
+	main_TOT_IN,	L"Total In: %s"
+	main_TOT_OUT,	L"Total Out: %s"
+	main_OUT_SPEED,	L"Out: %.1f KB/s"
 	main_MSG_DDNS_notdonator,	L"an option specified requires payment"
 	main_MSG_DDNS_badagent,	L"banned client"
 	main_MSG,	L"There are %d open connections from this address.\rDo you want to kick them all now?"
@@ -904,14 +848,14 @@ BEGIN
 	main_MSG2,	L"There are %d connections open.\rDo you want to close them now?"
 	main_FAILED,	L"Login failed"
 	main_LIMIT,	L"Max simultaneous addresses: %s ..."
-	main_MSG_UNPROTECTED_LINKS,	L"Links are NOT actually protected.\rThe feature is there to be used with the \"list protected items only...\" option.\rContinue?"
-	main_MSG_SAME_NAME,	L"An item with the same name is already present in this folder.\rContinue?"
-	main_MSG_OPTIONS_SAVED,	L"Options saved"
-	main_MSG_SOME_LOCKED,	L"Some items were not affected because locked"
-	main_MSG_ITEM_LOCKED,	L"The item is locked"
-	main_MSG_INVALID_VALUE,	L"Invalid value"
-	main_MSG_EMPTY_NO_LIMIT,	L"Leave blank to get no limits."
-	main_MSG_ADDRESSES_EXCEED,	L"The following addresses exceed the limit:\r%s"
+	main_LIMIT,	L"Max simultaneous addresses downloading: %s ..."
+	main_LIMIT,	L"Max connections: %s ..."
+	main_LIMIT,	L"Max connections from single address: %s ..."
+	main_LIMIT,	L"Max simultaneous downloads: %s ..."
+	main_LIMIT,	L"Max simultaneous downloads from single address: %s ..."
+	main_FINGERPRINT,	L"Create fingerprint on addition under %d KB"
+	main_NO_FINGERPRINT,	L"Create fingerprint on addition: disabled"
+	main_MSG,	L"Please insert a comment for \"%s\".\rYou should use HTML: <br> for break line."
 	main_MSG_NO_TEMP,	L"Cannot save temporary file"
 	main_MSG_ERROR_REGISTRY,	L"Can't write to registry.\rYou may lack necessary rights."
 	main_MSG_MANY_ITEMS,	L"You are putting many files.\rTry using real folders instead of virtual folders.\rRead documentation or ask on the forum for help."
@@ -920,54 +864,30 @@ BEGIN
 	main_MSG_ENABLED,	L"Option enabled"
 	main_MSG_DISABLED,	L"Option disabled"
 	main_MSG_COMM_ERROR,	L"Network error. Request failed."
-	Vcl_Imaging_GIFConsts_sInvalidColor,	L"Color not in color table"
-	Vcl_Imaging_GIFConsts_sInvalidBitSize,	L"Invalid Bits Per Pixel value"
-	Vcl_Imaging_GIFConsts_sEmptyColorMap,	L"Color table is empty"
-	Vcl_Imaging_GIFConsts_sEmptyImage,	L"Image is empty"
-	Vcl_Imaging_GIFConsts_sMultipleGCE,	L"Frame contains multiple Graphic Control Extension blocks"
-	Vcl_Imaging_GIFConsts_sNoPalette,	L"Missing, invalid or empty palette"
-	Vcl_Imaging_GIFConsts_sGIFImageFile,	L"GIF Image"
-	Vcl_Imaging_GIFConsts_sProgressLoading,	L"Loading"
-	Vcl_Imaging_GIFConsts_sProgressSaving,	L"Saving"
-	Vcl_Imaging_GIFConsts_sProgressConverting,	L"Converting"
-	Vcl_Imaging_GIFConsts_sProgressRendering,	L"Rendering"
-	Vcl_Imaging_GIFConsts_sProgressCopying,	L"Copying"
-	Vcl_Imaging_GIFConsts_sProgressOptimizing,	L"Optimizing"
-	main_S_PORT_LABEL,	L"Port: %s"
-	main_S_PORT_ANY,	L"any"
-	main_DISABLED,	L"disabled"
-	Vcl_Imaging_GIFConsts_sDecodeTooFewBits,	L"Decoder bit buffer under-run"
-	Vcl_Imaging_GIFConsts_sDecodeCircular,	L"Circular decoder table entry"
-	Vcl_Imaging_GIFConsts_sBadTrailer,	L"Invalid Image trailer"
-	Vcl_Imaging_GIFConsts_sBadExtensionInstance,	L"Internal error: Extension Instance does not match Extension Label"
-	Vcl_Imaging_GIFConsts_sBadBlockSize,	L"Unsupported Application Extension block size"
-	Vcl_Imaging_GIFConsts_sBadBlock,	L"Unknown GIF block type"
-	Vcl_Imaging_GIFConsts_sUnsupportedClass,	L"Object type not supported for operation"
-	Vcl_Imaging_GIFConsts_sInvalidData,	L"Invalid GIF data"
-	Vcl_Imaging_GIFConsts_sBadSize,	L"Invalid image size"
-	Vcl_Imaging_GIFConsts_sScreenSizeExceeded,	L"Image exceeds Logical Screen size"
-	Vcl_Imaging_GIFConsts_sNoColorTable,	L"No global or local color table defined"
-	Vcl_Imaging_GIFConsts_sBadPixelCoordinates,	L"Invalid pixel coordinates"
-	Vcl_Imaging_GIFConsts_sInvalidPixelFormat,	L"Unsupported PixelFormat"
-	Vcl_Imaging_GIFConsts_sBadDimension,	L"Invalid image dimensions"
-	Vcl_Imaging_GIFConsts_sNoDIB,	L"Image has no DIB"
-	Vcl_Imaging_GIFConsts_sInvalidStream,	L"Invalid stream operation"
+	main_MSG_DDNS_badauth,	L"invalid user/password"
+	main_MSG_DDNS_notfqdn,	L"incomplete hostname, required form aaa.bbb.com"
+	main_MSG_DDNS_nohost,	L"specified hostname does not exist"
+	main_MSG_DDNS_notyours,	L"specified hostname belongs to another username"
+	main_MSG_DDNS_numhost,	L"too many or too few hosts found"
+	main_MSG_DDNS_abuse,	L"specified hostname is blocked for update abuse"
+	main_MSG_DDNS_dnserr,	L"server error"
+	main_MSG_DDNS_911,	L"server error"
 	JclResources_RsIntelCacheDescrFF,	L"CPUID leaf 2 does not report cache descriptor information, use CPUID leaf 4 to query cache parameters"
 	JclResources_RsOSVersionWin8,	L"Windows 8"
 	JclResources_RsOSVersionWinServer2012,	L"Windows Server 2012"
 	JclResources_RsOSVersionWin81,	L"Windows 8.1"
 	JclResources_RsOSVersionWinServer2012R2,	L"Windows Server 2012 R2"
-	Vcl_Imaging_GIFConsts_sOutOfData,	L"Premature end of data"
-	Vcl_Imaging_GIFConsts_sTooManyColors,	L"Color table overflow"
-	Vcl_Imaging_GIFConsts_sBadColorIndex,	L"Invalid color index"
-	Vcl_Imaging_GIFConsts_sBadColorIndexFixed,	L"Invalid color index - color map expanded"
-	Vcl_Imaging_GIFConsts_sGIFErrorSaveEmpty,	L"Cannot save empty GIF"
-	Vcl_Imaging_GIFConsts_sBadSignature,	L"Invalid GIF signature"
-	Vcl_Imaging_GIFConsts_sScreenBadColorSize,	L"Invalid number of colors specified in Screen Descriptor"
-	Vcl_Imaging_GIFConsts_sImageBadColorSize,	L"Invalid number of colors specified in Image Descriptor"
-	Vcl_Imaging_GIFConsts_sUnknownExtension,	L"Unknown extension type"
-	Vcl_Imaging_GIFConsts_sBadExtensionLabel,	L"Invalid extension introducer"
-	Vcl_Imaging_GIFConsts_sOutOfMemDIB,	L"Failed to allocate memory for GIF DIB"
+	main_S_PORT_LABEL,	L"Port: %s"
+	main_S_PORT_ANY,	L"any"
+	main_DISABLED,	L"disabled"
+	main_MSG_UNPROTECTED_LINKS,	L"Links are NOT actually protected.\rThe feature is there to be used with the \"list protected items only...\" option.\rContinue?"
+	main_MSG_SAME_NAME,	L"An item with the same name is already present in this folder.\rContinue?"
+	main_MSG_OPTIONS_SAVED,	L"Options saved"
+	main_MSG_SOME_LOCKED,	L"Some items were not affected because locked"
+	main_MSG_ITEM_LOCKED,	L"The item is locked"
+	main_MSG_INVALID_VALUE,	L"Invalid value"
+	main_MSG_EMPTY_NO_LIMIT,	L"Leave blank to get no limits."
+	main_MSG_ADDRESSES_EXCEED,	L"The following addresses exceed the limit:\r%s"
 	JclResources_RsIntelCacheDescrD1,	L"3rd-level cache: 1 MByte, 4-way set associative, 64 byte line size"
 	JclResources_RsIntelCacheDescrD2,	L"3rd-level cache: 2 MByte, 4-way set associative, 64 byte line size"
 	JclResources_RsIntelCacheDescrD6,	L"3rd-level cache: 1 MByte, 8-way set associative, 64 byte line size"
@@ -1064,11 +984,11 @@ BEGIN
 	JclResources_RsIntelCacheDescr2C,	L"1st level data cache: 32 KBytes, 8-way set associative, 64 byte line size"
 	JclResources_RsIntelCacheDescr30,	L"1st level instruction cache: 32 KBytes, 8-way set associative, 64 byte line size"
 	JclResources_RsIntelCacheDescr39,	L"2nd-level cache: 128 KBytes, 4-way set associative, sectored cache, 64-byte line size"
-	GIFImage_sProgressSaving,	L"Saving..."
-	GIFImage_sProgressConverting,	L"Converting..."
-	GIFImage_sProgressRendering,	L"Rendering..."
-	GIFImage_sProgressCopying,	L"Copying..."
-	GIFImage_sProgressOptimizing,	L"Optimizing..."
+	Vcl_Imaging_GIFConsts_sProgressConverting,	L"Converting"
+	Vcl_Imaging_GIFConsts_sProgressRendering,	L"Rendering"
+	Vcl_Imaging_GIFConsts_sProgressCopying,	L"Copying"
+	Vcl_Imaging_GIFConsts_sProgressOptimizing,	L"Optimizing"
+	OverbyteIcsHttpContCod_ERR_GETCODING_OVERRIDE,	L"GetCoding must be overridden in %s"
 	JclResources_RsEReplacementChar,	L"Failed to get ANSI replacement character"
 	JclResources_RsUnableToOpenKeyRead,	L"Unable to open key \"%s\\%s\" for read"
 	JclResources_RsUnableToAccessValue,	L"Unable to open key \"%s\\%s\" and access value \"%s\""
@@ -1080,38 +1000,38 @@ BEGIN
 	JclResources_RsIntelCacheDescr03,	L"Data TLB: 4 KByte pages, 4-way set associative, 64 entries"
 	JclResources_RsIntelCacheDescr04,	L"Data TLB: 4 MByte pages, 4-way set associative, 8 entries"
 	JclResources_RsIntelCacheDescr05,	L"Data TLB1: 4 MByte pages, 4-way set associative, 32 entries"
-	GIFImage_sBadWidth,	L"Image width too small for contained frames"
-	GIFImage_sFailedPaste,	L"Failed to store GIF on clipboard"
-	GIFImage_sScreenSizeExceeded,	L"Image exceeds Logical Screen size"
-	GIFImage_sNoColorTable,	L"No global or local color table defined"
-	GIFImage_sBadPixelCoordinates,	L"Invalid pixel coordinates"
-	GIFImage_sInvalidPixelFormat,	L"Unsupported PixelFormat"
-	GIFImage_sBadDimension,	L"Invalid image dimensions"
-	GIFImage_sNoDIB,	L"Image has no DIB"
-	GIFImage_sInvalidStream,	L"Invalid stream operation"
-	GIFImage_sInvalidColor,	L"Color not in color table"
-	GIFImage_sInvalidBitSize,	L"Invalid Bits Per Pixel value"
-	GIFImage_sEmptyColorMap,	L"Color table is empty"
-	GIFImage_sEmptyImage,	L"Image is empty"
-	GIFImage_sInvalidReduction,	L"Invalid reduction method"
-	GIFImage_sGIFImageFile,	L"GIF Image"
-	GIFImage_sProgressLoading,	L"Loading..."
-	GIFImage_sBadVersion,	L"Unsupported GIF version"
-	GIFImage_sBadSignature,	L"Invalid GIF signature"
-	GIFImage_sScreenBadColorSize,	L"Invalid number of colors specified in Screen Descriptor"
-	GIFImage_sImageBadColorSize,	L"Invalid number of colors specified in Image Descriptor"
-	GIFImage_sUnknownExtension,	L"Unknown extension type"
-	GIFImage_sBadExtensionLabel,	L"Invalid extension introducer"
-	GIFImage_sOutOfMemDIB,	L"Failed to allocate memory for GIF DIB"
-	GIFImage_sDecodeTooFewBits,	L"Decoder bit buffer under-run"
-	GIFImage_sDecodeCircular,	L"Circular decoder table entry"
-	GIFImage_sBadTrailer,	L"Invalid Image trailer"
-	GIFImage_sBadExtensionInstance,	L"Internal error: Extension Instance does not match Extension Label"
-	GIFImage_sBadBlockSize,	L"Unsupported Application Extension block size"
-	GIFImage_sBadBlock,	L"Unknown GIF block type"
-	GIFImage_sUnsupportedClass,	L"Object type not supported for operation"
-	GIFImage_sInvalidData,	L"Invalid GIF data"
-	GIFImage_sBadHeight,	L"Image height too small for contained frames"
+	Vcl_Imaging_GIFConsts_sScreenSizeExceeded,	L"Image exceeds Logical Screen size"
+	Vcl_Imaging_GIFConsts_sNoColorTable,	L"No global or local color table defined"
+	Vcl_Imaging_GIFConsts_sBadPixelCoordinates,	L"Invalid pixel coordinates"
+	Vcl_Imaging_GIFConsts_sInvalidPixelFormat,	L"Unsupported PixelFormat"
+	Vcl_Imaging_GIFConsts_sBadDimension,	L"Invalid image dimensions"
+	Vcl_Imaging_GIFConsts_sNoDIB,	L"Image has no DIB"
+	Vcl_Imaging_GIFConsts_sInvalidStream,	L"Invalid stream operation"
+	Vcl_Imaging_GIFConsts_sInvalidColor,	L"Color not in color table"
+	Vcl_Imaging_GIFConsts_sInvalidBitSize,	L"Invalid Bits Per Pixel value"
+	Vcl_Imaging_GIFConsts_sEmptyColorMap,	L"Color table is empty"
+	Vcl_Imaging_GIFConsts_sEmptyImage,	L"Image is empty"
+	Vcl_Imaging_GIFConsts_sMultipleGCE,	L"Frame contains multiple Graphic Control Extension blocks"
+	Vcl_Imaging_GIFConsts_sNoPalette,	L"Missing, invalid or empty palette"
+	Vcl_Imaging_GIFConsts_sGIFImageFile,	L"GIF Image"
+	Vcl_Imaging_GIFConsts_sProgressLoading,	L"Loading"
+	Vcl_Imaging_GIFConsts_sProgressSaving,	L"Saving"
+	Vcl_Imaging_GIFConsts_sGIFErrorSaveEmpty,	L"Cannot save empty GIF"
+	Vcl_Imaging_GIFConsts_sBadSignature,	L"Invalid GIF signature"
+	Vcl_Imaging_GIFConsts_sScreenBadColorSize,	L"Invalid number of colors specified in Screen Descriptor"
+	Vcl_Imaging_GIFConsts_sImageBadColorSize,	L"Invalid number of colors specified in Image Descriptor"
+	Vcl_Imaging_GIFConsts_sUnknownExtension,	L"Unknown extension type"
+	Vcl_Imaging_GIFConsts_sBadExtensionLabel,	L"Invalid extension introducer"
+	Vcl_Imaging_GIFConsts_sOutOfMemDIB,	L"Failed to allocate memory for GIF DIB"
+	Vcl_Imaging_GIFConsts_sDecodeTooFewBits,	L"Decoder bit buffer under-run"
+	Vcl_Imaging_GIFConsts_sDecodeCircular,	L"Circular decoder table entry"
+	Vcl_Imaging_GIFConsts_sBadTrailer,	L"Invalid Image trailer"
+	Vcl_Imaging_GIFConsts_sBadExtensionInstance,	L"Internal error: Extension Instance does not match Extension Label"
+	Vcl_Imaging_GIFConsts_sBadBlockSize,	L"Unsupported Application Extension block size"
+	Vcl_Imaging_GIFConsts_sBadBlock,	L"Unknown GIF block type"
+	Vcl_Imaging_GIFConsts_sUnsupportedClass,	L"Object type not supported for operation"
+	Vcl_Imaging_GIFConsts_sInvalidData,	L"Invalid GIF data"
+	Vcl_Imaging_GIFConsts_sBadSize,	L"Invalid image size"
 	OverbyteIcsCharsetUtils_sJapaneseJIS,	L"Japanese (JIS)"
 	OverbyteIcsCharsetUtils_sKorean,	L"Korean"
 	OverbyteIcsCharsetUtils_sKoreanEUC,	L"Korean (EUC)"
@@ -1124,10 +1044,10 @@ BEGIN
 	OverbyteIcsCharsetUtils_sVietnameseWindows,	L"Vietnamese (Windows)"
 	OverbyteIcsCharsetUtils_sWesternEuropeanISO,	L"Western European (ISO)"
 	OverbyteIcsCharsetUtils_sWesternEuropeanWindows,	L"Western European (Windows)"
-	OverbyteIcsHttpContCod_ERR_GETCODING_OVERRIDE,	L"GetCoding must be overridden in %s"
-	GIFImage_sOutOfData,	L"Premature end of data"
-	GIFImage_sTooManyColors,	L"Color table overflow"
-	GIFImage_sBadColorIndex,	L"Invalid color index"
+	Vcl_Imaging_GIFConsts_sOutOfData,	L"Premature end of data"
+	Vcl_Imaging_GIFConsts_sTooManyColors,	L"Color table overflow"
+	Vcl_Imaging_GIFConsts_sBadColorIndex,	L"Invalid color index"
+	Vcl_Imaging_GIFConsts_sBadColorIndexFixed,	L"Invalid color index - color map expanded"
 	OverbyteIcsCharsetUtils_sCentralEuropeanISO,	L"Central European (ISO)"
 	OverbyteIcsCharsetUtils_sCentralEuropeanWindows,	L"Central European (Windows)"
 	OverbyteIcsCharsetUtils_sChineseTraditionalBig5,	L"Chinese Traditional (Big5)"

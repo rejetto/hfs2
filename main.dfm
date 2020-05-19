@@ -3187,11 +3187,6 @@ object mainFrm: TmainFrm
       Caption = 'View http request'
       OnClick = Viewhttprequest1Click
     end
-    object leavedisconnectedconnectionsChk: TMenuItem
-      AutoCheck = True
-      Caption = 'Leave disconnected connections'
-      OnClick = leavedisconnectedconnectionsChkClick
-    end
     object trayiconforeachdownload1: TMenuItem
       Caption = 'Tray icon for each download'
       Checked = True
