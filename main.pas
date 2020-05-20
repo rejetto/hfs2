@@ -17,7 +17,7 @@ This file is part of HFS ~ HTTP File Server.
     along with HFS; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 }
-{$A+,B-,C+,E-,F-,G+,H+,I-,J-,K-,L+,M-,N+,O+,P+,Q-,R-,S-,T-,U-,V+,X+,Y+,Z1}
+{$A+,B-,C+,E-,F-,G+,H+,I-,J+,K-,L+,M-,N+,O+,P+,Q-,R-,S-,T-,U-,V+,X+,Y+,Z1}
 {$INCLUDE defs.inc }
 
 unit main;
@@ -868,7 +868,6 @@ type
     procedure Disable1Click(Sender: TObject);
     procedure saveNewFingerprintsChkClick(Sender: TObject);
     procedure Createfingerprintonaddition1Click(Sender: TObject);
-    procedure pwdInPagesChkClick(Sender: TObject);
     procedure Howto1Click(Sender: TObject);
     procedure Name1Click(Sender: TObject);
     procedure Size1Click(Sender: TObject);
@@ -2764,8 +2763,8 @@ s:=copy( s, length(f.resource)+2, length(s) );
 result:=result+replaceStr(s, '\','/');
 end; // getFolder
 
-var userPwdHashCache:Tstr2str;
 function Tfile.fullURL(ip, user, pwd:string):string;
+const userPwdHashCache:Tstr2str = NIL;
 var s,k,base: string;
 begin
 if userPwdHashCache = NIL then
@@ -5239,7 +5238,7 @@ var
     // parameters: u(username), e(?expiration_UTC), s2(sha256(rest+pwd))
     function urlAuth():string;
     var
-      s, sign: string;      
+      s, sign: string;
     begin
     result:='';
     if mode <> 'auth' then
@@ -5259,6 +5258,8 @@ var
       exit('expired');    
     data.account:=acc;
     data.session.user:=acc.user;
+    data.user:=acc.user;
+    data.pwd:=acc.pwd;
     data.session.redirect:=getAccountRedirect(acc);
     end; //urlAuth
     
@@ -12421,20 +12422,6 @@ else s:=intToStr(autoFingerprint);
 if not inputquery('Auto fingerprint', MSG, s) then exit;
 try setAutoFingerprint(strToUInt(s))
 except msgDlg(MSG_INVALID_VALUE, MB_ICONERROR) end;
-end;
-
-procedure TmainFrm.pwdInPagesChkClick(Sender: TObject);
-resourcestring
-  MSG = 'This feature is INCOMPATIBLE with Internet Explorer.';
-begin
-if pwdInPagesChk.Checked
-and (msgDlg(MSG, MB_ICONWARNING+MB_OKCANCEL) = IDOK) then
-  begin
-  msgDlg(MSG_ENABLED);
-  exit;
-  end;
-pwdInPagesChk.checked:=FALSE;
-msgDlg(MSG_DISABLED)
 end;
 
 procedure TmainFrm.Howto1Click(Sender: TObject);
