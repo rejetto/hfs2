@@ -203,7 +203,9 @@ $(function(){
 [upload panel]
 <div id="upload-panel" class="additional-panel closeable" style="display:none">
 	<div id="upload-counters">
-		{.!Uploaded.}: <span id="upload-ok">0</span> - {.!Failed.}: <span id="upload-ko">0</span> - {.!Queued.}: <span id="upload-q">0</span>
+		{.!Uploaded.}: <span id="upload-ok">0</span>
+		<span style="display:none"> - {.!Failed.}: <span id="upload-ko">0</span></span>
+		- {.!Queued.}: <span id="upload-q">0</span>
 	</div>
 	<div id="upload-results"></div>
 	<div id="upload-progress">
@@ -775,9 +777,8 @@ function getSelectedItems() {
 }
 
 function getSelectedItemsName() {
-    return getSelectedItems().get().map(function(x) {
-        return getItemName(x)
-    })
+    return getSelectedItems().get().map(x=>
+        getItemName(x))
 }//getSelectedItemsName
 
 function deleteFiles(files) {
@@ -837,9 +838,7 @@ function selectionMask() {
             re = new RegExp(s, "i");
         }
         $("#files .selector")
-            .filter(function(i, e) {
-                return invert ^ re.test(getItemName(e));
-            })
+            .filter((i, e)=> invert ^ re.test(getItemName(e)))
             .prop('checked',true);
         selectionChanged()
     });
@@ -1009,9 +1008,8 @@ function sendFiles(files, done) {
             try {
                 data = JSON.parse(data)
                 data.forEach(function(r) {
-                    $('#upload-'+(r.err ? 'ko' : 'ok')).text(function(i, s) {
-                        return Number(s) + 1
-                    })
+                    $('#upload-'+(r.err ? 'ko' : 'ok')).text((i, s)=> +s +1)
+						.parent().show() // only for 'ko'
                     $(r.err ? '<span title="'+r.err+'"><i class="fa fa-ban"></i> '+ r.name+'</span>' 
 						: '<a title="{.!Size.}: '+r.size+'&#013;{.!Speed.}: '+r.speed+'B/s" href="'+r.url+'"><i class="fa fa-'+(r.err ? 'ban' : 'check-circled')+'"></i> '+r.name+'</a>')
 						.appendTo('#upload-results');
@@ -1137,18 +1135,16 @@ $(function(){
             $('<div class="buttons">').html([
                 it.closest('.can-delete').length > 0
 				&& $('<button><i class="fa fa-trash"></i> {.!Delete.}</button>')
-					.click(function() { deleteFiles([name]) }),
+					.click(()=> deleteFiles([name]) ),
                 it.closest('.can-rename').length > 0
 				&& $('<button><i class="fa fa-edit"></i> {.!Rename.}</button>').click(renameItem),
                 it.closest('.can-comment').length > 0
 				&& $('<button><i class="fa fa-quote-left"></i> {.!Comment.}</button>').click(setComment),
                 it.closest('.can-move').length > 0
 				&& $('<button><i class="fa fa-truck"></i> {.!Move.}</button>')
-					.click(function(){  moveFiles([name]) })
+					.click(()=> moveFiles([name]) )
             ])
         ]).addClass('item-menu-dialog')
-
-        //{.if|{.and|{.!option.move.}|{.can move.}.}| <button id='moveBtn' onclick='moveFiles()'>{.!Move.}</button> .}
 
         function setComment() {
             var value = it.find('.comment-text').text() || '';
@@ -1159,9 +1155,8 @@ $(function(){
         }//setComment
 
         function renameItem() {
-            ask(this.innerHTML+ ' '+name, { type: 'text', value: name }, function(to){
-                ajax("rename", { from: name, to: to });
-            })
+            ask(this.innerHTML+ ' '+name, { type: 'text', value: name }, to=>
+                ajax("rename", { from: name, to: to }))
         }
     })
 
