@@ -178,7 +178,7 @@ function idxOf(s:string; a:array of string; isSorted:boolean=FALSE):integer;
 function stringExists(s:string; a:array of string; isSorted:boolean=FALSE):boolean;
 function listToArray(l:Tstrings):TstringDynArray;
 function arrayToList(a:TStringDynArray; list:TstringList=NIL):TstringList;
-procedure sortArray(var a:TStringDynArray);
+function sortArray(a:TStringDynArray):TStringDynArray;
 // convert
 function boolToPtr(b:boolean):pointer;
 function strToCharset(s:string):Tcharset;
@@ -2639,7 +2639,7 @@ accounts[i]:=acc;
 result:=@accounts[i];
 end; // createAccountOnTheFly
 
-procedure sortArray(var a:TStringDynArray);
+function sortArray(a:TStringDynArray):TStringDynArray;
 var
   i, j, l: integer;
 begin
@@ -2647,6 +2647,7 @@ l:=length(a);
 for i:=0 to l-2 do
   for j:=i+1 to l-1 do
     swapMem(a[i], a[j], sizeof(a[i]), ansiCompareText(a[i], a[j]) > 0);
+result:=a;
 end; // sortArray
 
 procedure onlyForExperts(controls:array of Tcontrol);

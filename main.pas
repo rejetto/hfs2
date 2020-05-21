@@ -2815,15 +2815,14 @@ result:=(filesStayFlaggedForMinutes > 0)
   and (trunc(abs(now()-t)*24*60) <= filesStayFlaggedForMinutes)
 end; // isNew
 
-function getFiles(mask:string):TstringList;
+function getFiles(mask:string):TStringDynArray;
 var
   sr: TSearchRec;
 begin
-result:=TstringList.create;
-result.CaseSensitive:=FALSE;
-if findFirst(exePath+'*.diff.tpl', faAnyFile, sr) = 0 then
+result:=NIL;
+if findFirst(mask, faAnyFile, sr) = 0 then
   try
-    repeat result.add(sr.name)
+    repeat addString(sr.name, result)
     until findNext(sr) <> 0;
   finally findClose(sr) end;
 end; // getFiles
@@ -2844,20 +2843,6 @@ var
     + diff;
   result:=TRUE;
   end; // add2diff
-
-  procedure loadStar();
-  var
-    list: TstringList;
-    s: string;
-  begin
-  list:=getFiles(exePath+'hfs.diff.*.tpl');
-  try
-    list.sort();
-    for s in list do
-      add2diff(s);
-  finally list.free
-    end;
-  end;
 
 begin
 result:='';
@@ -2904,7 +2889,8 @@ while assigned(f) do
   f:=f.parent;
   first:=FALSE;
   end;
-loadStar();
+for s in sortArray(getFiles(exePath+'*.diff.tpl')) do
+  add2diff(loadTextFile(s));
 result:=diff;
 end; // getRecursiveDiffTplAsStr
 

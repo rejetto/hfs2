@@ -1,7 +1,15 @@
++ expiring links
+* dismiss regexp lib http://docwiki.embarcadero.com/Libraries/Rio/en/System.RegularExpressions.TRegEx
++ ipv6
++ load *.events
++ url auth limited to resource
++ global limit speed for downloads (browsing excluded)
++ [tpl id] [SECTION|for-tpl=MASK]
 * consider letting comment "protected" files. Can it really cause harm? 
 * flag to enable lnk files in a folder (disabled by default)
 + sign exe http://www.rejetto.com/forum/hfs-~-http-file-server/'unsafe'/msg1061437/#msg1061437
-cache reReplace
+* cache reReplace
++ {.calc.} to have a third numeric parameter that becomes 'x' symbol
 + hash&salt passwords
 - setInterval > setTimeout
 + target=_blank as an option on links
