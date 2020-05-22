@@ -4256,6 +4256,13 @@ while i < srv.conns.count do
   end;
 end; // kickBannedOnes
 
+function getAcceptOptions():TstringDynArray;
+begin
+result:=listToArray(localIPlist(sfAny));
+addUniqueString('127.0.0.1', result);
+addUniqueString('::1', result);
+end; // getAcceptOptions
+
 function startServer():boolean;
 
   procedure tryPorts(list:array of string);
@@ -4273,7 +4280,7 @@ begin
 result:=FALSE;
 if srv.active then exit; // fail if already active
 
-if (localIPlist.IndexOf(listenOn) < 0) and (listenOn <> '127.0.0.1') then
+if not stringExists(listenOn, getAcceptOptions()) then
   listenOn:='';
 
 if port > '' then
@@ -5911,19 +5918,16 @@ end; // httpEvent
 
 procedure findSimilarIP(fromIP:string);
 
-  function howManySameNumbers(ip1,ip2:string):integer;
+  function howManySameChars(ip1,ip2:string):integer;
   var
-    n1, n2: string;
+    i,n: integer;
   begin
-  result:=0;
-  while ip1 > '' do
-    begin
-    n1:=chop('.',ip1);
-    n2:=chop('.',ip2);
-    if n1 <> n2 then exit;
-    inc(result);
-    end;
-  end; // howManySameNumbers
+  i:=1;
+  n:=min(length(ip1),length(ip2));
+  while (i<=n) and (ip1[i] = ip2[i]) do
+    inc(i);
+  result:=i-1;
+  end; // howManySameChars
 
 var
   chosen: string;
@@ -5937,9 +5941,9 @@ if stringExists(fromIP, customIPs) then
   exit;
   end;
 chosen:=getIP();
-a:=getIPs();
+a:=getAcceptOptions();
 for i:=0 to length(a)-1 do
-  if howManySameNumbers(chosen, fromIP) < howManySameNumbers(a[i], fromIP) then
+  if howManySameChars(chosen, fromIP) < howManySameChars(a[i], fromIP) then
     chosen:=a[i];
 setDefaultIP(chosen);
 end; // findSimilarIP
@@ -7878,7 +7882,7 @@ var
   procedure every10sec();
   var
     s: string;
-    ss: Tstrings;
+    ss: TstringDynArray;
   begin
   if not stringExists(defaultIP, getPossibleAddresses()) then
     // previous address not available anymore (it happens using dial-up)
@@ -7891,10 +7895,10 @@ var
     s:=getIP();
     if not isLocalIP(s) then // clearly better
       setDefaultIP(s)
-    else if ansiStartsStr('169', defaultIP) then // we consider the 169 worst of other locals
+    else if ansiStartsStr('169.', defaultIP) then // we consider the 169 worst of other locals
       begin
-      ss:=LocalIPList();
-      if ss.count > 1 then
+      ss:=getAcceptOptions();
+      if length(ss) > 1 then
         setDefaultIP(ss[ if_(ss[0]=defaultIP, 1, 0) ]);
       end;;
     end;
@@ -8209,25 +8213,24 @@ CONST
   INDEX_FOR_NIC = 1;
 var
   a: TStringDynArray;
-  i: integer;
+  s: string;
 begin
 while IPaddress1.Items[INDEX_FOR_URL].Caption <> '-' do
   IPaddress1.delete(INDEX_FOR_URL);
 // fill 'IP address' menu
 a:=getPossibleAddresses();
-for i:=0 to length(a)-1 do
+for s in a do
   mainfrm.IPaddress1.Insert(INDEX_FOR_URL,
-    newItem(a[i], 0, a[i]=defaultIP, TRUE, ipmenuclick, 0, '') );
+    newItem(s, 0, s=defaultIP, TRUE, ipmenuclick, 0, '') );
 
 // fill 'Accept connections on' menu
 while Acceptconnectionson1.count > INDEX_FOR_NIC  do
   Acceptconnectionson1.delete(INDEX_FOR_NIC);
 Anyaddress1.checked:= listenOn = '';
-a:=listToArray(localIPlist);
-addUniqueString('127.0.0.1', a);
-for i:=0 to length(a)-1 do
+a:=getAcceptOptions();
+for s in a do
   Acceptconnectionson1.Insert(INDEX_FOR_NIC,
-    newItem( a[i], 0, a[i]=listenOn, TRUE, acceptOnMenuclick, 0, '') );
+    newItem( s, 0, s=listenOn, TRUE, acceptOnMenuclick, 0, '') );
 end; // refreshIPlist
 
 procedure TmainFrm.filesBoxDblClick(Sender: TObject);
@@ -11361,7 +11364,7 @@ resourcestring
   // we many need to try this specific test more than once
     repeat
     t:=now();
-    try result:=httpGet(SELF_TEST_URL+'?port='+port+'&host='+host+'&natted='+YESNO[localIPlist.IndexOf(externalIP)<0] )
+    try result:=httpGet(SELF_TEST_URL+'?port='+port+'&host='+host+'&natted='+YESNO[not stringExists(externalIP, getAcceptOptions())] )
     except break end;
     t:=now()-t;
     if (result ='') or (result[1] <> '4') or progFrm.cancelRequested then break;

@@ -82,11 +82,10 @@ function smartsize(size:int64):string;
 function httpGet(url:string; from:int64=0; size:int64=-1):string;
 function httpGetFile(url, filename:string; tryTimes:integer=1; notify:TdocDataEvent=NIL):boolean;
 function httpFileSize(url:string):int64;
-function getIPs():TStringDynArray;
 function getPossibleAddresses():TstringDynArray;
 function whatStatusPanel(statusbar:Tstatusbar; x:integer):integer;
 function getExternalAddress(var res:string; provider:Pstring=NIL):boolean;
-function checkAddressSyntax(address:string; wildcards:boolean=TRUE):boolean;
+function checkAddressSyntax(address:string; mask:boolean=TRUE):boolean;
 function inputQueryLong(const caption, msg:string; var value:string; ofs:integer=0):boolean;
 procedure purgeVFSaccounts();
 function exec(cmd:string; pars:string=''; showCmd:integer=SW_SHOW):boolean;
@@ -1378,56 +1377,72 @@ while mask > '' do
 result:=result xor odd(invert);
 end; // filematch
 
-function checkAddressSyntax(address:string; wildcards:boolean=TRUE):boolean;
+function checkAddressSyntax(address:string; mask:boolean=TRUE):boolean;
 var
   a1, a2: string;
-  i, dots, lastDot: integer;
-  wildcardsMet: boolean;
-
-  function validNumber():boolean;
-  begin result:=strToIntDef(substr(a1,lastDot+1,i-1), 0) <= 255 end;
-
+  sf: TSocketFamily;
 begin
+if not mask then
+  exit(WSocketIsIPEx(address, sf));
 result:=FALSE;
-if address = '' then exit;
-while (address > '') and (address[1] = '\') do delete(address,1,1);
+while (address > '') and (address[1] = '\') do
+  delete(address,1,1);
 while address > '' do
   begin
   a2:=chop(';', address);
-  if sameText(a2, 'lan') then continue;
+  if sameText(a2, 'lan') then
+    continue;
   a1:=chop('-', a2);
   if a2 > '' then
     if not checkAddressSyntax(a1, FALSE)
     or not checkAddressSyntax(a2, FALSE) then
       exit;
-  wildcardsMet:=FALSE;
-  dots:=0;
-  lastDot:=0;
-  for i:=1 to length(a1) do
-    case a1[i] of
-      '.':
-        begin
-        if not validNumber() then exit;
-        lastDot:=i;
-        inc(dots);
-        end;
-      '0'..'9': ;
-      '?','*' : if wildcards then wildcardsMet:=TRUE else exit;
-      else exit;
-      end;
-  if (dots > 3) or not wildcardsMet and (dots <> 3) then exit;
+  if reMatch(a1, '^[?*a-f0-9\.:]+$', '!') = 0 then
+    exit;
   end;
-result:=validNumber();
+result:=TRUE;
 end; // checkAddressSyntax
+
+function ipv6hex(ip:TIcsIPv6Address):string;
+begin
+setLength(result, 4*8);
+binToHex(@ip.words[0], pchar(result), sizeOf(ip))
+end;
 
 function addressMatch(mask, address:string):boolean;
 var
   invert: boolean;
-  part1, part2: string;
-  addrInt: dword;
-  ofs, i, bits: integer;
-  masks: TStringDynArray;
-  mode: (SINGLE, BITMASK, RANGE);
+  addr4: dword;
+  addr6: string;
+  bits: integer;
+  a: TStringDynArray;
+
+  function ipv6fix(s:string):string;
+  var
+    ok: boolean;
+    r: TIcsIPv6Address;
+  begin
+  if length(s) = 39 then
+    exit(replaceStr(s,':',''));
+  r:=wsocketStrToipv6(s, ok);
+  if ok then
+    exit(ipv6hex(r));
+  exit('');
+  end;
+
+  function ipv6range():boolean;
+  var
+    min, max: string;
+  begin
+  min:=ipv6fix(a[0]);
+  if min = ''then
+    exit(FALSE);
+  max:=ipv6fix(a[1]);
+  if max = '' then
+    exit(FALSE);
+  result:=(min <= addr6) and (max >= addr6)
+  end; // ipv6range
+
 begin
 result:=FALSE;
 invert:=FALSE;
@@ -1436,39 +1451,45 @@ while (mask > '') and (mask[1] = '\') do
   delete(mask,1,1);
   invert:=not invert;
   end;
-addrInt:=ipToInt(address);
-masks:=split(';',mask);
-ofs:=1;
-while not result and (ofs <= length(mask)) do
+addr6:=ipv6fix(address);
+addr4:=0;
+if addr6 = '' then
+  addr4:=ipToInt(address);
+for mask in split(';',mask) do
   begin
-  mode:=SINGLE;
-  part1:=trim(substr(mask, ofs, max(0,posEx(';', mask, ofs)-1) ));
-  inc(ofs, length(part1)+1);
-
-  if sameText(part1, 'lan') then
+  if result then
+    break;
+  if sameText(mask, 'lan') then
     begin
     result:=isLocalIP(address);
     continue;
     end;
 
-  i:=lastDelimiter('-/', part1);
-  if i > 0 then
+  // range?
+  a:=split('-', mask);
+  if length(a) = 2 then
     begin
-    if part1[i] = '-' then mode:=RANGE
-    else mode:=BITMASK;
-    part2:=part1;
-    part1:=chop(i, 1, part2);
+    if addr6 > '' then
+      result:=ipv6range()
+    else
+      result:=(addr4 >= ipToInt(a[0])) and (addr4 <= ipToInt(a[1]));
+    continue;
     end;
 
-  case mode of
-    SINGLE: result:=match( pchar(part1), pchar(address) ) > 0;
-    RANGE: result:=(addrInt >= ipToInt(part1)) and (addrInt <= ipToInt(part2));
-    BITMASK:
-      try
-        bits:=32-strToInt(part2);
-        result:=addrInt shr bits = ipToInt(part1) shr bits;
-      except end;
+  // bitmask? ipv4 only
+  a:=split('/', mask);
+  if (addr6='') and (length(a) = 2) then
+    begin
+    try
+      bits:=32-strToInt(a[1]);
+      result:=addr4 shr bits = ipToInt(a[0]) shr bits;
+    except
+      end;
+    continue;
     end;
+
+  // single
+  result:=match( pchar(mask), pchar(address) ) > 0;
   end;
 result:=result xor invert;
 end; // addressMatch
@@ -1757,10 +1778,12 @@ s:=trim(s);
 if s = '' then exit;
 // try to determine length
 i:=1;
-while (i < length(s)) and (i < 15) and charInSet(s[i+1], ['0'..'9','.']) do inc(i);
-while (i > 0) and (s[i] = '.') do dec(i);
+while (i < length(s)) and (i < 15) and charInSet(s[i+1], ['0'..'9','.']) do
+  inc(i);
+while (i > 0) and (s[i] = '.') do
+  dec(i);
 setLength(s,i);
-result:= checkAddressSyntax(s) and not HSlib.isLocalIP(s);
+result:= checkAddressSyntax(s, FALSE) and not HSlib.isLocalIP(s);
 if not result then exit;
 if (res <> s) and mainFrm.logOtherEventsChk.checked then
   mainFrm.add2log('New external address: '+s+' via '+hostFromURL(addr));
@@ -1780,17 +1803,13 @@ while (x > x1) and (result < statusbar.Panels.Count-1) do
   end;
 end; // whatStatusPanel
 
-function getIPs():TStringDynArray;
-begin
-try result:=listToArray(localIPlist) except result:=NIL end;
-end;
-
 function getPossibleAddresses():TstringDynArray;
 begin // next best
 result:=toSA([defaultIP, dyndns.host]);
 addArray(result, customIPs);
 addString(externalIP, result);
-addArray(result, getIPs());
+try addArray(result, listToArray(localIPlist(sfAny)))
+except end;
 removeStrings('', result);
 uniqueStrings(result);
 end; // getPossibleAddresses

@@ -370,6 +370,8 @@ function isLocalIP(ip:string):boolean;
 var
   r: record d,c,b,a:byte end;
 begin
+if ip = '::1' then
+  exit(TRUE);
 dword(r):=WSocket_ntohl(WSocket_inet_addr(ansiString(ip)));
 result:=(r.a in [0,10,23,127])
   or (r.a = 192) and ((r.b = 168) or (r.b = 0) and (r.c = 2))
@@ -670,15 +672,16 @@ try
     P_port:=sock.getxport();
   result:=TRUE;
 
-  try
-    sock.MultiListenSockets.Clear();
-    with sock.MultiListenSockets.Add do
-      begin
-      addr := '::';
-      Port := sock.port
-      end;
-    sock.MultiListen();
-  except end;
+  if onAddress = '*' then
+    try
+      sock.MultiListenSockets.Clear();
+      with sock.MultiListenSockets.Add do
+        begin
+        addr := '::';
+        Port := sock.port
+        end;
+      sock.MultiListen();
+    except end;
 
   notify(HE_OPEN, NIL);
 except
