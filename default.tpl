@@ -305,7 +305,7 @@ confirm=Are you sure?
 
 button { background-color: #cde; color: #444; padding: .5em 1em; border: transparent; text-decoration: none; border-radius: .3em; vertical-align: middle; cursor:pointer; }
 body { font-family:tahoma, verdana, arial, helvetica, sans; transition:background-color 1s ease; }
-a { text-decoration:none; color:#26c; border:1px solid transparent; padding:0 0.1em; }
+a { text-decoration:none; color:#28c; border:1px solid transparent; padding:0 0.1em; }
 #folder-path { float:left; margin-bottom: 0.2em; }
 #folder-path button { padding: .4em; }
 #folder-path button:first-child { padding: .2em .4em;} #folder-path i.fa { font-size:135% }
@@ -358,7 +358,7 @@ button i.fa { font-size:110% }
 .ask input { border:1px solid rgba(0,0,0,0.5); padding: .2em; margin-top: .5em; }
 .ask .close { float: right; font-size: 1.2em; color: red; position: relative; top: -0.4em; right: -0.3em; }
 
-#additional-panels input {     color: #555; padding: .1em 0.3em; border-radius: 0.4em; }
+#additional-panels input { border:0; color: #555; padding: .1em .3em .2em; border-radius: 0.4em; }
 
 .additional-panel { position:relative; max-height: calc(100vh - 5em); text-align:left; margin: 0.5em 1em; padding: 0.5em 1em; border-radius: 1em; background-color:#555; border: 2px solid #aaa; color:#fff; line-height: 1.5em; display:inline-block;  }
 .additional-panel .close { position: absolute; right: -0.8em; top: -0.2em; color: #aaa; font-size: 130%; }
