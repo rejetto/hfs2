@@ -39,7 +39,7 @@ COMMENT with the ones above you can disable some features of the template. They 
 </head>
 <body>
 	<div id="wrapper">
-	<!--{.comment|--><h1 style='margin-bottom:100em'>WARNING: this template is only to be used with HFS 2.3 (and macros enabled)</h1> <!--.} -->
+	<!--{.comment|--><h1 style='margin-bottom:100em'>WARNING: this template is only to be used with HFS 2.4 (and macros enabled)</h1> <!--.} -->
 	{.$menu panel.}
 	{.$folder panel.}
 	{.$list panel.}

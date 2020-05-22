@@ -36,7 +36,7 @@ uses
   HSlib, traylib, monoLib, progFrmLib, classesLib;
 
 const
-  VERSION = '2.4.0 beta10';
+  VERSION = '2.4.0 RC1';
   VERSION_BUILD = '312';
   VERSION_STABLE = {$IFDEF STABLE } TRUE {$ELSE} FALSE {$ENDIF};
   CURRENT_VFS_FORMAT :integer = 1;
@@ -3458,7 +3458,6 @@ end; // shouldRecur
 
 function Tmainfrm.getFolderPage(folder:Tfile; cd:TconnData; otpl:Tobject):string;
 // we pass the Tpl parameter as Tobject because symbol Ttpl is not defined yet
-
 var
   baseurl, list, fileTpl, folderTpl, linkTpl: string;
   table: TStringDynArray;
@@ -3606,6 +3605,39 @@ var
   fast.append(s);
   end; // handleItem
 
+const ip2availability: Tdictionary<string,Tdatetime> = NIL;
+const folderConcurrents: integer = 0;
+
+  procedure updateAvailability();
+  var
+    pair: Tpair<string,Tdatetime>;
+    t: Tdatetime;
+  begin
+  dec(folderConcurrents);
+  t:=now();
+  ip2availability[cd.address]:=t+1/SECONDS;
+  // purge leftovers
+   for pair in ip2availability do 
+    if pair.Value < t then
+      ip2availability.Remove(pair.Key);
+  end;
+
+  function available():boolean;
+  begin
+  if ip2availability = NIL then
+    ip2availability:=Tdictionary<string,Tdatetime>.create();
+  try 
+    if ip2availability[cd.address] > now() then // this specific address has to wait?
+      exit(FALSE);
+  except
+    end;
+  if folderConcurrents >= 3 then   // max number of concurrent folder loading, others are postponed
+    exit(FALSE);
+  inc(folderConcurrents);
+  ip2availability.AddOrSetValue(cd.address, now()+1);
+  result:=TRUE;
+  end; // available
+
 var
   i, n: integer;
   f: Tfile;
@@ -3613,6 +3645,12 @@ begin
 result:='';
 if (folder = NIL) or not folder.isFolder() then exit;
 
+if not available() then
+  begin
+  cd.conn.reply.mode:=HRM_OVERLOAD;
+  cd.conn.addHeader('Refresh: '+intToStr(1+random(2))); // random for less collisions
+  exit('Please wait, server busy');
+  end;  
 if macrosLogChk.checked and not appendmacroslog1.checked then
   resetLog();
 diffTpl:=Ttpl.create();
@@ -3735,6 +3773,7 @@ try
   result:=replaceText(result, '%build-time%',
     floatToStrF((now()-buildTime)*SECONDS, ffFixed, 7,3) );
 finally
+  updateAvailability();    
   folder.unlock();
   diffTpl.free;
   end;
@@ -5184,7 +5223,8 @@ var
     
     if conn.reply.contentType = '' then
       conn.reply.contentType:=ansistring(if_(trim(getTill('<', s))='', 'text/html', 'text/plain'))+'; charset=utf-8';
-    conn.reply.mode:=HRM_REPLY;
+    if conn.reply.mode = HRM_IGNORE then      
+      conn.reply.mode:=HRM_REPLY;
     conn.reply.bodyMode:=RBM_STRING;
     conn.reply.body:=UTF8encode(s);
     compressReply(data);
@@ -5427,6 +5467,12 @@ var
   if conn.reply.mode = HRM_REDIRECT then
     exit;
 
+  lastActivityTime:=now();
+  if conn.request.method = HM_HEAD then
+    conn.reply.mode:=HRM_REPLY_HEADER
+  else
+    conn.reply.mode:=HRM_REPLY;
+
   if ansiStartsStr('/~img', url) then
     begin
     if not sendPic(data) then
@@ -5579,6 +5625,8 @@ var
   if ansiStartsStr('~files.lst', urlCmd)
   or f.isFolder() and (data.urlvars.values['tpl'] = 'list') then
     begin
+    if conn.reply.mode=HRM_REPLY_HEADER then
+      exit;
     // load from external file
     s:=cfgPath+FILELIST_TPL_FILE;
     if newMtime(s, lastFilelistTpl) then
@@ -5605,19 +5653,12 @@ var
     exit;
     end;
 
-  case conn.request.method of
-    HM_GET, HM_POST:
-      begin
-      conn.reply.mode:=HRM_REPLY;
-      lastActivityTime:=now();
-      end;
-    HM_HEAD: conn.reply.mode:=HRM_REPLY_HEADER;
-    end;
-
   data.lastFile:=f; // auto-freeing
 
   if f.isFolder() then
     begin
+    if conn.reply.mode=HRM_REPLY_HEADER then
+      exit;
     deletion();
     if sessionRedirect() then
       exit;

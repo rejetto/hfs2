@@ -19,6 +19,7 @@ Copyright (C) 2002-2014 Massimo Melina (www.rejetto.com)
 HTTP Server Lib
 
 ==== TO DO
+* https
 * upload bandwidth control (can it be done without multi-threading?)
 
 }
@@ -292,7 +293,7 @@ const
   MINIMUM_CHUNK_SIZE = 2*1024;
   MAXIMUM_CHUNK_SIZE = 1024*1024;
   HRM2CODE: array [ThttpReplyMode] of integer = (200, 200, 403, 401, 404, 400,
-  	500, 0, 0, 405, 302, 503, 413, 301, 304 );
+  	500, 0, 0, 405, 302, 429, 413, 301, 304 );
   METHOD2STR: array [ThttpMethod] of ansistring = ('UNK','GET','POST','HEAD');
   HRM2STR: array [ThttpReplyMode] of ansistring = ('Head+Body', 'Head only', 'Deny',
     'Unauthorized', 'Not found', 'Bad request', 'Internal error', 'Close',
@@ -352,7 +353,7 @@ const
     '',
     '405 - Method not allowed',
     '<html><head><meta http-equiv="refresh" content="url=%url%" /></head><body onload=''window.location="%url%"''>302 - <a href="%url%">Redirection to %url%</a></body></html>',
-    '503 - Server is overloaded, retry later',
+    '429 - Server is overloaded, retry later',
     '413 - The request has exceeded the max length allowed',
     '301 - Moved permanently to <a href="%url%">%url%</a>',
     '' // RFC2616: The 304 response MUST NOT contain a message-body
@@ -875,7 +876,6 @@ end; // timerEvent
 procedure ThttpSrv.notify(ev:ThttpEvent; conn:ThttpConn);
 begin
 if not assigned(onEvent) then exit;
-//if assigned(sock) then sock.pause();
 if assigned(conn) then
   begin
   inc(conn.lockCount);

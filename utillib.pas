@@ -166,7 +166,7 @@ function replaceString(var ss:TStringDynArray; old, new:string):integer;
 function popString(var ss:TstringDynArray):string;
 procedure insertString(s:string; idx:integer; var ss:TStringDynArray);
 function removeString(var a:TStringDynArray; idx:integer; l:integer=1):boolean; overload;
-function removeString(find:string; var a:TStringDynArray):boolean; overload;
+function removeString(s:string; var a:TStringDynArray; onlyOnce:boolean=TRUE; ci:boolean=TRUE; keepOrder:boolean=TRUE):boolean; overload;
 procedure removeStrings(find:string; var a:TStringDynArray);
 procedure toggleString(s:string; var ss:TStringDynArray);
 function onlyString(s:string; ss:TStringDynArray):boolean;
@@ -669,10 +669,6 @@ begin
   until false;
 end; // removeStrings
 
-// remove first instance of the specified string
-function removeString(find:string; var a:TStringDynArray):boolean;
-begin result:=removeString(a, idxOf(find,a)) end;
-
 function removeArray(var src:TstringDynArray; toRemove:array of string):integer;
 var
   i, l, ofs: integer;
@@ -745,6 +741,33 @@ while idx+l < length(a) do
   end;
 setLength(a, idx);
 end; // removestring
+
+function removeString(s:string; var a:TStringDynArray; onlyOnce:boolean=TRUE; ci:boolean=TRUE; keepOrder:boolean=TRUE):boolean; overload;
+var i, lessen:integer;
+begin
+result:=FALSE;
+lessen:=0;
+try
+  for i:=length(a)-1 to 0 do
+    if ci and sameText(a[i], s)
+    or not ci and (a[i]=s) then
+      begin
+      result:=TRUE;
+      if keepOrder then
+        removeString(a, i)
+      else
+        begin
+        inc(lessen);
+        a[i]:=a[length(a)-lessen];
+        end;
+      if onlyOnce then
+        exit;
+      end;
+finally
+  if lessen > 0 then
+    setLength(a, length(a)-lessen);
+  end;
+end;
 
 function dotted(i:int64):string;
 begin
