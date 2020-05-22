@@ -2935,7 +2935,6 @@ object mainFrm: TmainFrm
       object pwdInPagesChk: TMenuItem
         AutoCheck = True
         Caption = 'Include password in pages (for download managers)'
-        OnClick = pwdInPagesChkClick
       end
       object httpsUrlsChk: TMenuItem
         AutoCheck = True

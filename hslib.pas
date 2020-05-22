@@ -29,7 +29,7 @@ unit HSlib;
 interface
 
 uses
-  OverbyteIcsWSocket, classes, messages, winprocs, forms, extctrls, sysutils, system.contnrs, strUtils, winsock, inifiles, types;
+  OverbyteIcsWSocket, OverbyteIcsWSockets, classes, messages, winprocs, forms, extctrls, sysutils, system.contnrs, strUtils, winsock, inifiles, types;
 
 const
   VERSION = '2.11.0';
@@ -261,7 +261,7 @@ type
     procedure calculateSpeed();
     procedure processDisconnecting();
   public
-    sock: Twsocket;     // listening socket
+    sock: TwsocketServer;     // listening socket
     conns,          // full list of connected clients
     disconnecting,  // list of pending disconnections
     offlines,       // disconnected clients to be freed
@@ -661,15 +661,25 @@ begin
 result:=FALSE;
 if active or not assigned(sock) then exit;
 try
-  if onAddress = '' then onAddress:='*';
-  if (onAddress = '') or (onAddress = '*') then sock.addr:='0.0.0.0'
-  else sock.addr:=onAddress;
+  if onAddress = '' then
+    onAddress:='*';
+  sock.addr:=ifThen(onAddress = '*', '0.0.0.0', onAddress);
   sock.port:=port;
-  sock.proto:='6';
   sock.listen();
   if port = '0' then
     P_port:=sock.getxport();
   result:=TRUE;
+
+  try
+    sock.MultiListenSockets.Clear();
+    with sock.MultiListenSockets.Add do
+      begin
+      addr := '::';
+      Port := sock.port
+      end;
+    sock.MultiListen();
+  except end;
+
   notify(HE_OPEN, NIL);
 except
   end;
@@ -689,7 +699,7 @@ begin notify(HE_CLOSE, NIL) end;
 
 constructor ThttpSrv.create();
 begin
-sock:=TWSocket.create(NIL);
+sock:=TWSocketServer.create(NIL);
 sock.OnSessionAvailable:=connected;
 sock.OnSessionClosed:=disconnected;
 sock.OnBgException:=bgexception;

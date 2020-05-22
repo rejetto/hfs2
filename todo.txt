@@ -1,3 +1,4 @@
++ replace shellExtDlg.gif with transparent png (english system)
 + expiring links
 * dismiss regexp lib http://docwiki.embarcadero.com/Libraries/Rio/en/System.RegularExpressions.TRegEx
 + ipv6
