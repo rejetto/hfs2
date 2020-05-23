@@ -303,9 +303,9 @@ confirm=Are you sure?
 
 {.$icons.css.}
 
-button { background-color: #cde; color: #444; padding: .5em 1em; border: transparent; text-decoration: none; border-radius: .3em; vertical-align: middle; cursor:pointer; }
+button { background-color: #bcd; color: #444; padding: .5em 1em; border: transparent; text-decoration: none; border-radius: .3em; vertical-align: middle; cursor:pointer; }
 body { font-family:tahoma, verdana, arial, helvetica, sans; transition:background-color 1s ease; }
-a { text-decoration:none; color:#28c; border:1px solid transparent; padding:0 0.1em; }
+a { text-decoration:none; color:#58a; border:1px solid transparent; padding:0 0.1em; }
 #folder-path { float:left; margin-bottom: 0.2em; }
 #folder-path button { padding: .4em; }
 #folder-path button:first-child { padding: .2em .4em;} #folder-path i.fa { font-size:135% }
@@ -364,8 +364,10 @@ button i.fa { font-size:110% }
 .additional-panel .close { position: absolute; right: -0.8em; top: -0.2em; color: #aaa; font-size: 130%; }
 
 body.dark-theme { background:#222; color:#aaa; }
+body.dark-theme #menu-panel { background:#345 }
 body.dark-theme #title-bar { color:#bbb }
 body.dark-theme a { color:#79b }
+body.dark-theme .item { border-color:#444; }
 body.dark-theme .item:hover { background:#111; }
 body.dark-theme button { background:#89a; }
 body.dark-theme .item .comment { background-color:#444; color:#888; }
@@ -381,7 +383,7 @@ body.dark-theme #additional-panels input
 #msgs { display:none; }
 #msgs li:first-child { font-weight:bold; }
 
-#menu-panel { position:fixed; top:0; left:0; width: 100%; background:#555; text-align:center;
+#menu-panel { position:fixed; top:0; left:0; width: 100%; background:#568; text-align:center;
 position: -webkit-sticky; position: -moz-sticky; position: -ms-sticky; position: -o-sticky; position: sticky; margin-bottom:0.3em;
 z-index:1; /* without this .item-menu will be over*/ }
 #menu-panel button span { margin-left:.8em }
