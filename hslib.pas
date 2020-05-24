@@ -690,8 +690,9 @@ end; // start
 
 procedure ThttpSrv.stop();
 begin
-if assigned(sock) then
-  try sock.Close() except end;
+if sock = NIL then exit;
+try sock.Close() except end;
+try sock.multiListenSockets.clear() except end;
 end;
 
 procedure ThttpSrv.connected(Sender: TObject; Error: Word);
