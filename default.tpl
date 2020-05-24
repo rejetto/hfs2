@@ -303,7 +303,7 @@ confirm=Are you sure?
 {.$icons.css.}
 
 button { background-color: #bcd; color: #444; padding: .5em 1em; border: transparent; text-decoration: none; border-radius: .3em; vertical-align: middle; cursor:pointer; }
-body { font-family:tahoma, verdana, arial, helvetica, sans; transition:background-color 1s ease; }
+body { font-family:tahoma, verdana, arial, helvetica, sans; transition:background-color 1s ease; color:#777; }
 a { text-decoration:none; color:#357; border:1px solid transparent; padding:0 0.1em; }
 #folder-path { float:left; margin-bottom: 0.2em; }
 #folder-path button { padding: .4em; }
@@ -311,7 +311,7 @@ a { text-decoration:none; color:#357; border:1px solid transparent; padding:0 0.
 button i.fa { font-size:110% }
 .item { margin-bottom:.3em; padding:.3em  .8em; border-top:1px solid #ddd;  }
 .item:hover { background:#f8f8f8; }
-.item-props { float:right; font-size:90%; margin-left:12px; color:#777; margin-top:.2em; }
+.item-props { float:right; font-size:90%; margin-left:12px; margin-top:.2em; }
 .item-link { float:left; word-break:break-word; /* fix long names without spaces on mobile */ }
 .item img { vertical-align: text-bottom; margin:0 0.2em; }
 .item .fa-lock { margin-right: 0.2em; }

@@ -36,8 +36,8 @@ uses
   HSlib, traylib, monoLib, progFrmLib, classesLib;
 
 const
-  VERSION = '2.4 beta2';
-  VERSION_BUILD = '304';
+  VERSION = '2.4 beta3';
+  VERSION_BUILD = '305';
   VERSION_STABLE = {$IFDEF STABLE } TRUE {$ELSE} FALSE {$ENDIF};
   CURRENT_VFS_FORMAT :integer = 1;
   CRLF = #13#10;
@@ -5272,7 +5272,7 @@ var
   if addressmatch(forwardedMask, conn.address) then
     begin
     data.address:=getTill(':', getTill(',', conn.getHeader('x-forwarded-for')));
-    if not checkAddressSyntax(data.address) then
+    if not checkAddressSyntax(data.address, FALSE) then
       data.address:=conn.address;
     end;
 
