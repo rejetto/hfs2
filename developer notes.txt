@@ -1,4 +1,4 @@
-Initially developed with Delphi 6, now with Delphi 10.3.3
+﻿Initially developed with Delphi 6, now with Delphi 10.3.3
 
 Icons are generated at http://fontello.com/ . Use fontello.json for further modifications.
 
@@ -6,3 +6,4 @@ Icons are generated at http://fontello.com/ . Use fontello.json for further modi
 ICS v8.63 by François PIETTE http://www.overbyte.be
 TRegExpr v0.952 by Andrey V. Sorokin http://www.regexpstudio.com/TRegExpr/TRegExpr.html
 JEDI Code Library v2.7 https://github.com/project-jedi/jcl
+Kryvich's Delphi Localizer v4.1 http://sites.google.com/site/kryvich

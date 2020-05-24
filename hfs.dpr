@@ -25,6 +25,7 @@ uses
   {$IFDEF EX_DEBUG}
   ftmExceptionForm,
   {$ENDIF }
+  uFreeLocalizer,
   monoLib,
   Forms,
   windows,
@@ -94,14 +95,14 @@ begin
     end;
   {$IFDEF EX_DEBUG}initErrorHandler(format('HFS %s (%s)', [VERSION, VERSION_BUILD]));{$ENDIF}
   Application.Initialize();
-{
+
   if fileExists('hfs.lng') then
     begin
     FreeLocalizer.AutoTranslate := True;
     try FreeLocalizer.LanguageFile := 'hfs.lng';
     except msgDlg('Localization not supporting your codepage', MB_ICONERROR+MB_OK) end;
     end;
-}
+
   Application.CreateForm(TmainFrm, mainFrm);
   Application.CreateForm(TnewuserpassFrm, newuserpassFrm);
   Application.CreateForm(ToptionsFrm, optionsFrm);
