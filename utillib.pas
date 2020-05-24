@@ -1472,7 +1472,7 @@ for mask in split(';',mask) do
     if addr6 > '' then
       result:=ipv6range()
     else
-      result:=(addr4 >= ipToInt(a[0])) and (addr4 <= ipToInt(a[1]));
+      result:=(pos(':',a[0]) = 0) and (addr4 >= ipToInt(a[0])) and (addr4 <= ipToInt(a[1]));
     continue;
     end;
 
