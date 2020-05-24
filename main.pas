@@ -1131,9 +1131,8 @@ var
   addingItemsCounter: integer = -1; // -1 is disabled
   stopAddingItems, queryingClose: boolean;
   port: string;
-  defaultTpl: string;
   lastWindowRect: Trect;
-  dmBrowserTpl, filelistTpl: Ttpl;
+  defaultTpl, dmBrowserTpl, filelistTpl: Ttpl;
   tplEditor: string;
   tplLast: Tdatetime;
   tplImport: boolean;
@@ -4496,7 +4495,7 @@ finally
 end; // runTplImport
 
 // returns true if template was patched
-function setTplText(text:string):boolean;
+function setTplText(text:string=''):boolean;
 (* postponed to next release
   procedure patch290();
   {$J+}
@@ -4528,8 +4527,10 @@ function setTplText(text:string):boolean;
 begin
 result:=FALSE; // mod by mars
 //patch290();
+if trim(text) = trim(defaultTpl.fullText) then
+  text:='';
 tpl.fullText:=text;
-tplIsCustomized:= text <> defaultTpl;
+tplIsCustomized:= text > '';
 if boolOnce(tplImport) then
   runTplImport();
 end; // setTplText
@@ -4545,7 +4546,7 @@ if fileExists(tplFilename) then
 else if tplLast <> 0 then
   begin
   tplLast:=0; // we have no modified-time in this case, but this will stop the refresh
-  setTplText(defaultTpl);
+  setTplText();
   end;
 end; // keepTplUpdated
 
@@ -7161,7 +7162,7 @@ if lastGoodLogWidth > 0 then
 if lastGoodConnHeight > 0 then
   connPnl.Height:=lastGoodConnHeight;
 if not fileExists(tplFilename) then
-  setTplText(defaultTpl);
+  setTplText();
 srv.persistentConnections:=persistentconnectionsChk.Checked;
 applyFilesBoxRatio();
 updateRecentFilesMenu();
@@ -11575,7 +11576,7 @@ begin
 if not fileExists(tplFilename) then
   begin
   tplFilename:=TPL_FILE;
-  saveTextFile(tplFilename, defaultTpl);
+  saveTextFile(tplFilename, defaultTpl.fullText);
   end;
 exec(getTplEditor(), '"'+tplFilename+'"');
 end;
@@ -11931,7 +11932,7 @@ and only1instanceChk.checked and not mono.master then
   end;
 
 if not cfgLoaded then
-  setTplText(defaultTpl);
+  setTplText();
   
 processParams_before(params);
 
@@ -12526,11 +12527,8 @@ else
   tmpPath:=getTempDir();
 lastUpdateCheckFN:=tmpPath+'HFS last update check.tmp';
 setCurrentDir(exePath); // sometimes people mess with the working directory, so we force it to the exe path
-if fileExists('default.tpl') then
-  defaultTpl:=loadTextfile('default.tpl')
-else
-  defaultTpl:=getRes('defaultTpl');
-tpl:=Ttpl.create();
+defaultTpl:=Ttpl.create(getRes('defaultTpl'));
+tpl:=Ttpl.create('', defaultTpl);
 defSorting:='name';
 dmBrowserTpl:=Ttpl.create(getRes('dmBrowserTpl'));
 filelistTpl:=Ttpl.create(getRes('filelistTpl'));
@@ -12590,6 +12588,7 @@ FINALIZATION
 progFrm.free;
 toDelete.free;
 tpl.free;
+defaultTpl.Free;
 filelistTpl.free;
 autoupdatedFiles.free;
 iconsCache.free;

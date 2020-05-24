@@ -909,18 +909,22 @@ end;
 
 function Ttpl.getSection(section:string; inherit:boolean=TRUE):PtplSection;
 begin
-try result:=sections[section]
-except result:=NIL
-  end;
+if sections.containsKey(section) then
+  result:=sections[section]
+else
+  result:=NIL;
 if inherit and assigned(over) and ((result = NIL) or (trim(result.txt) = '')) then
   result:=over.getSection(section);
 end; // getSection
 
 function Ttpl.getTxt(section:string):string;
+var p: PtplSection;
 begin
-try result:=getSection(section).txt
-except result:=''
-  end;
+p:=getSection(section);
+if p = NIL then
+  result:=''
+else
+  result:=p.txt
 end; // getTxt
 
 function Ttpl.getTxtByExt(fileExt:string):string;
