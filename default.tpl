@@ -1,4 +1,4 @@
-Welcome! This is the default template for HFS 2.4
+Welcome! This is the default template for HFS 2.4m
 template revision TR3.
 
 Here below you'll find some options affecting the template.
@@ -45,7 +45,6 @@ COMMENT with the ones above you can disable some features of the template. They 
 	{.$list panel.}
 	</div>
 </body>
-<!-- Build-time: %build-time% -->
 </html>
 
 [list panel]
@@ -57,7 +56,7 @@ COMMENT with the ones above you can disable some features of the template. They 
 	</div>
 :}.}
 <div id="serverinfo">
-	<a href="http://www.rejetto.com/hfs/"><i class="fa fa-coffee"></i> {.!Uptime.}: %uptime%</a>
+	<a href="http://www.rejetto.com/hfs/" title="Build-time: %build-time%"><i class="fa fa-coffee"></i> {.!Uptime.}: %uptime%</a>
 </div>
 
 
@@ -305,7 +304,7 @@ confirm=Are you sure?
 
 button { background-color: #bcd; color: #444; padding: .5em 1em; border: transparent; text-decoration: none; border-radius: .3em; vertical-align: middle; cursor:pointer; }
 body { font-family:tahoma, verdana, arial, helvetica, sans; transition:background-color 1s ease; }
-a { text-decoration:none; color:#58a; border:1px solid transparent; padding:0 0.1em; }
+a { text-decoration:none; color:#357; border:1px solid transparent; padding:0 0.1em; }
 #folder-path { float:left; margin-bottom: 0.2em; }
 #folder-path button { padding: .4em; }
 #folder-path button:first-child { padding: .2em .4em;} #folder-path i.fa { font-size:135% }
@@ -360,7 +359,7 @@ button i.fa { font-size:110% }
 
 #additional-panels input { border:0; color: #555; padding: .1em .3em .2em; border-radius: 0.4em; }
 
-.additional-panel { position:relative; max-height: calc(100vh - 5em); text-align:left; margin: 0.5em 1em; padding: 0.5em 1em; border-radius: 1em; background-color:#555; border: 2px solid #aaa; color:#fff; line-height: 1.5em; display:inline-block;  }
+.additional-panel { position:relative; max-height: calc(100vh - 5em); text-align:left; margin: 0.5em 1em; padding: 0.5em 1em; border-radius: 1em; background-color:#667; border: 2px solid #aaa; color:#fff; line-height: 1.5em; display:inline-block;  }
 .additional-panel .close { position: absolute; right: -0.8em; top: -0.2em; color: #aaa; font-size: 130%; }
 
 body.dark-theme { background:#222; color:#aaa; }
@@ -383,7 +382,7 @@ body.dark-theme #additional-panels input
 #msgs { display:none; }
 #msgs li:first-child { font-weight:bold; }
 
-#menu-panel { position:fixed; top:0; left:0; width: 100%; background:#568; text-align:center;
+#menu-panel { position:fixed; top:0; left:0; width: 100%; background:#678; text-align:center;
 position: -webkit-sticky; position: -moz-sticky; position: -ms-sticky; position: -o-sticky; position: sticky; margin-bottom:0.3em;
 z-index:1; /* without this .item-menu will be over*/ }
 #menu-panel button span { margin-left:.8em }
