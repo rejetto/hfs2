@@ -78,7 +78,6 @@ object mainFrm: TmainFrm
     ParentFont = False
     ShowCaptions = True
     TabOrder = 1
-    ExplicitWidth = 976
     object menuBtn: TToolButton
       Left = 0
       Top = 0
@@ -190,7 +189,6 @@ object mainFrm: TmainFrm
     ShowCaptions = True
     TabOrder = 2
     Wrapable = False
-    ExplicitWidth = 976
     object browseBtn: TToolButton
       Left = 0
       Top = 0
@@ -230,7 +228,6 @@ object mainFrm: TmainFrm
     Font.Style = []
     ParentFont = False
     TabOrder = 0
-    ExplicitWidth = 976
     object splitV: TSplitter
       Left = 313
       Top = 0
@@ -264,7 +261,6 @@ object mainFrm: TmainFrm
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitWidth = 660
       object logBox: TRichEdit
         Left = 0
         Top = 23
@@ -286,7 +282,6 @@ object mainFrm: TmainFrm
         Zoom = 100
         OnChange = logBoxChange
         OnMouseDown = logBoxMouseDown
-        ExplicitWidth = 660
       end
       object logTitle: TPanel
         Left = 0
@@ -296,7 +291,6 @@ object mainFrm: TmainFrm
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 1
-        ExplicitWidth = 660
         object titlePnl: TPanel
           Left = 0
           Top = 0
@@ -306,7 +300,6 @@ object mainFrm: TmainFrm
           BevelOuter = bvNone
           Caption = 'Log'
           TabOrder = 0
-          ExplicitWidth = 400
         end
         object logToolbar: TPanel
           Left = 303
@@ -317,7 +310,6 @@ object mainFrm: TmainFrm
           AutoSize = True
           BevelOuter = bvNone
           TabOrder = 1
-          ExplicitLeft = 400
           object collapsedPnl: TPanel
             Left = 0
             Top = 0
@@ -630,7 +622,6 @@ object mainFrm: TmainFrm
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 2
-      ExplicitWidth = 976
       object sbar: TStatusBar
         Left = 0
         Top = 87
@@ -642,7 +633,6 @@ object mainFrm: TmainFrm
           end>
         OnDblClick = sbarDblClick
         OnMouseDown = sbarMouseDown
-        ExplicitWidth = 976
       end
       object connBox: TListView
         Left = 0
@@ -695,7 +685,6 @@ object mainFrm: TmainFrm
         ViewStyle = vsReport
         OnAdvancedCustomDrawSubItem = connBoxAdvancedCustomDrawSubItem
         OnData = connBoxData
-        ExplicitWidth = 976
       end
     end
   end
@@ -2805,12 +2794,10 @@ object mainFrm: TmainFrm
       object MinimizetotrayChk: TMenuItem
         AutoCheck = True
         Caption = 'Minimize to tray'
-        Checked = True
       end
       object showmaintrayiconChk: TMenuItem
         AutoCheck = True
         Caption = 'Show main tray icon'
-        Checked = True
         OnClick = showmaintrayiconChkClick
       end
       object hetrayiconshows1: TMenuItem
@@ -3216,7 +3203,8 @@ object mainFrm: TmainFrm
     OnMinimize = appEventsMinimize
     OnRestore = appEventsRestore
     OnShowHint = appEventsShowHint
-    Left = 592
+    Left = 688
+    Top = 8
   end
   object logmenu: TPopupMenu
     Images = images
