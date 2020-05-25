@@ -5105,7 +5105,6 @@ var
       FAILED = 'Login failed';
     var
       m: TStringDynArray;
-      fTemp: Tfile;
     begin
     result:=FALSE;
     if assigned(forceFile) then f:=forceFile;
@@ -7974,11 +7973,14 @@ var
         if userIcsBuffer > 0 then
           data.conn.sock.bufSize:=userIcsBuffer;
 
-        size:=minmax(8192, MEGA, round(data.averageSpeed));
         if userSocketBuffer > 0 then
           data.conn.sndBuf:=userSocketBuffer
-        else if highSpeedChk.checked and (safeDiv(0.0+size, data.conn.sndbuf, 2) > 2) then
+        else
+          begin
+          size:=minmax(8192, MEGA, round(data.averageSpeed));
+          if highSpeedChk.checked and (safeDiv(0.0+size, data.conn.sndbuf, 2) > 2) then
             data.conn.sndBuf:=size;
+          end;
         end;
 
       // connection inactivity timeout
@@ -10602,9 +10604,12 @@ begin VFSmodified:=TRUE end;
 procedure TmainFrm.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
 quitting:=TRUE;
-runEventScript('quit');
-timer.enabled:=FALSE;
-if autosaveOptionsChk.checked then saveCFG();
+if applicationFullyInitialized then
+  begin
+  runEventScript('quit');
+  timer.enabled:=FALSE;
+  if autosaveOptionsChk.checked then saveCFG();
+  end;
 // we disconnectAll() before srv.free, so we can purgeConnections()
 if assigned(srv) then srv.disconnectAll(TRUE);
 purgeConnections();
@@ -11945,9 +11950,17 @@ if not quitASAP then
     if not isIntegratedInShell() then
       with TshellExtFrm.create(mainfrm) do
         try
-          if showModal() = mrYes then
-            if not integrateInShell() then
-              msgDlg(MSG_ERROR_REGISTRY, MB_ICONERROR);
+          case showModal() of
+            mrYes:
+              if not integrateInShell() then
+                msgDlg(MSG_ERROR_REGISTRY, MB_ICONERROR);
+            mrNo:;
+            else
+              begin
+              application.terminate();
+              exit;
+              end;
+          end;
         finally free end;
     end;
 
