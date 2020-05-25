@@ -29,7 +29,7 @@ unit HSlib;
 interface
 
 uses
-  OverbyteIcsWSocket, OverbyteIcsWSockets, classes, messages, winprocs, forms, extctrls, sysutils, system.contnrs, strUtils, winsock, inifiles, types;
+  OverbyteIcsWSocket, classes, messages, winprocs, forms, extctrls, sysutils, system.contnrs, strUtils, winsock, inifiles, types;
 
 const
   VERSION = '2.11.0';
@@ -204,7 +204,7 @@ type
     eventData: ansistring;
     ignoreSpeedLimit: boolean;
     limiters: TobjectList;     // every connection can be bound to a number of TspeedLimiter
-    constructor create(server:ThttpSrv);
+    constructor create(server:ThttpSrv; acceptingSock:Twsocket);
     destructor Destroy; override;
     procedure disconnect();
     procedure addHeader(s:ansistring; overwrite:boolean=TRUE); // set an additional header line. If overwrite=false will always append.
@@ -261,7 +261,7 @@ type
     procedure calculateSpeed();
     procedure processDisconnecting();
   public
-    sock: TwsocketServer;     // listening socket
+    sock, sock6: Twsocket;     // listening socket
     conns,          // full list of connected clients
     disconnecting,  // list of pending disconnections
     offlines,       // disconnected clients to be freed
@@ -673,16 +673,12 @@ try
   result:=TRUE;
 
   if onAddress = '*' then
-    try
-      sock.MultiListenSockets.Clear();
-      with sock.MultiListenSockets.Add do
-        begin
-        addr := '::';
-        Port := sock.port
-        end;
-      sock.MultiListen();
-    except end;
-
+    with sock6 do
+      begin
+      addr:='::';
+      Port:=sock.port;
+      listen();
+      end;
   notify(HE_OPEN, NIL);
 except
   end;
@@ -692,21 +688,24 @@ procedure ThttpSrv.stop();
 begin
 if sock = NIL then exit;
 try sock.Close() except end;
-try sock.multiListenSockets.clear() except end;
+try sock6.Close() except end;
 end;
 
 procedure ThttpSrv.connected(Sender: TObject; Error: Word);
-begin if error=0 then ThttpConn.create(self) end;
+begin if error=0 then ThttpConn.create(self, sender as Twsocket) end;
 
 procedure ThttpSrv.disconnected(Sender: TObject; Error: Word);
 begin notify(HE_CLOSE, NIL) end;
 
 constructor ThttpSrv.create();
 begin
-sock:=TWSocketServer.create(NIL);
+sock:=TWSocket.create(NIL);
 sock.OnSessionAvailable:=connected;
 sock.OnSessionClosed:=disconnected;
 sock.OnBgException:=bgexception;
+sock6:=TWSocket.create(NIL);
+sock6.OnSessionAvailable:=connected;
+sock6.OnBgException:=bgexception;
 
 conns:=TobjectList.create;
 conns.OwnsObjects:=FALSE;
@@ -938,13 +937,13 @@ begin canClose:=FALSE end;
 
 ////////// CLIENT
 
-constructor ThttpConn.create(server:ThttpSrv);
+constructor ThttpConn.create(server:ThttpSrv; acceptingSock:Twsocket);
 var
   i: integer;
 begin
 // init socket
 sock:=Twsocket.create(NIL);
-sock.Dup(server.sock.Accept);
+sock.Dup(acceptingSock.accept());
 sock.OnDataAvailable:=dataavailable;
 sock.OnSessionClosed:=disconnected;
 sock.onSendData:=senddata;
