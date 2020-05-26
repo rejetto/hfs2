@@ -3,7 +3,6 @@ defaultTpl TEXT default.tpl
 dmBrowserTpl TEXT dmBrowser.tpl
 invertban TEXT invertban.txt
 filelistTpl TEXT filelist.tpl
-uploadDisabled TEXT upload_disabled.txt
 uploadHowTo TEXT upload_how.txt
 alias TEXT alias.txt
 IPservices TEXT ipservices.txt
