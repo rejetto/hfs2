@@ -923,6 +923,37 @@ var
     finally free end;
   end; // foreach
 
+  procedure forLine();
+  var
+    lines: TStringList;
+    line, code, run: string;
+    i: integer;
+  begin
+  code:=macroDequote(par(pars.count-1));
+  with TfastStringAppend.create do
+    try
+      lines:=TStringList.create();
+      lines.text:= getVar(par('var'));
+      for line in lines do
+        begin
+        i:=pos('=',line);
+        if i > 0 then
+          begin
+          setVar('line-key', Copy(line, 1, i-1));
+          setVar('line-value', Copy(line, i+1, MAXINT));
+          end;
+        setVar('line', line);
+        run:=code;
+        applyMacrosAndSymbols(run, cbMacros, cbData);
+        append(run);
+        end;
+      result:=reset();
+    finally
+      Free;
+      lines.Free;
+      end;
+  end; //forLine
+
   procedure for_();
   var
     b, e, i, d: integer;
@@ -2427,8 +2458,12 @@ try
       minOrMax();
 
     if stringExists(name, ['if','if not']) then
-      if isFalse(p) xor (length(name) > 2) then result:=macroDequote(par(2))
+      begin
+      try p:=getVar(parEx('var'));
+      except end;
+      if isTrue(p) xor (length(name) = 2) then result:=macroDequote(par(2))
       else result:=macroDequote(par(1));
+      end;
 
     if stringExists(name, ['=','>','>=','<','<=','<>','!=']) then
       trueIf(compare(name, p, par(1)));
@@ -2443,6 +2478,9 @@ try
 
     if name = 'cut' then
       cut();
+
+    if name ='for line' then
+      forLine();
 
     if pars.count < 3 then exit; // from here, only macros with at least 3 parameters
 

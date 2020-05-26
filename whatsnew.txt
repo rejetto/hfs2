@@ -12,12 +12,16 @@ propaganda
   Mobile-friendly template
   Unicode support
   Encrypted login, and logout
+  IPv6
 /propaganda
 + new default template
 + new login system, session based, with logout
++ IPv6 support
 + {.set item|name.}
 + {.get item|icon.}
 + {.set cfg.}
++ {.for line.}
++ {.if|var}
 + cache for jquery and template sections
 + new template commands: base64, base64decode, md5, sha1
 + *.diff.tpl in exe's folder
