@@ -4624,22 +4624,26 @@ var
   procedure doLog();
   var
     i: integer;
-    url_: string; // an alias, final '_' is to not confuse with the other var
     s: string;
+
+    function decodedUrl():string;
+    begin
+    if conn = NIL then
+      exit('');
+    result:=decodeURL(conn.request.url);
+    end;
+
   begin
   if assigned(data) and data.dontLog and (event <> HE_DISCONNECTED) then exit; // we exit expect for HE_DISCONNECTED because dontLog is always set AFTER connections, so HE_CONNECTED is always logged. The coupled HE_DISCONNECTED should be then logged too.
 
   if assigned(data) and (data.preReply = PR_BAN)
   and not logBannedChk.checked then exit;
 
-  if conn = NIL then url_:=''
-  else url_:=decodeURL(conn.request.url);
   if not (event in [HE_OPEN, HE_CLOSE, HE_CONNECTED, HE_DISCONNECTED, HE_GOT]) then
     if not logIconsChk.checked and (data.downloadingWhat = DW_ICON)
     or not logBrowsingChk.checked and (data.downloadingWhat = DW_FOLDERPAGE)
-    or not logProgressChk.checked and (url_ = '/~progress') then
+    or not logProgressChk.checked and (decodedUrl() = '/~progress') then
       exit;
-
   if not (event in [HE_OPEN, HE_CLOSE])
   and addressMatch(dontLogAddressMask, data.address) then
     exit;
@@ -4693,7 +4697,7 @@ var
           s:=subStr(conn.getHeader('Range'), 7);
           if s > '' then
             s:=TAB+'['+s+']';
-          add2log(format('Requested %s %s%s', [ METHOD2STR[conn.request.method], url_, s ]), data);
+          add2log(format('Requested %s %s%s', [ METHOD2STR[conn.request.method], decodedUrl(), s ]), data);
           end;
         if dumprequestsChk.checked then
           add2log('Request dump'+CRLF+conn.request.full, data);
@@ -4730,7 +4734,7 @@ var
         add2log(format('Fully downloaded - %s @ %sB/s - %s', [
           smartSize(conn.bytesSentLastItem),
           smartSize(calcAverageSpeed(conn.bytesSentLastItem)),
-          url_]), data);
+          decodedUrl()]), data);
         end;
     end;
 

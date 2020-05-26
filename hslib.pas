@@ -527,10 +527,14 @@ while i < len do
     continue;
   if c >= $FE then
     exit(FALSE);
-  if c >= $F0 then more:=3
-  else if c >= $E0 then more:=2
-  else if c >= $C0 then more:=1
-  else exit(FALSE);
+  if c >= $F0 then
+    more:=3
+  else if c >= $E0 then
+    more:=2
+  else if c >= $C0 then
+    more:=1
+  else
+    exit(FALSE);
   if i+more > len then
     exit(FALSE);
   while more > 0 do
