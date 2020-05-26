@@ -2788,6 +2788,8 @@ and not mainfrm.noPortInUrlChk.checked then
   result:=':'+srv.port+result;
 if ip = '' then
   ip:=defaultIP;
+if Pos(':',ip, Pos(':',ip)+1) > 0 then // ipv6
+  ip:='['+getTill('%',ip)+']';
 result:=protoColon()+ip+result;
 end; // fullURL
 
