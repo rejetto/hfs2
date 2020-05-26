@@ -67,6 +67,8 @@ s:='';
 if ts then
     s:='<hr>'+dateTimeToStr(now())+CRLF;
 s:=s+#13'<dt>'+htmlEncode(textIn)+'</dt><dd>'+htmlEncode(textOut)+'</dd>';
+if sizeOfFile(MACROS_LOG_FILE) = 0 then
+  s:=HEADER+s;
 result:=appendTextFile(MACROS_LOG_FILE, s);
 end; // macrosLog
 
