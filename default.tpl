@@ -190,7 +190,7 @@ $(function(){
 
 [folder panel]
 <div id='folder-path'>
-	{.breadcrumbs|{:<button onclick="location.href='%bread-url%' "> {.if|{.length|%bread-name%.}|/ %bread-name%|<i class='fa fa-home'></i>.}</button>:} .}
+	{.breadcrumbs|{:<button onclick="location.href='%bread-url%' "> {.if|{.length|%bread-name%.}|%bread-name%|<i class='fa fa-home'></i>.}</button>:} .}
 </div>
 {.if|%number%|
 <div id='folder-stats'>
@@ -306,7 +306,7 @@ button { background-color: #bcd; color: #444; padding: .5em 1em; border: transpa
 body { font-family:tahoma, verdana, arial, helvetica, sans; transition:background-color 1s ease; color:#777; }
 a { text-decoration:none; color:#357; border:1px solid transparent; padding:0 0.1em; }
 #folder-path { float:left; margin-bottom: 0.2em; }
-#folder-path button { padding: .4em; }
+#folder-path button { padding: .4em .6em; border-radius:.7em; }
 #folder-path button:first-child { padding: .2em .4em;} #folder-path i.fa { font-size:135% }
 button i.fa { font-size:110% }
 .item { margin-bottom:.3em; padding:.3em  .8em; border-top:1px solid #ddd;  }
