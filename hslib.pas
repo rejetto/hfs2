@@ -715,7 +715,7 @@ try
       begin
       addr:='::';
       Port:=sock.port;
-      listen();
+      try listen except end;
       end;
   notify(HE_OPEN, NIL);
 except
