@@ -514,36 +514,32 @@ end; // base64decode
 
 function validUTF8(s:rawbytestring):boolean;
 var
-  i, bits, len: integer;
+  i, more, len: integer;
   c: byte;
 begin
-c:=0;
-bits:=0;
 len:=length(s);
 i:=0;
 while i < len do
   begin
   inc(i);
   c:=ord(s[i]);
-  if c < 128 then
+  if c < $80 then
     continue;
-  if c >= 254 then
+  if c >= $FE then
     exit(FALSE);
-  if c >= 252 then bits:=6
-  else if c >= 248 then bits:=5
-  else if c >= 240 then bits:=4
-  else if c >= 224 then bits:=3
-  else if c >= 192 then bits:=2
+  if c >= $F0 then more:=3
+  else if c >= $E0 then more:=2
+  else if c >= $C0 then more:=1
   else exit(FALSE);
-  if (i+bits > len) then
+  if i+more > len then
     exit(FALSE);
-  while bits > 1 do
+  while more > 0 do
     begin
     inc(i);
     c:=ord(s[i]);
-    if (c < 128) or (c > 191) then
+    if (c < $80) or (c > $C0) then
       exit(FALSE);
-    dec(bits);
+    dec(more);
     end;
   end;
 result:=TRUE;

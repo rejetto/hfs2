@@ -2062,7 +2062,8 @@ if to_ = NIL then
   end;
 l:=to_-from+1;
 setLength(result, l);
-if l > 0 then strLcopy(@result[1], from, l);
+if l > 0 then
+  strLcopy(@result[1], from, l);
 end; // getStr
 
 function poss(chars:TcharSet; s:string; ofs:integer=1):integer;
