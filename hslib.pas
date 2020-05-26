@@ -512,6 +512,43 @@ while i <= length(s) do
   end;
 end; // base64decode
 
+function validUTF8(s:rawbytestring):boolean;
+var
+  i, bits, len: integer;
+  c: byte;
+begin
+c:=0;
+bits:=0;
+len:=length(s);
+i:=0;
+while i < len do
+  begin
+  inc(i);
+  c:=ord(s[i]);
+  if c < 128 then
+    continue;
+  if c >= 254 then
+    exit(FALSE);
+  if c >= 252 then bits:=6
+  else if c >= 248 then bits:=5
+  else if c >= 240 then bits:=4
+  else if c >= 224 then bits:=3
+  else if c >= 192 then bits:=2
+  else exit(FALSE);
+  if (i+bits > len) then
+    exit(FALSE);
+  while bits > 1 do
+    begin
+    inc(i);
+    c:=ord(s[i]);
+    if (c < 128) or (c > 191) then
+      exit(FALSE);
+    dec(bits);
+    end;
+  end;
+result:=TRUE;
+end; // validUTF8
+
 function decodeURL(url:ansistring; utf8:boolean=TRUE):string;
 var
   i, j: integer;
@@ -531,10 +568,11 @@ while i<length(url) do
     url[j]:=url[i];
   end;
 setLength(url, j);
-if utf8 then
+if utf8 and validUTF8(url)  then
   begin
   result:=utf8ToString(url);
-  if result='' then  // if the string is not UTF8 compliant, the result is empty
+  // if the string is not UTF8 compliant, the result is empty, or sometimes same length (but ruined)
+  if (result='') or (length(result)=length(url)) then
     result:=url;
   end
 else
