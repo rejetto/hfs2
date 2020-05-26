@@ -562,7 +562,7 @@ z-index:1; /* without this .item-menu will be over*/ }
 [ajax.move|no log]
 {.check session.}
 {.set|dst|{.postvar|dst.}.}
-{.break|if={.not|{.and|{.can move.}|{.get|can delete.}|{.get|can upload|path={.^dst.}.}/and.}.} |result=forbidden.}
+{.break|if={.not|{.and|{.can move.}|{.get|can upload|path={.^dst.}.}/and.}.} |result=forbidden.}
 {.set|log|{.!Moving items to.} {.^dst.}.}
 {.for each|fn|{.replace|:|{.no pipe||.}|{.postvar|files.}.}|{:
     {.break|if={.is file protected|var=fn.}|result=forbidden.}
@@ -607,7 +607,7 @@ can comment=and|{.get|can upload.}|{.!option.comment.}
 can rename=and|{.get|can delete.}|{.!option.rename.}
 can delete=get|can delete
 can change pwd=member of|can change password
-can move=or|1|1
+can move=and|{.get|can delete.}|{.!option.move.}
 escape attr=replace|"|&quot;|$1
 commentNL=if|{.pos|<br|$1.}|$1|{.replace|{.chr|10.}|<br />|$1.}
 add bytes=switch|{.cut|-1||$1.}|,|0,1,2,3,4,5,6,7,8,9|$1 {.!Bytes.}|K,M,G,T|$1B
@@ -940,9 +940,8 @@ function upload(){
 		var files = this.files
 		if (!files.length) return
 		$('#upload-panel').slideDown('fast')
-		uploadQ.add(function(done){
-			sendFiles(files, done)
-		})
+		uploadQ.add(done=>
+			sendFiles(files, done))
   	}).click()
 } //upload
 
@@ -1006,7 +1005,7 @@ function sendFiles(files, done) {
     $.ajax({
         type: 'POST',
         data: formData,
-        success: function(data) {
+        success(data) {
             try {
                 data = JSON.parse(data)
                 data.forEach(function(r) {
@@ -1026,7 +1025,7 @@ function sendFiles(files, done) {
         cache: false,
         contentType: false,
         processData: false,
-        xhr: function() {
+        xhr() {
             var e = $('#upload-progress')
             var prog = e.find('progress').prop('value', 0)
             e.slideDown('fast')
