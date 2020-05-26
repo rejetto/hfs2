@@ -5854,7 +5854,7 @@ case event of
     data.downloadingWhat:=DW_UNK;
     data.agent:=getAgentID(conn);
     data.fileXferStart:=now();
-    f:=findFileByURL(decodeURL(conn.request.url));
+    f:=findFileByURL(decodeURL(getTill('?',conn.request.url)));
     data.lastFile:=f; // auto-freeing
     data.uploadSrc:=conn.post.filename;
     data.uploadFailed:='';
