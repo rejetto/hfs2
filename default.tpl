@@ -320,7 +320,7 @@ button i.fa { font-size:110% }
 .comment>i { margin-right:0.5em; }
 .item-size { margin-left:.3em }
 .selector { float:left; width: 1.2em; height:1.2em; margin-right: .5em;}
-.item-menu { padding:0.1em 0.3em; border-radius:0.6em; border: 1px outset; position: relative; top: -0.1em;}
+.item-menu { padding:0.1em 0.3em; border-radius:0.6em; position: relative; top: -0.1em;}
 .dialog-content h1 { margin:0; }
 .dialog-content .buttons { margin-top:1.5em }
 .dialog-content .buttons button { margin:.5em auto; min-width: 9em; display:block; }
