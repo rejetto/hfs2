@@ -7587,13 +7587,13 @@ resourcestring
 const
   UPDATE_BATCH_FILE = 'hfs.update.bat';
   UPDATE_BATCH = 'START %0:s /WAIT "%1:s" -q'+CRLF
-    +'ping 127.0.0.1 -n 3 -w 1000> nul'+CRLF
-    +'DEL "%3:s'+PREVIOUS_VERSION+'"'+CRLF
-    +'%2:sMOVE "%1:s" "%3:s'+PREVIOUS_VERSION+'"'+CRLF
-    +'DEL "%1:s"'+CRLF
-    +'MOVE "%4:s" "%1:s"'+CRLF
+    +'ping 127.0.0.1 -n 3 -w 1000> nul'+CRLF // wait
+    +'DEL "%3:s'+PREVIOUS_VERSION+'"'+CRLF // previous backup
+    +'%2:sMOVE "%1:s" "%3:s'+PREVIOUS_VERSION+'"'+CRLF // new backup
+    +'DEL "%1:s"'+CRLF // too zealous?
+    +'MOVE "%4:s" "%1:s"'+CRLF // new becomes current
     +'START %0:s "%1:s"'+CRLF
-    +'DEL %%0'+CRLF;
+    +'DEL %%0'+CRLF; // remove self
 var
   size: integer;
   fn: string;

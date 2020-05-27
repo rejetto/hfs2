@@ -1,3 +1,4 @@
+- update doesn't work without 'only 1 instance' (it's the -q)
 + replace shellExtDlg.gif with transparent png (english system)
 + expiring links
 * dismiss regexp lib http://docwiki.embarcadero.com/Libraries/Rio/en/System.RegularExpressions.TRegEx

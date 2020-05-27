@@ -1212,14 +1212,8 @@ end;
 
 // exec but does not wait for the process to end
 function execNew(cmd:string):boolean;
-var
-  si: TStartupInfo;
-  pi: TProcessInformation;
 begin
-fillchar(si, sizeOf(si), 0);
-fillchar(pi, sizeOf(pi), 0);
-si.cb:=sizeOf(si);
-result:=createProcess(NIL,pchar(cmd),NIL,NIL,FALSE,0,NIL,NIL,si,pi)
+result:=32 < ShellExecute(0, nil, 'cmd.exe', pchar('/C '+cmd), nil, SW_SHOW);
 end; // execNew
 
 function addArray(var dst:TstringDynArray; src:array of string; where:integer=-1; srcOfs:integer=0; srcLn:integer=-1):integer;
