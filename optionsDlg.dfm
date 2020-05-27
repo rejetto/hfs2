@@ -222,9 +222,9 @@ object optionsFrm: ToptionsFrm
           Top = 106
           Width = 198
           Height = 22
-          EditLabel.Width = 111
+          EditLabel.Width = 105
           EditLabel.Height = 14
-          EditLabel.Caption = 'After ~login, redirect to'
+          EditLabel.Caption = 'After login, redirect to'
           TabOrder = 4
           OnChange = redirBoxChange
         end
