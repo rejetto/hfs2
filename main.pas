@@ -36,8 +36,8 @@ uses
   HSlib, traylib, monoLib, progFrmLib, classesLib;
 
 const
-  VERSION = '2.4 beta5';
-  VERSION_BUILD = '307';
+  VERSION = '2.4 beta6';
+  VERSION_BUILD = '308';
   VERSION_STABLE = {$IFDEF STABLE } TRUE {$ELSE} FALSE {$ENDIF};
   CURRENT_VFS_FORMAT :integer = 1;
   CRLF = #13#10;
@@ -4905,6 +4905,16 @@ var
     +'filename*=UTF-8'''''+s+'; filename='+s));
   end;
 
+  function sessionRedirect():boolean;
+  begin
+  if data.session.redirect = '' then
+    exit(FALSE);
+  conn.reply.mode:=HRM_REDIRECT;
+  conn.reply.url:=data.session.redirect;
+  data.session.redirect:=''; // only once
+  result:=TRUE;
+  end; // sessionRedirect
+
   function sessionSetup():boolean;
   var
     sid: string;
@@ -4951,13 +4961,6 @@ var
     exit;
   data.user:=data.account.user;
   data.pwd:=data.account.pwd;
-  if data.session.redirect > '' then
-    begin    
-    conn.reply.mode:=HRM_REDIRECT;
-    conn.reply.url:=data.session.redirect;
-    data.session.redirect:=''; // only once
-    result:=FALSE;
-    end;
   end; // sessionSetup
 
   procedure serveTar();
@@ -5264,7 +5267,6 @@ var
     data.session.user:=acc.user;
     data.user:=acc.user;
     data.pwd:=acc.pwd;
-    data.session.redirect:=getAccountRedirect(acc);
     end; //urlAuth
     
   var
@@ -5614,7 +5616,8 @@ var
   if f.isFolder() then
     begin
     deletion();
-
+    if sessionRedirect() then
+      exit;
     data.downloadingWhat:=DW_FOLDERPAGE;
     if DMbrowserTplChk.Checked and isDownloadManagerBrowser() then
       s:=getFolderPage(f, data, dmBrowserTpl)
