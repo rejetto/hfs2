@@ -5270,6 +5270,7 @@ var
     data.session.user:=acc.user;
     data.user:=acc.user;
     data.pwd:=acc.pwd;
+    data.session.redirect:='.';
     end; //urlAuth
     
   var
