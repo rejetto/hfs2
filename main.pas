@@ -3150,19 +3150,22 @@ f:=self;
 if assigned(outInherited) then outInherited^:=FALSE;
 while assigned(f) do
   begin
-  for i:=0 to length(f.accounts[action])-1 do
+  for s in f.accounts[action] do
   	begin
-    s:=f.accounts[action][i];
     if (s = '')
-    or (action = FA_UPLOAD) and not f.isRealFolder() then continue; // we must ignore this setting
+    or (action = FA_UPLOAD) and not f.isRealFolder() then  // we must ignore this setting
+      continue;
 
     if specialUsernames and (s[1] = '@')
     or accountExists(s, specialUsernames) then // we admit groups only if specialUsernames are admitted too
       addString(s, result);
     end;
-  if (action = FA_ACCESS) and (f.user > '') then addString(f.user, result);
-  if assigned(result) then exit;
-  if assigned(outInherited) then outInherited^:=TRUE;
+  if (action = FA_ACCESS) and (f.user > '') then
+    addString(f.user, result);
+  if assigned(result) then
+    exit;
+  if assigned(outInherited) then
+    outInherited^:=TRUE;
   f:=f.parent;
   end;
 end; // getAccountsFor
@@ -7364,6 +7367,8 @@ var
       inc(result);
   end; // itemsVisible
 
+var
+  s: string;
 begin
 // default values
 setDefaultValues(filemenu.items);
@@ -7407,19 +7412,22 @@ if filesBox.SelectionCount = 1 then
 
   a:=NIL;
   if anyFileSelected then
-    a:=expandAccountsByLink(selectedFile.getAccountsFor(FA_ACCESS, TRUE));
+    a:=expandAccountsByLink(selectedFile.getAccountsFor(FA_ACCESS, TRUE))
+      +expandAccountsByLink(selectedFile.getAccountsFor(FA_UPLOAD, TRUE))
+      +expandAccountsByLink(selectedFile.getAccountsFor(FA_DELETE, TRUE));
   visibleIf(CopyURLwithpassword1, assigned(a), ONLY_EXPERT);
   copyURLwithpassword1.Clear();
-  for i:=0 to length(a)-1 do
-    copyURLwithpassword1.add( newItem( a[i], 0, FALSE, TRUE, copyURLwithPasswordMenuClick, 0, '') );
+  uniqueStrings(a, FALSE);
+  for s in a do
+    copyURLwithpassword1.add( newItem( s, 0, FALSE, TRUE, copyURLwithPasswordMenuClick, 0, '') );
   end;
 
 a:=getPossibleAddresses();
 if length(a) = 1 then a:=NIL;
 visibleIf(CopyURLwithdifferentaddress1, anyFileSelected and assigned(a), ONLY_EXPERT);
 copyURLwithdifferentaddress1.clear();
-for i:=0 to length(a)-1 do
-  copyURLwithdifferentaddress1.add( newItem( a[i], 0, FALSE, TRUE, copyURLwithAddressMenuclick, 0, '') );
+for s in a do
+  copyURLwithdifferentaddress1.add( newItem( s, 0, FALSE, TRUE, copyURLwithAddressMenuclick, 0, '') );
 
 end;
 
@@ -10508,7 +10516,7 @@ f:=selectedFile;
 while assigned(f) and (f.accounts[FA_ACCESS] = NIL) and (f.user = '') do
   f:=f.parent;
 
-if f.user = user then 
+if assigned(f) and (f.user = user) then
   pwd:=f.pwd
 else
   begin

@@ -749,6 +749,13 @@ object mainFrm: TmainFrm
       AutoHotkeys = maManual
       Caption = 'Copy URL with password'
     end
+    object CopyURLwithdifferentaddress1: TMenuItem
+      Caption = 'Copy URL with different host address'
+    end
+    object CopyURLwithfingerprint1: TMenuItem
+      Caption = 'Copy URL with fingerprint'
+      OnClick = CopyURLwithfingerprint1Click
+    end
     object Browseit1: TMenuItem
       Caption = 'Browse it'
       ImageIndex = 26
@@ -784,13 +791,6 @@ object mainFrm: TmainFrm
     end
     object N11: TMenuItem
       Caption = '-'
-    end
-    object CopyURLwithdifferentaddress1: TMenuItem
-      Caption = 'Copy URL with different host address'
-    end
-    object CopyURLwithfingerprint1: TMenuItem
-      Caption = 'Copy URL with fingerprint'
-      OnClick = CopyURLwithfingerprint1Click
     end
     object Purge1: TMenuItem
       Caption = 'Purge...'

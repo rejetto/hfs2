@@ -172,7 +172,7 @@ function onlyString(s:string; ss:TStringDynArray):boolean;
 function addArray(var dst:TstringDynArray; src:array of string; where:integer=-1; srcOfs:integer=0; srcLn:integer=-1):integer;
 function removeArray(var src:TstringDynArray; toRemove:array of string):integer;
 function addUniqueArray(var a:TstringDynArray; b:array of string):integer;
-procedure uniqueStrings(var a:TstringDynArray);
+procedure uniqueStrings(var a:TstringDynArray; ci:Boolean=TRUE);
 function idxOf(s:string; a:array of string; isSorted:boolean=FALSE):integer;
 function stringExists(s:string; a:array of string; isSorted:boolean=FALSE):boolean;
 function listToArray(l:Tstrings):TstringDynArray;
@@ -639,13 +639,14 @@ if i < 0 then addString(s, ss)
 else removeString(ss, i);
 end; // toggleString
 
-procedure uniqueStrings(var a:TstringDynArray);
+procedure uniqueStrings(var a:TstringDynArray; ci:Boolean=TRUE);
 var
   i, j: integer;
 begin
 for i:=length(a)-1 downto 1 do
   for j:=i-1 downto 0 do
-    if ansiCompareText(a[i], a[j]) = 0 then
+    if ci and SameText(a[i], a[j])
+    or not ci and (a[i] = a[j]) then
       begin
       removeString(a, i);
       break;
