@@ -44,6 +44,7 @@ type
   TnameExistsFun = function(user:string):boolean;
 
 procedure doNothing(); inline; // useful for readability
+function httpsCanWork():boolean;
 function accountExists(user:string; evenGroups:boolean=FALSE):boolean;
 function getAccount(user:string; evenGroups:boolean=FALSE):Paccount;
 function nodeToFile(n:TtreeNode):Tfile;
@@ -1651,71 +1652,101 @@ result:=inputQueryLongdlg.ShowModal() = mrOk;
 if result then value:=inputQueryLongdlg.inputBox.Text;
 end; // inputQueryLong
 
+function dllIsPresent(name:string):boolean;
+var h: HMODULE;
+begin
+h:=LoadLibrary(@name);
+result:= h<>0;
+FreeLibrary(h);
+end;
+
+function httpsCanWork():boolean;
+const
+  files: array of string = ['libcrypto-1_1.dll','libssl-1_1.dll'];
+  baseUrl = 'http://rejetto.com/hfs/';
+  // these should be made resourcestring but then a runtime error is raised
+  MSG = 'An HTTPS action is required but some files are missing. Download them?';
+  MSG_OK = 'Download completed';
+  MSG_KO = 'Download failed';
+var
+  s: string;
+  missing: TStringDynArray;
+begin
+missing:=NIL;
+for s in files do
+  if not FileExists(s) and not dllIsPresent(s) then
+    addString(s, missing);
+if missing=NIL then
+  exit(TRUE);
+if msgDlg(MSG, MB_OKCANCEL+MB_ICONQUESTION) <> MROK then
+  exit(FALSE);
+for s in missing do
+  if not httpGetFile(baseUrl+s, s, 2, mainfrm.statusBarHttpGetUpdate) then
+    begin
+    msgDlg(MSG_KO, MB_ICONERROR);
+    exit(FALSE);
+    end;
+mainfrm.setStatusBarText(MSG_OK);
+result:=TRUE;
+end; // httpsCanWork
+
 function httpGet(url:string; from:int64=0; size:int64=-1):string;
 var
-  http: THttpCli;
   reply: Tstringstream;
 begin
 if size = 0 then
-  begin
-  result:='';
-  exit;
-  end;
+  exit('');
 reply:=TStringStream.Create('');
-try
-  http:=Thttpcli.create(NIL);
+with ThttpClient.createURL(url) do
   try
-    http.URL:=url;
-    http.followRelocation:=TRUE;
-    http.rcvdStream:=reply;
-    http.agent:=HFS_HTTP_AGENT;
+    rcvdStream:=reply;
     if (from <> 0) or (size > 0) then
-      http.contentRangeBegin:=intToStr(from);
+      contentRangeBegin:=intToStr(from);
     if size > 0 then
-      http.contentRangeEnd:=intToStr(from+size-1);
-    http.get();
+      contentRangeEnd:=intToStr(from+size-1);
+    get();
     result:=reply.dataString;
-  finally http.free end
-finally reply.free end
+  finally
+    reply.free;
+    Free;
+    end
 end; // httpGet
 
 function httpFileSize(url:string):int64;
-var
-  http: THttpCli;
 begin
-http:=Thttpcli.create(NIL);
-try
-  http.URL:=url;
-  http.Agent:=HFS_HTTP_AGENT;
+with ThttpClient.createURL(url) do
   try
-    http.head();
-    result:=http.contentLength
-  except result:=-1 end;
-finally http.free end
+    try
+      head();
+      result:=contentLength
+     except result:=-1
+      end;
+  finally free
+    end;
 end; // httpFileSize
 
 function httpGetFile(url, filename:string; tryTimes:integer=1; notify:TdocDataEvent=NIL):boolean;
 var
-  http: THttpCli;
-  reply: Tfilestream;
   supposed: integer;
+  reply: Tfilestream;
 begin
 reply:=TfileStream.Create(filename, fmCreate);
-try
-  http:=Thttpcli.create(NIL);
+with ThttpClient.createURL(url) do
   try
-    http.URL:=url;
-    http.RcvdStream:=reply;
-    http.Agent:=HFS_HTTP_AGENT;
-    http.OnDocData:=notify;
+    rcvdStream:=reply;
+    onDocData:=notify;
     result:=TRUE;
-    try http.get()
-    except result:=FALSE end;
-    supposed:=http.ContentLength;
-  finally http.free end
-finally reply.free end;
+    try get()
+    except result:=FALSE
+      end;
+    supposed:=ContentLength;
+  finally
+    reply.free;
+    free;
+    end;
 result:= result and (sizeOfFile(filename)=supposed);
-if not result then deleteFile(filename);
+if not result then
+  deleteFile(filename);
 
 if not result and (tryTimes > 1) then
   result:=httpGetFile(url, filename, tryTimes-1, notify);

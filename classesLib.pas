@@ -23,7 +23,8 @@ unit classesLib;
 interface
 
 uses
-  iniFiles, types, hslib, strUtils, sysUtils, classes, math, system.Generics.Collections;
+  iniFiles, types, hslib, strUtils, sysUtils, classes, math, system.Generics.Collections,
+  OverbyteIcsWSocket, OverbyteIcshttpProt;
 
 type
   TfastStringAppend = class
@@ -189,6 +190,12 @@ type
     destructor Destroy; override;
     end;
 
+  ThttpClient = class(TSslHttpCli)
+    constructor Create(AOwner: TComponent); override;
+    destructor destroy;
+    class function createURL(url:string):ThttpClient;
+    end;
+
   Ttlv = class
   protected
     cur, bound: integer;
@@ -213,6 +220,30 @@ implementation
 
 uses
   utilLib, main, windows, dateUtils, forms;
+
+class function ThttpClient.createURL(url:string):ThttpClient;
+begin
+if startsText('https://', url)
+and not httpsCanWork() then
+  exit(NIL);
+result:=ThttpClient.Create(NIL);
+result.URL:=url;
+end;
+
+constructor ThttpClient.create(AOwner: TComponent);
+begin
+inherited;
+followRelocation:=TRUE;
+agent:=HFS_HTTP_AGENT;
+SslContext := TSslContext.Create(NIL);
+end; // create
+
+destructor ThttpClient.destroy;
+begin
+SslContext.free;
+SslContext:=NIl;
+inherited;
+end;
 
 constructor TperIp.create();
 begin
@@ -504,10 +535,7 @@ end; // reset
 function TtarStream.fsInit():boolean;
 begin
 if assigned(fs) and (fs.FileName = flist[cur].src) then
-  begin
-  result:=TRUE;
-  exit;
-  end;
+  exit(TRUE);
 result:=FALSE;
 try
   freeAndNIL(fs);
@@ -1089,8 +1117,8 @@ function Ttlv.pop(var value:string; var raw:ansistring):integer;
 var
   n: integer;
 begin
-result:=-1;
-if isOver() then exit; // finished
+if isOver() then 
+  exit(-1); // finished
 result:=integer((@whole[cur])^);
 n:=Pinteger(@whole[cur+4])^;
 raw:=copy(whole, cur+8, n);
@@ -1109,10 +1137,7 @@ function Ttlv.down():boolean;
 begin
 // do we have anything to recur on?
 if (cur = 1) then
-  begin
-  result:=false;
-  exit;
-  end;
+  exit(FALSE);
 // push into the stack
 if (stackTop = length(stack)) then // space over
   setLength(stack, stackTop+10); // make space
@@ -1129,10 +1154,7 @@ end; // down
 function Ttlv.up():boolean;
 begin
 if stackTop = 0 then
-  begin
-  result:=false;
-  exit;
-  end;
+  exit(FALSE);
 dec(stackTop);
 bound:=stack[stackTop];
 dec(stackTop);

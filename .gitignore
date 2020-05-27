@@ -8,6 +8,7 @@ win32/
 *.exe
 *.map
 *.tmp
+*.dll
 *.bak
 *.*-
 *.corrupted

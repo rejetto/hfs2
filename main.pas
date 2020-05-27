@@ -983,6 +983,7 @@ type
     procedure progFrmHttpGetUpdate(sender:TObject; buffer:pointer; Len:integer);
     procedure recalculateGraph();
  public
+    procedure statusBarHttpGetUpdate(sender:TObject; buffer:pointer; Len:integer);
     procedure remove(node:Ttreenode=NIL);
     function  setCfg(cfg:string; alreadyStarted:boolean=TRUE):boolean;
     function  getCfg(exclude:string=''):string;
@@ -1268,10 +1269,7 @@ begin
 result:=NIL;
 if (account = NIL) or not account.enabled then exit;
 if shouldStop() then
-  begin
-  result:=account;
-  exit;
-  end;
+  exit(account);
 i:=0;
 toCheck:=account.link;
 while i < length(toCheck) do
@@ -1280,10 +1278,7 @@ while i < length(toCheck) do
   inc(i);
   if (account = NIL) or not account.enabled then continue;
   if shouldStop() then
-    begin
-    result:=account;
-    exit;
-    end;
+    exit(account);
   addUniqueArray(toCheck, account.link);
   end;
 end; // accountRecursion
@@ -1304,10 +1299,7 @@ begin
 result:=FALSE;
 if f = NIL then exit;
 if action = FA_ACCESS then
-  begin
-  result:=f.accessFor(cd);
-  exit;
-  end;
+  exit(f.accessFor(cd));
 if f.isTemp() then
   f:=f.parent;
 if (action = FA_UPLOAD) and not f.isRealFolder() then exit;
@@ -1600,10 +1592,7 @@ var
       s:=commentMasks[i];
       mask:=chop('=', s);
       if fileMatch(mask, fn) then
-        begin
-        result:=s;
-        exit;
-        end;
+        exit(s);
       end;
     result:='';
     end; // getCommentByMaskFor
@@ -2026,10 +2015,7 @@ fillChar(shfi, SizeOf(TShFileInfo), 0);
 // but it does not actually work without the expandFileName()
 shGetFileInfo( pchar(expandFileName(fn)), 0, shfi, SizeOf(shfi), SHGFI_SYSICONINDEX);
 if shfi.iIcon = 0 then
-  begin
-  result:=ICON_FILE;
-  exit;
-  end;
+  exit(ICON_FILE);
 // as reported by official docs
 destroyIcon(shfi.hIcon);
 
@@ -2136,10 +2122,7 @@ var
 begin
 for i:=0 to length(address2name) div 2-1 do
   if addressmatch(address2name[i*2+1], ip) then
-    begin
-    result:=address2name[i*2];
-    exit;
-    end;
+    exit(address2name[i*2]);
 result:='';
 end; // localDNSget
 
@@ -2196,10 +2179,7 @@ procedure updateDynDNS();
   begin
   s:=trim(s);
   if s = '' then
-    begin
-    result:='no reply';
-    exit;
-    end;
+    exit('no reply');
   code:='';
   result:='successful';
   code:=trim(lowercase(getTill(' ',s)));
@@ -2207,9 +2187,8 @@ procedure updateDynDNS();
   for i:=1 to length(ERRORS) do
     if code = ERRORS[i].code then
       begin
-      result:='error: '+ERRORS[i].msg;
       dyndns.active:=FALSE;
-      exit;
+      exit('error: '+ERRORS[i].msg);
       end;
   result:='unknown reply: '+s;
   end; // interpretResponse
@@ -2602,10 +2581,7 @@ end; // fixTreeStructure
 function Tfile.getParent():Tfile;
 begin
 if node = NIL then 
-  begin
-  result:=NIL;
-  exit;
-  end;
+  exit(NIL);
 if node.data <> self then // the tree structure is unreliable, at least on DISPLAYCHANGE event. This will workaround it
   fixTreeStructure(mainFrm.filesBox.Items[0]);
 if isTemp() then result:=nodeToFile(node)
@@ -2633,10 +2609,7 @@ var
   f: Tfile;
 begin
 if not isFolder() then
-  begin
-  result:=DLcount;
-  exit;
-  end;
+  exit(DLcount);
 result:=0;
 if node = NIL then exit;
 n:=node.getFirstChild();
@@ -2714,8 +2687,8 @@ function Tfile.pathTill(root:Tfile=NIL; delim:char='\'):string;
 var
   f: Tfile;
 begin
-result:='';
-if self = root then exit;
+if self = root then
+  exit('');
 result:=name;
 f:=parent;
 if isTemp() then
@@ -2914,8 +2887,7 @@ if not isTemp() then
     n:=n.getNextSibling();
     if (FA_LINK in f.flags) or f.isFolder()
     or not fileMatch(mask, f.name) or not fileExists(f.resource) then continue;
-    result:=f;
-    exit;
+    exit(f);
     end;
 
 if not isRealFolder() or not sysutils.directoryExists(resource) then exit;
@@ -2982,10 +2954,7 @@ if result >= 0 then exit;
 if isFile() then
   for i:=0 to length(iconMasks)-1 do
     if fileMatch(iconMasks[i].str, name) then
-      begin
-      result:=iconMasks[i].int;
-      exit;
-      end;
+      exit(iconMasks[i].int);
 ic:=iconsCache.get(resource);
 if ic = NIL then
   begin
@@ -3089,7 +3058,6 @@ var
 begin
 result:=FALSE;
 if isFile() and isDLforbidden() then exit;
-result:=FALSE;
 f:=self;
 while assigned(f) do
   begin
@@ -3214,8 +3182,8 @@ end; // getSafeHost
 
 function nodeIsLocked(n:Ttreenode):boolean;
 begin
-result:=FALSE;
-if (n = NIL) or (n.data = NIL) then exit;
+if (n = NIL) or (n.data = NIL) then 
+  exit(FALSE);
 result:=nodeToFile(n).isLocked();
 end; // nodeIsLocked
 
@@ -3774,16 +3742,10 @@ begin
 result:=default;
 for i:=0 to length(mimeTypes) div 2-1 do
   if fileMatch(mimeTypes[i*2], fn) then
-    begin
-    result:=mimeTypes[i*2+1];
-    exit;
-    end;
+    exit(mimeTypes[i*2+1]);
 for i:=0 to length(DEFAULT_MIME_TYPES) div 2-1 do
   if fileMatch(DEFAULT_MIME_TYPES[i*2], fn) then
-    begin
-    result:=DEFAULT_MIME_TYPES[i*2+1];
-    exit;
-    end;
+    exit(DEFAULT_MIME_TYPES[i*2+1]);
 end; // name2mimetype
 
 procedure Tmainfrm.getPage(sectionName:string; data:TconnData; f:Tfile=NIL; tpl2use:Ttpl=NIL);
@@ -12079,6 +12041,12 @@ with sender as ThttpCli do
   if progFrm.cancelRequested then abort();
   end;
 end; // progFrmHttpGetUpdate
+
+procedure TmainFrm.statusBarHttpGetUpdate(sender:Tobject; buffer:pointer; len:integer);
+begin
+with sender as ThttpCli do
+  setStatusBarText( 'Downloading '+intToStr(safeDiv(RcvdCount*100, contentLength))+'%' );
+end; // statusBarHttpGetUpdate
 
 function purgeFilesCB(f:Tfile; childrenDone:boolean; par, par2:integer):TfileCallbackReturn;
 begin

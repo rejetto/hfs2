@@ -2,7 +2,7 @@ object mainFrm: TmainFrm
   Left = 293
   Top = 219
   Caption = 'HFS ~ HTTP File Server'
-  ClientHeight = 483
+  ClientHeight = 436
   ClientWidth = 879
   Color = clBtnFace
   Constraints.MinHeight = 260
@@ -218,7 +218,7 @@ object mainFrm: TmainFrm
     Left = 0
     Top = 83
     Width = 879
-    Height = 400
+    Height = 353
     Align = alClient
     BevelOuter = bvNone
     Font.Charset = DEFAULT_CHARSET
@@ -228,10 +228,11 @@ object mainFrm: TmainFrm
     Font.Style = []
     ParentFont = False
     TabOrder = 0
+    ExplicitHeight = 400
     object splitV: TSplitter
       Left = 313
       Top = 0
-      Height = 289
+      Height = 242
       Beveled = True
       Constraints.MaxWidth = 3
       Constraints.MinWidth = 3
@@ -241,7 +242,7 @@ object mainFrm: TmainFrm
     end
     object splitH: TSplitter
       Left = 0
-      Top = 289
+      Top = 242
       Width = 879
       Height = 5
       Cursor = crVSplit
@@ -257,15 +258,16 @@ object mainFrm: TmainFrm
       Left = 316
       Top = 0
       Width = 563
-      Height = 289
+      Height = 242
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
+      ExplicitHeight = 289
       object logBox: TRichEdit
         Left = 0
         Top = 23
         Width = 563
-        Height = 266
+        Height = 219
         Align = alClient
         Font.Charset = ANSI_CHARSET
         Font.Color = clWindowText
@@ -282,6 +284,7 @@ object mainFrm: TmainFrm
         Zoom = 100
         OnChange = logBoxChange
         OnMouseDown = logBoxMouseDown
+        ExplicitHeight = 266
       end
       object logTitle: TPanel
         Left = 0
@@ -557,16 +560,17 @@ object mainFrm: TmainFrm
       Left = 0
       Top = 0
       Width = 313
-      Height = 289
+      Height = 242
       Align = alLeft
       BevelOuter = bvNone
       Caption = 'filesPnl'
       TabOrder = 0
+      ExplicitHeight = 289
       object filesBox: TTreeView
         Left = 0
         Top = 23
         Width = 313
-        Height = 266
+        Height = 219
         Align = alClient
         BevelInner = bvLowered
         BevelOuter = bvSpace
@@ -602,6 +606,7 @@ object mainFrm: TmainFrm
         OnMouseEnter = filesBoxMouseEnter
         OnMouseLeave = filesBoxMouseLeave
         OnMouseUp = filesBoxMouseUp
+        ExplicitHeight = 266
       end
       object filesTitle: TPanel
         Left = 0
@@ -616,12 +621,13 @@ object mainFrm: TmainFrm
     end
     object connPnl: TPanel
       Left = 0
-      Top = 294
+      Top = 247
       Width = 879
       Height = 106
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 2
+      ExplicitTop = 294
       object sbar: TStatusBar
         Left = 0
         Top = 87
