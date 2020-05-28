@@ -11259,14 +11259,10 @@ result:='';
 pt:=pointToCharPoint(logBox, logRightClick);
 if pt.x < 0 then
   pt:=logbox.caretpos;
-if pt.y >= logbox.lines.count then exit;
+if pt.y >= logbox.lines.count then
+  exit;
 s:=logbox.lines[pt.y];
-if pt.x > length(s) then exit;
-i:=pt.x;
-while (i > 1) and (s[i] <> ' ') do dec(i);
-inc(i);
-s:=copy(s,i, posEx(' ',s,i));
-s:=trim(getTill(':',getTill('@',s)));
+s:=reGet(s, '^\S+ +(\S+@)?(\S+):\d+ ', 2);
 if checkAddressSyntax(s,FALSE) then
   result:=s;
 end; // ipPointedInLog
