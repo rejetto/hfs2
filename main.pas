@@ -5098,7 +5098,10 @@ var
       result:=TRUE;
       specialGrant:=TRUE;
       end;
-    if result then exit;
+    if result then
+      exit;
+    if f.isFolder() and sessionRedirect() then // forbidden folder, but we were asked to go elsewhere
+      exit;
     conn.reply.realm:=f.getShownRealm();
     runEventScript('unauthorized');
     getPage('login', data, f);
