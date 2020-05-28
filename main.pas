@@ -5077,8 +5077,6 @@ var
     function accessGranted(forceFile:Tfile=NIL):boolean;
     resourcestring
       FAILED = 'Login failed';
-    var
-      m: TStringDynArray;
     begin
     result:=FALSE;
     if assigned(forceFile) then f:=forceFile;
@@ -5089,11 +5087,9 @@ var
       exit;
       end;
     result:=f.accessFor(data);
-    // ok, you are referring a section of the template, which virtually resides in the root because of the url starting with /~
-    // but you don't have access rights to the root. We'll let you pass if it's actually a section and you are using it from a folder that you have access to.
-    if not result and (f = rootFile)
-    and ((mode='section') or ansiStartsStr('~', urlCmd) and tpl.sectionExist(copy(urlCmd,2,MAXINT)))
-    and (0 < reMatch(conn.getHeader('Referer'), '://([^@]*@)?'+getSafeHost(data)+'(/.*)', 'i', 1, @m)) then
+    // sections are accessible. You can implement protection in place, if needed.
+    if not result  and (f = rootFile)
+    and ((mode='section') or startsStr('~', urlCmd) and tpl.sectionExist(copy(urlCmd,2,MAXINT))) then
       begin
       result:=TRUE;
       specialGrant:=TRUE;
@@ -7074,7 +7070,7 @@ while cfg > '' do
     if h = 'only-1-instance' then only1instanceChk.checked:=yes;
 		if h = 'graph-rate' then setGraphRate(int);
 		if h = 'graph-size' then graph.size:=int;
-    if h = 'forwarded-mask' then forwardedMask:=l;
+    if h = 'forwarded-mask' then forwardedMask:=ifThen(l='127.0.0.1','::1;127.0.0.1',l);
     if h = 'delete-partial-uploads' then deletePartialUploadsChk.checked:=yes;
     if h = 'rename-partial-uploads' then renamePartialUploads:=l;
     if h = 'do-not-log-address' then dontLogAddressMask:=l;
@@ -12541,7 +12537,7 @@ ipsEverConnected.delimiter:=';';
 logMaxLines:=2000;
 trayShows:='downloads';
 flashOn:='download';
-forwardedMask:='127.0.0.1';
+forwardedMask:='::1;127.0.0.1';
 runningOnRemovable:=DRIVE_REMOVABLE = GetDriveType(Pchar(exePath[1]+':\'));
 etags.values['exe']:=strMD5(dateToHTTP(getMtimeUTC(paramStr(0))));
 
