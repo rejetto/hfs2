@@ -2233,9 +2233,11 @@ if assigned(mainFrm) then
   mainfrm.visible:=userInteraction.bakVisible;
 end; // reenableUserInteraction
 
+function sanitizeSID(s:string):string;
+begin result:=reReplace(s, '[\D\W]', '', '!') end;
 
 function getNewSID():string;
-begin result:=replaceStr(base64encode(str_(now())+str_(random())), '=','') end;
+begin result:=sanitizeSID(base64encode(str_(now())+str_(random()))) end;
 
 constructor Tsession.create(const sid:string='');
 begin
@@ -4894,7 +4896,8 @@ var
     sid:=conn.getCookie(SESSION_COOKIE);
     if sid = '' then
       sid:=data.urlvars.Values[SESSION_COOKIE];
-    if sid = '' then
+    sid:=sanitizeSID(sid);
+    if sid.length < 10 then
       begin
       data.session:=Tsession.create();
       data.session.ip:=conn.address;
