@@ -1,4 +1,4 @@
-Welcome! This is the default template for HFS 2.4m
+Welcome! This is the default template for HFS 2.4
 template revision TR3.
 
 Here below you'll find some options affecting the template.
@@ -123,7 +123,7 @@ COMMENT with the ones above you can disable some features of the template. They 
 		</button>
 
 		{.if|{.get|can archive.}|
-		<button id='archiveBtn' onclick='ask("{.!Download these files as a single archive?.}", function() { submit({ selection: getSelectedItemsName() }, "{.get|url|mode=archive|recursive.}") })'>
+		<button id='archiveBtn' onclick='ask("{.!Download these files as a single archive?.}", ()=> submit({ files: getSelectedItemsName() }, "{.get|url|mode=archive|recursive.}") )'>
 			<i class="fa fa-file-archive"></i>
 			<span>{.!Archive.}</span>
 		</button>
@@ -469,7 +469,7 @@ z-index:1; /* without this .item-menu will be over*/ }
 {.!max s dl msg.}
 <br>({.disconnection reason.})
 
-[unauthorized]
+[unauth]
 <h1>{.!Unauthorized.}</h1>
 {.!Either your user name and password do not match, or you are not permitted to access this resource..}
 
@@ -667,6 +667,7 @@ function submit(data, url) {
 				f.append("<input type='hidden' name='"+k+"' value='"+v2+"' />")
         	})
     }
+	showLoading()
     f.submit()
 }//submit
 
@@ -787,10 +788,8 @@ function getSelectedItemsName() {
 }//getSelectedItemsName
 
 function deleteFiles(files) {
-	ask("{.!confirm.}", function(){
-		showLoading()
-		return submit({ action:'delete', selection:files })
-	})
+	ask("{.!confirm.}", ()=> 
+		submit({ action:'delete', files }))
 }
 
 function moveFiles(files) {

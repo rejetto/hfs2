@@ -36,8 +36,8 @@ uses
   HSlib, traylib, monoLib, progFrmLib, classesLib;
 
 const
-  VERSION = '2.4 beta7';
-  VERSION_BUILD = '309';
+  VERSION = '2.4.0 beta8';
+  VERSION_BUILD = '310';
   VERSION_STABLE = {$IFDEF STABLE } TRUE {$ELSE} FALSE {$ENDIF};
   CURRENT_VFS_FORMAT :integer = 1;
   CRLF = #13#10;
@@ -3111,7 +3111,6 @@ end; // getRecursiveFileMask
 
 function Tfile.getAccountsFor(action:TfileAction; specialUsernames:boolean=FALSE; outInherited:Pboolean=NIL):TstringDynArray;
 var
-  i: integer;
   f: Tfile;
   s: string;
 begin
@@ -3872,6 +3871,21 @@ try
   data.conn.reply.body:='';
 except end;
 
+if sectionName = 'ban' then
+  data.conn.reply.mode:=HRM_DENY
+else if sectionName = 'deny' then
+  data.conn.reply.mode:=HRM_DENY
+else if sectionName = 'login' then
+  data.conn.reply.mode:=HRM_DENY
+else if sectionName = 'not found' then
+  data.conn.reply.mode:=HRM_NOT_FOUND
+else if sectionName = 'unauthorized' then
+  data.conn.reply.mode:=HRM_UNAUTHORIZED
+else if sectionName = 'overload' then
+  data.conn.reply.mode:=HRM_OVERLOAD
+else if sectionName = 'max contemp downloads' then
+  data.conn.reply.mode:=HRM_OVERLOAD;
+
 section:=tpl2use.getSection(sectionName);
 if section = NIL then exit;
 
@@ -3886,13 +3900,6 @@ try
   addArray(md.table, ['%reason%', s]);
 
   data.conn.reply.contentType:=ansistring(name2mimetype(sectionName, 'text/html'));
-  if sectionName = 'ban' then data.conn.reply.mode:=HRM_DENY;
-  if sectionName = 'deny' then data.conn.reply.mode:=HRM_DENY;
-  if sectionName = 'login' then data.conn.reply.mode:=HRM_DENY;
-  if sectionName = 'not found' then data.conn.reply.mode:=HRM_NOT_FOUND;
-  if sectionName = 'unauthorized' then data.conn.reply.mode:=HRM_UNAUTHORIZED;
-  if sectionName = 'overload' then data.conn.reply.mode:=HRM_OVERLOAD;
-  if sectionName = 'max contemp downloads' then data.conn.reply.mode:=HRM_OVERLOAD;
 
   md.cd:=data;
   md.tpl:=tpl2use;
@@ -4465,41 +4472,24 @@ end; // runTplImport
 
 // returns true if template was patched
 function setTplText(text:string=''):boolean;
-(* postponed to next release
-  procedure patch290();
-  {$J+}
-  const
-    PATCH: string = '';
-    PATCH_RE = '(\[ajax\.mkdir.+)\[special:import';
-  var
-    se: TstringDynArray;
-    i: integer;
-  begin
-  // is it default tpl?
-  if not ansiStartsText('Welcome! This is the default template for HFS 2.3', text) then
-    exit;
-  // needs to be patched?
-  if pos('template revision TR1.',substr(text,1,80)) = 0 then
-    exit;
-  // calculate the patch once
-  if length(PATCH)=0 then
-    PATCH:=reGet(defaultTpl, PATCH_RE, 1, '!mis');
-  {$J-}
-  // find the to-be-patched
-  i:=reMatch(text, PATCH_RE, '!mis', 1, @se);
-  if i=0 then exit; // something is wrong
-  result:=TRUE; // mark
-  replace(text, PATCH, i, i+length(se[1])-1); // real patch
-  text:=stringReplace(text, 'template revision TR1.', 'template revision TR3.', []); // version stamp
-  end;//patchIt
-*)
+resourcestring
+  MSG_OLD = 'The template you are trying to load is not compatible with current HFS version.'
+    +#13'HFS will now use default template.'
+    +#13'Ask on the forum if you need further help.';
 begin
 result:=FALSE; // mod by mars
 //patch290();
 if trim(text) = trim(defaultTpl.fullText) then
   text:='';
 tpl.fullText:=text;
-tplIsCustomized:= text > '';
+if tpl.sectionExist('unauthorized') then
+  begin
+  tpl.fullText:='';
+  tplFilename:='';
+  tplImport:=FALSE;
+  msgDlg(MSG_OLD, MB_ICONERROR);
+  end;
+tplIsCustomized:= tpl.fullText > '';
 if boolOnce(tplImport) then
   runTplImport();
 end; // setTplText
@@ -4921,7 +4911,7 @@ var
     begin
     data.user:=conn.request.user;
     data.pwd:=conn.request.pwd;
-    data.account:=NIL;
+    data.account:=getAccount(data.user);
     exit;
     end;
   data.account:=getAccount(data.session.user);
@@ -4930,6 +4920,15 @@ var
   data.user:=data.account.user;
   data.pwd:=data.account.pwd;
   end; // sessionSetup
+
+  function getFilesSelection():TStringDynArray;
+  var i: integer;
+  begin
+  result:=NIL;
+  for i:=0 to data.postvars.count-1 do
+    if sameText('files', data.postvars.names[i]) then
+      addString(getTill('#', data.postvars.valueFromIndex[i]), result) // omit #anchors
+  end; // getFilesSelection
 
   procedure serveTar();
   var
@@ -4976,20 +4975,18 @@ var
 
     procedure addSelection();
     var
-      i: integer;
-      s: string;
+      s, t: string;
       ft: Tfile;
     begin
     selection:=FALSE;
-    for i:=0 to data.postvars.count-1 do
-      if sameText('selection', data.postvars.names[i]) then
+    for s in getFilesSelection() do
         begin
         selection:=TRUE;
-        s:=getTill('#', data.postvars.valueFromIndex[i]); // omit #anchors
-        if dirCrossing(s) then continue;
+        if dirCrossing(s) then 
+          continue;
         ft:=findFilebyURL(s, f);
-        if ft = NIL then continue;
-
+        if ft = NIL then 
+          continue;
         try
           if not ft.accessFor(data) then
             continue;
@@ -5003,7 +5000,9 @@ var
           if not fileExists(ft.resource) then
             continue;
           if noFolders then
-            s:=substr(s, lastDelimiter('\/', s)+1);
+            t:=substr(s, lastDelimiter('\/', s)+1)
+          else
+            t:=s;
           tar.addFile(ft.resource, s);
         finally freeIfTemp(ft) end;
         end;
@@ -5082,8 +5081,10 @@ var
       FAILED = 'Login failed';
     begin
     result:=FALSE;
-    if assigned(forceFile) then f:=forceFile;
-    if f = NIL then exit;
+    if assigned(forceFile) then
+      f:=forceFile;
+    if f = NIL then
+      exit;
     if f.isFile() and (dlForbiddenForWholeFolder or f.isDLforbidden()) then
       begin
       getPage('deny', data);
@@ -5150,25 +5151,23 @@ var
     doneRes:=NIL;
     errors:=NIL;
     done:=NIL;
-    for i:=0 to data.postvars.count-1 do
-      if sameText('selection', data.postvars.names[i]) then
+    for asUrl in getFilesSelection() do
+      begin
+      s:=uri2disk(asUrl, f);
+      if (s = '') or not fileOrDirExists(s) then  // ignore
+        continue;
+      runEventScript('file deleting', ['%item-deleting%', s]);
+      moveToBin(toSA([s, s+'.md5', s+COMMENT_FILE_EXT]) , TRUE);
+      if fileOrDirExists(s) then
         begin
-        asUrl:=getTill('#', data.postvars.valueFromIndex[i]); // omit #anchors
-        s:=uri2disk(asUrl, f);
-        if (s = '') or not fileOrDirExists(s) then continue; // ignore
-
-        runEventScript('file deleting', ['%item-deleting%', s]);
-        moveToBin(toSA([s, s+'.md5', s+COMMENT_FILE_EXT]) , TRUE);
-        if fileOrDirExists(s) then
-          begin
-          addString(asUrl, errors);
-          continue; // this was not deleted. permissions problem?
-          end;
-
-        addString(s, doneRes);
-        addString(asUrl, done);
-        runEventScript('file deleted', ['%item-deleted%', s]);
+        addString(asUrl, errors);
+        continue; // this was not deleted. permissions problem?
         end;
+
+      addString(s, doneRes);
+      addString(asUrl, done);
+      runEventScript('file deleted', ['%item-deleted%', s]);
+      end;
 
     removeFilesFromComments(doneRes);
 
@@ -5181,7 +5180,7 @@ var
     function getAccountRedirect(acc:Paccount=NIL):string;
     begin
     result:='';
-    if acc = NIL then    
+    if acc = NIL then
       acc:=data.account;
     acc:=accountRecursion(acc, ARSC_REDIR);
     if acc = NIL then exit;
@@ -11250,7 +11249,6 @@ end; // pointToCharPoint
 
 function Tmainfrm.ipPointedInLog():string;
 var
-  i: integer;
   s: string;
   pt: Tpoint;
 begin
