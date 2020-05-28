@@ -356,6 +356,7 @@ button i.fa { font-size:110% }
 	-o-transform: translate(-50%, -50%);
 	background:#fff; border-radius: 1em; padding: 1em; text-align:center; min-width: 10em;
 }
+.dialog-content input { border: 1px solid #888; } /* without this the border on chrome83 is not consistent */
 .ask input { border:1px solid rgba(0,0,0,0.5); padding: .2em; margin-top: .5em; }
 .ask .close { float: right; font-size: 1.2em; color: red; position: relative; top: -0.4em; right: -0.3em; }
 
