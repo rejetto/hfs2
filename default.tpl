@@ -849,14 +849,20 @@ function selectionMask() {
 function showLogin(options) {
 	if (!HFS.sid) // the session was just deleted
 		return location.reload() // but it's necessary for login
-	var d = dialog('\
-		<form style="line-height:1.9em">\
-			Username\
-			<br><input name=usr />\
-			<br>Password\
-			<br><input name=pwd type=password />\
-			<br><br><button type=submit>Login</button>\
-		</form>', options)
+	var d = dialog(`
+		<form style="line-height:1.9em">
+			{.!Username.}
+			<br><input name=usr />
+			<br>{.!Password.}
+			<br><input name=pwd type=password />
+			<br><br><button type=submit>{.!Login.}</button>
+		</form>`, options)
+
+	if (HFS.user)
+		d.find('form').prepend(`<div style='border-bottom:1px solid #888; margin-bottom:1em; padding-bottom:1em;'>
+			The current account (${HFS.user}) has no access to this resource.
+			<br>Please enter different credentials.
+		</div>`)
 	
 	d.find('form').submit(function(){
 		var vals = d.find('[name]').get().map(x=> x.value.trim())
