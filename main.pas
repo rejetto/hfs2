@@ -4174,11 +4174,11 @@ logBox.SelAttributes.name:=logFontName;
 if logFontSize > 0 then
   logBox.SelAttributes.size:=logFontSize;
 logBox.SelAttributes.Color:=clRed;
-logBox.SelText:=ts+' ';
+logBox.SelText:=ts+'  ';
 if addr > '' then
   begin
   logBox.SelAttributes.Color:=ADDRESS_COLOR;
-  logBox.SelText:=addr+' ';
+  logBox.SelText:=addr+'  ';
   end;
 logBox.SelAttributes.color:=clr;
 logBox.SelText:=first+CRLF;
@@ -11258,7 +11258,7 @@ if pt.x < 0 then
 if pt.y >= logbox.lines.count then
   exit;
 s:=logbox.lines[pt.y];
-s:=reGet(s, '^\S+ +(\S+@)?(\S+):\d+ ', 2);
+s:=reGet(s, '.+  (\S+@)?(\S+):\d+ ', 2);
 if checkAddressSyntax(s,FALSE) then
   result:=s;
 end; // ipPointedInLog
