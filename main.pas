@@ -2234,7 +2234,7 @@ if assigned(mainFrm) then
 end; // reenableUserInteraction
 
 function sanitizeSID(s:string):string;
-begin result:=reReplace(s, '[\D\W]', '', '!') end;
+begin result:=reReplace(s, '[^0-9a-zA-Z]', '', '!') end;
 
 function getNewSID():string;
 begin result:=sanitizeSID(base64encode(str_(now())+str_(random()))) end;
@@ -4874,7 +4874,7 @@ var
 
   function sessionSetup():boolean;
   var
-    sid: string;
+    sid, s: string;
   begin
   result:=TRUE;
   if data = NIL then
@@ -4886,14 +4886,7 @@ var
     sid:=conn.getCookie(SESSION_COOKIE);
     if sid = '' then
       sid:=data.urlvars.Values[SESSION_COOKIE];
-    sid:=sanitizeSID(sid);
-    if sid.length < 10 then
-      begin
-      data.session:=Tsession.create();
-      data.session.ip:=conn.address;
-      conn.setCookie(SESSION_COOKIE, data.session.id, ['path','/'], 'HttpOnly'); // the session is site-wide, even if this request was related to a folder
-      end
-    else
+    if (sid = sanitizeSID(sid)) and (sid.length >= 10) then
       try
         data.session:=sessions[sid];
         if data.session.ip <> conn.address then
@@ -4905,7 +4898,13 @@ var
       except
         data.session:=Tsession.create(sid); // probably expired
         data.session.ip:=conn.address;
-        end;
+        end
+    else
+      begin
+      data.session:=Tsession.create();
+      data.session.ip:=conn.address;
+      conn.setCookie(SESSION_COOKIE, data.session.id, ['path','/'], 'HttpOnly'); // the session is site-wide, even if this request was related to a folder
+      end
     end;
   if conn.request.user > '' then // priority
     begin
