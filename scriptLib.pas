@@ -457,7 +457,8 @@ var
     vars: Tstrings;
     s: string;
   begin
-  if not satisfied(md.cd) then exit;
+  if not satisfied(md.cd) then
+    exit;
   try
     result:=md.cd.conn.request.url;
     if pars.count < 2 then exit;
@@ -666,7 +667,7 @@ var
   procedure convert();
   begin
   if sameText(p, 'ansi') and sameText(par(1), 'utf-8') then
-    result:=ansiToUTF8(ansistring(par(2)))
+    result:=string(ansiToUTF8(ansistring(par(2))))
   else if sameText(p, 'utf-8') and sameText(par(1), 'ansi') then
     result:=utf8ToAnsi(ansistring(par(2)))
   end; // convert
@@ -1077,6 +1078,7 @@ var
   procedure load(fn:string; varname:string='');
   var
     from, size: int64;
+    s: ansistring;
   begin
   result:='';
   from:=parI('from', 0);
@@ -1095,11 +1097,17 @@ var
     try result:=httpGet(fn, from, size)
     except result:='' end
   else
-    result:=loadFile(uri2diskMaybe(fn), from, size);
+    begin
+    s:=loadFile(uri2diskMaybe(fn), from, size);
+    result:=UTF8ToString(s);
+    if result = '' then
+      result:=s;
+    end;
 
   if varname = '' then
     begin
-    if anyCharIn('/\',fn) then result:=macroQuote(result);
+    if anyCharIn('/\',fn) then
+      result:=macroQuote(result);
     exit;
     end;
   if ansiStartsStr(ENCODED_TABLE_HEADER, result) then
@@ -1962,7 +1970,7 @@ try
       result:=jsEncode(p, first(par(1),'''"'));
 
     if name = 'base64' then
-      result:=base64encode(UTF8encode(p));
+      result:=string(base64encode(UTF8encode(p)));
     if name = 'base64decode' then
       result:=utf8ToString(base64decode(ansistring(p)));
     if name = 'md5' then

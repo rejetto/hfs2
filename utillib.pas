@@ -1707,6 +1707,8 @@ with ThttpClient.createURL(url) do
       contentRangeEnd:=intToStr(from+size-1);
     get();
     result:=reply.dataString;
+    if sameText('utf-8', reGet(ContentType, '; *charset=(.+) *($|;)')) then
+      Result:=UTF8ToString(result);
   finally
     reply.free;
     Free;

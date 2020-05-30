@@ -3899,7 +3899,7 @@ try
   else s:=first(data.banReason, data.disconnectReason);
   addArray(md.table, ['%reason%', s]);
 
-  data.conn.reply.contentType:=ansistring(name2mimetype(sectionName, 'text/html'));
+  data.conn.reply.contentType:=ansistring(name2mimetype(sectionName, 'text/html; charset=utf-8'));
 
   md.cd:=data;
   md.tpl:=tpl2use;
@@ -5130,7 +5130,7 @@ var
       end;
     
     if conn.reply.contentType = '' then
-      conn.reply.contentType:=ansistring(if_(trim(getTill('<', s))='', 'text/html', 'text/plain'));
+      conn.reply.contentType:=ansistring(if_(trim(getTill('<', s))='', 'text/html', 'text/plain'))+'; charset=utf-8';
     conn.reply.mode:=HRM_REPLY;
     conn.reply.bodyMode:=RBM_STRING;
     conn.reply.body:=UTF8encode(s);

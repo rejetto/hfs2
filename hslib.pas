@@ -1366,7 +1366,7 @@ if buffer = '' then exit;
 if state = HCS_IDLE then
   begin
   state:=HCS_REQUESTING;
-  reply.contentType:='text/html';
+  reply.contentType:='text/html; charset=utf-8';
   notify(HE_REQUESTING);
   end;
 case state of
@@ -1384,7 +1384,7 @@ notify(HE_REQUESTED);
 if not initInputStream() then
   begin
   reply.mode:=HRM_INTERNAL_ERROR;
-  reply.contentType:='text/html';
+  reply.contentType:='text/html; charset=utf-8';
   notify(HE_CANT_OPEN_FILE);
   end;
 notify(HE_STREAM_READY);
