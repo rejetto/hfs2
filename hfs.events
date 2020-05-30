@@ -1,3 +1,0 @@
-[+download]
-{.remove header|ETag.}
-{.remove header|Set-cookie.}

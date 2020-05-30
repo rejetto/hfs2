@@ -1,3 +1,4 @@
+- updateDynDNS() is not translatable
 - update doesn't work without 'only 1 instance' (it's the -q)
 + replace shellExtDlg.gif with transparent png (english system)
 + expiring links
@@ -25,6 +26,7 @@
 + macros missing to cache a folder: {.reply|content=|var=|code=|filename=|mime=.}
 - unexpected scripting behavior http://www.rejetto.com/forum/index.php/topic,9728.msg1054517.html#msg1054517
     in handleItem() translate only symbols, and run all macros at the end
+document: {.exec|out|timeout|exitcode.}
 document: [+section]
 document: {.set item|diff template.}
 document: single line diff templates

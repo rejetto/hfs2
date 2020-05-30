@@ -8,45 +8,46 @@
   resources were bound to the produced executable.
 */
 
-#define main_MSG 64800
-#define main_REMOVE_SHELL 64801
-#define main_S_OFF 64802
-#define main_S_ON 64803
-#define main_LOG 64804
-#define main_MSG 64805
+#define main_CAPTION 64800
+#define main_MSG 64801
+#define main_REMOVE_SHELL 64802
+#define main_S_OFF 64803
+#define main_S_ON 64804
+#define main_LOG 64805
 #define main_MSG 64806
-#define main_MSG2 64807
-#define main_MSG 64808
-#define main_MSG2 64809
-#define main_MSG 64810
+#define main_MSG 64807
+#define main_MSG2 64808
+#define main_MSG 64809
+#define main_MSG2 64810
 #define main_MSG 64811
 #define main_MSG 64812
 #define main_MSG 64813
+#define main_MSG 64814
 #define main_MSG 64816
 #define main_MSG 64817
 #define main_MSG 64818
 #define main_MSG 64819
 #define main_MSG 64820
 #define main_MSG 64821
-#define main_MSG_BEFORE 64822
-#define main_MSG_OK 64823
-#define main_MSG_OK_PORT 64824
-#define main_MSG_3 64825
-#define main_MSG_6 64826
-#define main_MSG_7 64827
-#define main_MSG 64828
+#define main_MSG 64822
+#define main_MSG_BEFORE 64823
+#define main_MSG_OK 64824
+#define main_MSG_OK_PORT 64825
+#define main_MSG_3 64826
+#define main_MSG_6 64827
+#define main_MSG_7 64828
 #define main_MSG 64829
-#define main_HELP 64830
-#define main_CAPTION 64831
-#define main_MSG_CORRUPTED 64832
-#define main_MSG_MACROS_FOUND 64833
-#define main_MSG_INFO 64834
-#define main_MSG_NEWER 64835
-#define main_ARE_EXPERT 64836
-#define main_ARE_EASY 64837
-#define main_SW2EXPERT 64838
-#define main_SW2EASY 64839
-#define main_MSG 64840
+#define main_MSG 64830
+#define main_HELP 64831
+#define main_MSG_AUTO_DISABLED 64832
+#define main_MSG_CORRUPTED 64833
+#define main_MSG_MACROS_FOUND 64834
+#define main_MSG_INFO 64835
+#define main_MSG_NEWER 64836
+#define main_ARE_EXPERT 64837
+#define main_ARE_EASY 64838
+#define main_SW2EXPERT 64839
+#define main_SW2EASY 64840
 #define main_MSG 64841
 #define main_MSG 64842
 #define main_MSG 64843
@@ -54,70 +55,70 @@
 #define main_MSG 64845
 #define main_MSG 64846
 #define main_MSG 64847
-#define main_LIMIT 64848
-#define main_MSG_MAX_BW_1 64849
-#define main_LIMIT1 64850
-#define main_NODL 64851
-#define main_MSG 64852
+#define main_ZEROMSG 64848
+#define main_LIMIT 64849
+#define main_MSG_MAX_BW_1 64850
+#define main_LIMIT1 64851
+#define main_NODL 64852
 #define main_MSG 64853
-#define main_MSG2 64854
-#define main_MSG 64855
-#define main_MSG2 64856
-#define main_MSG 64857
+#define main_MSG 64854
+#define main_MSG2 64855
+#define main_MSG 64856
+#define main_MSG2 64857
 #define main_MSG 64858
-#define main_MSG_TITLE 64859
-#define main_MSG_OLD 64860
-#define main_MSG_UNK_FK 64861
-#define main_MSG_VIS_ONLY_ANON 64862
-#define main_MSG_AUTO_DISABLED 64863
-#define main_IN_SPEED 64864
-#define main_BANS 64865
-#define main_MEMORY 64866
-#define main_CUSTOMIZED 64867
-#define main_ITEMS 64868
-#define main_MSG1 64869
-#define main_MSG 64870
-#define main_MSG_BETTERSTOP 64871
-#define main_MSG_BADCRC 64872
-#define main_MSG_NEWER 64873
-#define main_MSG_ZLIB 64874
-#define main_MSG_BAKAVAILABLE 64875
-#define main_LIMIT 64876
-#define main_TOP_SPEED 64877
-#define main_MSG_MAX_BW 64878
-#define main_ZEROMSG 64879
-#define main_AUTOSAVE 64880
-#define main_MSG 64881
-#define main_MSG_MIN 64882
-#define main_MSG_BAN 64883
-#define main_MSG 64884
-#define main_MSG_SAVE_ERROR 64885
-#define main_MSG_LIMITED 64886
-#define main_MSG_UPDATE 64887
-#define main_MSG_FROMDISK 64888
-#define main_COPY 64889
-#define main_ALREADY 64890
-#define main_NOSPACE 64891
-#define main_CONN 64892
-#define main_TOT_IN 64893
-#define main_TOT_OUT 64894
-#define main_OUT_SPEED 64895
+#define main_MSG 64859
+#define main_MSG_TITLE 64860
+#define main_MSG_OLD 64861
+#define main_MSG_UNK_FK 64862
+#define main_MSG_VIS_ONLY_ANON 64863
+#define main_OUT_SPEED 64864
+#define main_IN_SPEED 64865
+#define main_BANS 64866
+#define main_MEMORY 64867
+#define main_CUSTOMIZED 64868
+#define main_ITEMS 64869
+#define main_MSG1 64870
+#define main_MSG 64871
+#define main_MSG_BETTERSTOP 64872
+#define main_MSG_BADCRC 64873
+#define main_MSG_NEWER 64874
+#define main_MSG_ZLIB 64875
+#define main_MSG_BAKAVAILABLE 64876
+#define main_LIMIT 64877
+#define main_TOP_SPEED 64878
+#define main_MSG_MAX_BW 64879
+#define main_MSG 64880
+#define main_AUTOSAVE 64881
+#define main_MSG 64882
+#define main_MSG_MIN 64883
+#define main_MSG_BAN 64884
+#define main_MSG 64885
+#define main_MSG_SAVE_ERROR 64886
+#define main_MSG_LIMITED 64887
+#define main_MSG_UPDATE 64888
+#define main_MSG_FROMDISK 64889
+#define main_COPY 64890
+#define main_ALREADY 64891
+#define main_NOSPACE 64892
+#define main_CONN 64893
+#define main_TOT_IN 64894
+#define main_TOT_OUT 64895
 #define main_MSG_DDNS_notdonator 64896
 #define main_MSG_DDNS_badagent 64897
 #define main_MSG 64898
 #define main_MSG2 64899
 #define main_MSG 64900
 #define main_MSG2 64901
-#define main_FAILED 64902
-#define main_LIMIT 64903
+#define main_MSG_OLD 64902
+#define main_FAILED 64903
 #define main_LIMIT 64904
 #define main_LIMIT 64905
 #define main_LIMIT 64906
 #define main_LIMIT 64907
 #define main_LIMIT 64908
-#define main_FINGERPRINT 64909
-#define main_NO_FINGERPRINT 64910
-#define main_MSG 64911
+#define main_LIMIT 64909
+#define main_FINGERPRINT 64910
+#define main_NO_FINGERPRINT 64911
 #define main_MSG_EMPTY_NO_LIMIT 64912
 #define main_MSG_ADDRESSES_EXCEED 64913
 #define main_MSG_NO_TEMP 64914
@@ -744,6 +745,7 @@
 #define System_SysConst_SDiskFull 65535
 STRINGTABLE
 BEGIN
+	main_CAPTION,	L"Edit resource"
 	main_MSG,	L"The current template is using macros.\rDo you want to cancel this action?"
 	main_REMOVE_SHELL,	L"Remove from shell context menu"
 	main_S_OFF,	L"Switch OFF"
@@ -758,6 +760,7 @@ BEGIN
 	main_MSG,	L"Here you can specify how to format the log file complying Apache standard.\rLeave blank to get bare copy of screen on file.\r\rExample:\r   %h %l %u %t \"%r\" %>s %b"
 	main_MSG,	L"This option creates an .md5 file for every new calculated fingerprint.\rUse with care to get not your disk invaded by these files."
 	main_MSG,	L"When you add files and no fingerprint is found, it is calculated.\rTo avoid long waitings, set a limit to file size (in KiloBytes).\rLeave empty to disable, and have no fingerprint created."
+	main_MSG,	L"Any event from the following IP address mask will be not logged."
 	main_MSG,	L"Specify your addresses, each per line"
 	main_MSG,	L"Can't find external address\r( %s )"
 	main_MSG,	L"This option makes pointless the option \"Find external address at startup\", which has now been disabled for your convenience."
@@ -773,7 +776,7 @@ BEGIN
 	main_MSG,	L"\"Suggest\" the browser to open directly the specified files.\rOther files should pop up a save dialog."
 	main_MSG,	L"You should not use this option unless you really know its meaning.\rContinue?"
 	main_HELP,	L"For help on how to use this file please refer http://www.rejetto.com/wiki/?title=HFS:_Event_scripts"
-	main_CAPTION,	L"Edit resource"
+	main_MSG_AUTO_DISABLED,	L"Because of the problems encountered in loading,\rautomatic saving has been disabled\runtil you save manually or load another one."
 	main_MSG_CORRUPTED,	L"This file does not contain valid data."
 	main_MSG_MACROS_FOUND,	L"!!!!!!!!! DANGER !!!!!!!!!\rThis file contains macros.\rDon't accept macros from people you don't trust.\r\rTrust this file?"
 	main_MSG_INFO,	L"Last stable version: %s\r\rLast untested version: %s\r"
@@ -789,7 +792,7 @@ BEGIN
 	main_MSG,	L"The connection is kicked after a timeout.\rSpecify in seconds.\rLeave blank to get no timeout."
 	main_MSG,	L"All changes will be lost\rContinue?"
 	main_MSG,	L"Enter the number of MINUTES files stay flagged from their addition.\rLeave blank to disable."
-	main_MSG,	L"Any event from the following IP address mask will be not logged."
+	main_ZEROMSG,	L"Zero is an effective limit.\rTo disable instead, leave empty."
 	main_LIMIT,	L"Speed limit"
 	main_MSG_MAX_BW_1,	L"Max bandwidth for single address (KB/s)."
 	main_LIMIT1,	L"Speed limit for single address"
@@ -805,7 +808,7 @@ BEGIN
 	main_MSG_OLD,	L"This file is old and uses different settings.\rThe \"let browse\" folder option will be reset.\rRe-saving the file will update its format."
 	main_MSG_UNK_FK,	L"This file has been created with a newer version.\rSome data was discarded because unknown.\rIf you save the file now, the discarded data will NOT be saved."
 	main_MSG_VIS_ONLY_ANON,	L"This VFS file uses the \"Visible only to anonymous users\" feature.\rThis feature is not available anymore.\rYou can achieve similar results by restricting access to @anonymous,\rthen enabling \"List protected items only for allowed users\"."
-	main_MSG_AUTO_DISABLED,	L"Because of the problems encountered in loading,\rautomatic saving has been disabled\runtil you save manually or load another one."
+	main_OUT_SPEED,	L"Out: %.1f KB/s"
 	main_IN_SPEED,	L"In: %.1f KB/s"
 	main_BANS,	L"Ban rules: %d"
 	main_MEMORY,	L"Mem"
@@ -821,7 +824,7 @@ BEGIN
 	main_LIMIT,	L"Limit"
 	main_TOP_SPEED,	L"Top speed"
 	main_MSG_MAX_BW,	L"Max bandwidth (KB/s)."
-	main_ZEROMSG,	L"Zero is an effective limit.\rTo disable instead, leave empty."
+	main_MSG,	L"Please insert a comment for \"%s\".\rYou should use HTML: <br> for break line."
 	main_AUTOSAVE,	L"Auto save every: "
 	main_MSG,	L"Auto-save %s.\rSpecify in seconds.\rLeave blank to disable."
 	main_MSG_MIN,	L"We don't accept less than %d"
@@ -837,13 +840,13 @@ BEGIN
 	main_CONN,	L"Connections: %d"
 	main_TOT_IN,	L"Total In: %s"
 	main_TOT_OUT,	L"Total Out: %s"
-	main_OUT_SPEED,	L"Out: %.1f KB/s"
 	main_MSG_DDNS_notdonator,	L"an option specified requires payment"
 	main_MSG_DDNS_badagent,	L"banned client"
 	main_MSG,	L"There are %d open connections from this address.\rDo you want to kick them all now?"
 	main_MSG2,	L"You can edit the address.\rMasks and ranges are allowed."
 	main_MSG,	L"This option is NOT compatible with \"dynamic dns updater\".\rContinue?"
 	main_MSG2,	L"There are %d connections open.\rDo you want to close them now?"
+	main_MSG_OLD,	L"The template you are trying to load is not compatible with current HFS version.\rHFS will now use default template.\rAsk on the forum if you need further help."
 	main_FAILED,	L"Login failed"
 	main_LIMIT,	L"Max simultaneous addresses: %s ..."
 	main_LIMIT,	L"Max simultaneous addresses downloading: %s ..."
@@ -853,7 +856,6 @@ BEGIN
 	main_LIMIT,	L"Max simultaneous downloads from single address: %s ..."
 	main_FINGERPRINT,	L"Create fingerprint on addition under %d KB"
 	main_NO_FINGERPRINT,	L"Create fingerprint on addition: disabled"
-	main_MSG,	L"Please insert a comment for \"%s\".\rYou should use HTML: <br> for break line."
 	main_MSG_EMPTY_NO_LIMIT,	L"Leave blank to get no limits."
 	main_MSG_ADDRESSES_EXCEED,	L"The following addresses exceed the limit:\r%s"
 	main_MSG_NO_TEMP,	L"Cannot save temporary file"

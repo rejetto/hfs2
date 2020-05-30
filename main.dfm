@@ -228,7 +228,6 @@ object mainFrm: TmainFrm
     Font.Style = []
     ParentFont = False
     TabOrder = 0
-    ExplicitHeight = 400
     object splitV: TSplitter
       Left = 313
       Top = 0
@@ -262,7 +261,6 @@ object mainFrm: TmainFrm
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitHeight = 289
       object logBox: TRichEdit
         Left = 0
         Top = 23
@@ -284,7 +282,6 @@ object mainFrm: TmainFrm
         Zoom = 100
         OnChange = logBoxChange
         OnMouseDown = logBoxMouseDown
-        ExplicitHeight = 266
       end
       object logTitle: TPanel
         Left = 0
@@ -565,7 +562,6 @@ object mainFrm: TmainFrm
       BevelOuter = bvNone
       Caption = 'filesPnl'
       TabOrder = 0
-      ExplicitHeight = 289
       object filesBox: TTreeView
         Left = 0
         Top = 23
@@ -606,7 +602,6 @@ object mainFrm: TmainFrm
         OnMouseEnter = filesBoxMouseEnter
         OnMouseLeave = filesBoxMouseLeave
         OnMouseUp = filesBoxMouseUp
-        ExplicitHeight = 266
       end
       object filesTitle: TPanel
         Left = 0
@@ -627,7 +622,6 @@ object mainFrm: TmainFrm
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 2
-      ExplicitTop = 294
       object sbar: TStatusBar
         Left = 0
         Top = 87

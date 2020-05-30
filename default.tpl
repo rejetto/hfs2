@@ -703,9 +703,8 @@ function dialog(content, options) {
     ).click(function(ev){
         ev.stopImmediatePropagation()
     })
-	setTimeout(function(){
-		ret.find(':input:not(:disabled):first').focus() 
-	})
+	setTimeout(()=>
+		ret.find(':input:not(:disabled):first').focus() )
     return ret
 } // dialog
 
@@ -983,8 +982,8 @@ function newQ(){
 function changeSort(){
     dialog([
         $('<h3>').text('{.!Sort by.}'),
-        $('<div class="buttons">').html(objToArr(sortOptions, function(label,code){
-            return $('<button>')
+        $('<div class="buttons">').html(objToArr(sortOptions, (label,code)=>
+            $('<button>')
 				.text(label)
 				.prepend(urlParams.sort===code ? '<i class="fa fa-sort-alt-'+(urlParams.rev?'down':'up')+'"></i> ' : '')
                 .click(function(){
@@ -992,7 +991,7 @@ function changeSort(){
 					urlParams.sort = code||undefined
                     location.search = encodeURL(urlParams)
 				})
-		}))
+		))
 	])
 }//changeSort
 

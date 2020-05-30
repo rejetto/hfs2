@@ -255,6 +255,7 @@ function strSHA256(s:string):string;
 function strSHA1(s:string):string;
 function strMD5(s:string):string;
 function strToOem(s:string):ansistring;
+function strToBytes(s:ansistring):Tbytes;
 
 implementation
 
@@ -2907,7 +2908,7 @@ finally
   end;
 end; // deltree
 
-function str2bytes(s:ansistring):Tbytes;
+function strToBytes(s:ansistring):Tbytes;
 begin
 setLength(result, length(s));
 move(s[1], result[0], length(result));
@@ -2917,7 +2918,7 @@ function stringToGif(s:ansistring; gif:TgifImage=NIL):TgifImage;
 var
   ss: Tbytesstream;
 begin
-ss:=Tbytesstream.create(str2bytes(s));
+ss:=Tbytesstream.create(strToBytes(s));
 try
   if gif = NIL then
     gif:=TGIFImage.Create();
