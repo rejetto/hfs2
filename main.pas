@@ -1644,7 +1644,7 @@ this would let us have "=" inside the names, but names cannot be assigned
   comments:=THashedStringList.create();
   try
     comments.caseSensitive:=FALSE;
-    try comments.loadFromFile(folder.resource+'\'+COMMENTS_FILE);
+    try comments.loadFromFile(folder.resource+'\'+COMMENTS_FILE, TEncoding.UTF8);
     except end;
     loadIon(folder.resource, comments);
     i:=if_((filesFilter='\') or (urlFilesFilter='\'), faDirectory, faAnyFile);
@@ -2500,7 +2500,7 @@ try
   try
     try
       comments.CaseSensitive:=FALSE;
-      comments.LoadFromFile(resource+'\..\'+COMMENTS_FILE);
+      comments.LoadFromFile(resource+'\..\'+COMMENTS_FILE, TEncoding.UTF8);
       result:=comments.values[name];
     except end
   finally
@@ -4392,7 +4392,7 @@ var
   // comments file
   try
     fn:=lastPath+COMMENTS_FILE;
-    ss.loadFromFile(fn);
+    ss.loadFromFile(fn, TEncoding.UTF8);
     anyChange:=FALSE;
     for i:=trancheStart to trancheEnd do
       begin
@@ -4405,7 +4405,7 @@ var
       if ss.count = 0 then
         deleteFile(fn)
       else
-        ss.saveToFile(fn);
+        ss.saveToFile(fn, TEncoding.UTF8);
   except end;
   // descript.ion
   if not mainfrm.supportDescriptionChk.checked then exit;

@@ -385,28 +385,11 @@ begin if c then result:=a else result:=b end;
 function min(a,b:integer):integer;
 begin if a < b then result:=a else result:=b end;
 
-// this table is to be used by ipos(), to be calculated once
-var
-  upcaseTab: array [char] of char;
 function ipos(ss, s: string; ofs:integer=1):integer; overload;
-
-  procedure initTab();
-  var
-    i: char;
-    tmp: string;
-  begin
-  for i:=#0 to #255 do
-    begin
-    tmp:=ansiUppercase(i);
-    upcaseTab[i]:=tmp[1];
-    end;
-  end;
-
 var
   rss, rs, rss1, p: pchar;
   l: integer;
 begin
-if upcaseTab[#1] = #0 then initTab();
 result:=0;
 l:=length(s);
 if (l < ofs) or (l = 0) or (ss = '') then exit;
@@ -418,7 +401,7 @@ for result:=ofs to l do
   begin
   rss:=rss1;
   p:=rs;
-  while (rss^ <> #0) and (rss^ = upcaseTab[p^]) do
+  while (rss^ <> #0) and (rss^ = upcase(p^)) do
     begin
     inc(rss);
     inc(p);
