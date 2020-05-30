@@ -311,15 +311,16 @@ a { text-decoration:none; color:#357; border:1px solid transparent; padding:0 0.
 #folder-path button { padding: .4em .6em; border-radius:.7em; }
 #folder-path button:first-child { padding: .2em .4em;} #folder-path i.fa { font-size:135% }
 button i.fa { font-size:110% }
-.item { margin-bottom:.3em; padding:.3em  .8em; border-top:1px solid #ddd;  }
+.item { margin-bottom:.3em; padding:.3em; border-top:1px solid #ddd;  }
 .item:hover { background:#f8f8f8; }
 .item-props { float:right; font-size:90%; margin-left:12px; margin-top:.2em; }
 .item-link { float:left; word-break:break-word; /* fix long names without spaces on mobile */ }
 .item img { vertical-align: text-bottom; margin:0 0.2em; }
 .item .fa-lock { margin-right: 0.2em; }
 .item .clearer { clear:both }
-.comment { color:#666; padding:.1em .5em .2em; background-color: #f5f5f5; border-radius: 1em; margin-top: 0.1em; }
-.comment>i { margin-right:0.5em; }
+.comment { color:#666; padding:.1em 1.8em .2em; border-radius: 1em; margin-top: 0.1em; 
+	background-color:rgba(0,0,0,.04); /* dynamically darker, as also hover is darker */  } 
+.comment>i:first-child { margin-right:0.5em; margin-left:-1.4em; }
 .item-size { margin-left:.3em }
 .selector { float:left; width: 1.2em; height:1.2em; margin-right: .5em;}
 .item-menu { padding:0.1em 0.3em; border-radius:0.6em; position: relative; top: -0.1em;}
