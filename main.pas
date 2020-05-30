@@ -1166,7 +1166,6 @@ var
   lockTimerevent: boolean;
   filesStayFlaggedForMinutes: integer;
   autosaveVFS: Tautosave;
-  logRightClick: Tpoint;
   warnManyItems: boolean = TRUE;
   runningOnRemovable: boolean;
   startupFilename: string;
@@ -3879,7 +3878,7 @@ else if sectionName = 'login' then
   data.conn.reply.mode:=HRM_DENY
 else if sectionName = 'not found' then
   data.conn.reply.mode:=HRM_NOT_FOUND
-else if sectionName = 'unauthorized' then
+else if sectionName = 'unauth' then
   data.conn.reply.mode:=HRM_UNAUTHORIZED
 else if sectionName = 'overload' then
   data.conn.reply.mode:=HRM_OVERLOAD
@@ -5398,7 +5397,7 @@ var
       begin
       data.acceptedCredentials:=FALSE;
       runEventScript('unauthorized');
-      getPage('unauthorized', data);
+      getPage('unauth', data);
       conn.reply.realm:='Invalid login';
       exit;
       end
@@ -5455,21 +5454,6 @@ var
     exit;
     end;
 
-  if urlCmd = '~login' then // legacy method for login dialog
-    if conn.request.user = '' then
-      begin 
-      getPage('unauthorized', data);
-      if loginRealm > '' then
-        conn.reply.realm:=loginRealm;
-      exit;
-      end
-    else
-      begin
-      conn.reply.mode:=HRM_REDIRECT;
-      conn.reply.url:=first(getAccountRedirect(), url);
-      exit;
-      end;
-
   b:=urlCmd = '~upload+progress';
   if (b or (urlCmd = '~upload') or (urlCmd = '~upload-no-progress')) then
     begin
@@ -5479,7 +5463,7 @@ var
       getPage( if_(b,'upload+progress','upload'), data, f)
     else
       begin
-      getPage('unauthorized', data);
+      getPage('unauth', data);
       runEventScript('unauthorized');
       end;
     if b then  // fix for IE6
@@ -8710,7 +8694,7 @@ procedure TmainFrm.logmenuPopup(Sender: TObject);
 begin
 Readonly1.Checked:=logBox.ReadOnly;
 Readonly1.visible:=not easyMode;
-Banthisaddress1.visible:= logBox.selAttributes.color=ADDRESS_COLOR;
+Banthisaddress1.visible:= ipPointedInLog() > '';
 Address2name1.visible:=not easyMode;
 Logfile1.visible:=not easyMode;
 logOnVideoChk.visible:=not easyMode;
@@ -10256,12 +10240,6 @@ end; // loadVFS
 procedure TmainFrm.logBoxChange(Sender: TObject);
 begin logToolbar.visible:=not easyMode and (logBox.Lines.count > 0) end;
 
-procedure TmainFrm.logBoxMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
-begin
-if button = mbRight then
-  logRightClick:=point(x,y);
-end;
-
 procedure Tmainfrm.popupMainMenu();
 begin
 menuBtn.Down:=TRUE;
@@ -11240,8 +11218,11 @@ function pointToCharPoint(re:TRichEdit; pt:Tpoint):Tpoint;
 const
   EM_EXLINEFROMCHAR = WM_USER+54;
 begin
+if pt.x < 0 then
+  exit(point(-1,-1));
 result.x:=re.perform(EM_CHARFROMPOS, 0, integer(@pt));
-if result.x < 0 then exit;
+if result.x < 0 then
+  exit;
 result.y:=re.perform(EM_EXLINEFROMCHAR, 0, result.x);
 dec(result.x, re.perform(EM_LINEINDEX, result.y, 0));
 end; // pointToCharPoint
@@ -11252,16 +11233,25 @@ var
   pt: Tpoint;
 begin
 result:='';
-pt:=pointToCharPoint(logBox, logRightClick);
-if pt.x < 0 then
-  pt:=logbox.caretpos;
+pt:=logbox.caretpos;
 if pt.y >= logbox.lines.count then
   exit;
 s:=logbox.lines[pt.y];
-s:=reGet(s, '.+  (\S+@)?(\S+):\d+ ', 2);
+s:=reGet(s, '^.+  (\S+@)?(\S+):\d+  ', 2);
 if checkAddressSyntax(s,FALSE) then
   result:=s;
 end; // ipPointedInLog
+
+procedure TmainFrm.logBoxMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+var pt: Tpoint;
+begin
+if button = mbRight then
+  begin
+  pt:=pointToCharPoint(logBox, Point(x,y));
+  if pt.x >= 0 then
+    logBox.CaretPos:=pt;
+  end;
+end;
 
 procedure TmainFrm.Banthisaddress1Click(Sender: TObject);
 begin banAddress(ipPointedInLog()); end;

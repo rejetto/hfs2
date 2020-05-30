@@ -322,7 +322,7 @@ button i.fa { font-size:110% }
 	background-color:rgba(0,0,0,.04); /* dynamically darker, as also hover is darker */  } 
 .comment>i:first-child { margin-right:0.5em; margin-left:-1.4em; }
 .item-size { margin-left:.3em }
-.selector { float:left; width: 1.2em; height:1.2em; margin-right: .5em;}
+.selector { float:left; width: 1.2em; height:1.2em; margin-right: .5em; filter:grayscale(1); }
 .item-menu { padding:0.1em 0.3em; border-radius:0.6em; position: relative; top: -0.1em;}
 .dialog-content h1 { margin:0; }
 .dialog-content .buttons { margin-top:1.5em }
