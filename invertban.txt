@@ -1,8 +1,0 @@
-Normal behavior of the Ban is to prevent access to the addresses you specify (also called black-list).
-If you want the opposite, to allow the addresses that you specify (white-list), enter all addresses in a single row preceded by a \ character.
-
-Let say you want to allow all your 192.168 local network plus your office at 1.1.1.1.
-Just put this IP address mask: \192.168.*;1.1.1.1
-The opening \ character inverts the logic, so everything else is banned.
-
-If you want to know more about address masks, check the guide.

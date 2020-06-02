@@ -834,7 +834,16 @@ procedure ToptionsFrm.okBtnClick(Sender: TObject);
 begin if saveValues() then close() end;
 
 procedure ToptionsFrm.Button1Click(Sender: TObject);
-begin msgDlg(getRes('invertBan')) end;
+resourcestring MSG_INVERT_BAN =
+  'Normal behavior of the Ban is to prevent access to the addresses you specify (also called black-list).'
+  +#13'If you want the opposite, to allow the addresses that you specify (white-list), enter all addresses in a single row preceded by a \ character.'
+  +#13
+  +#13'Let say you want to allow all your 192.168 local network plus your office at 1.1.1.1.'
+  +#13'Just put this IP address mask: \192.168.*;1.1.1.1'
+  +#13'The opening \ character inverts the logic, so everything else is banned.'
+  +#13
+  +#13'If you want to know more about address masks, check the guide.';
+begin msgDlg(MSG_INVERT_BAN) end;
 
 procedure ToptionsFrm.groupsBtnClick(Sender: TObject);
 var

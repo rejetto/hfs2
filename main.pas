@@ -138,6 +138,9 @@ resourcestring
     +#13'Continue?';
   MSG_SAME_NAME ='An item with the same name is already present in this folder.'
     +#13'Continue?';
+  MSG_CONTINUE = 'Continue?';
+  MSG_PROCESSING = 'Processing...';
+  MSG_SPEED_KBS = '%.1f kB/s';
   MSG_OPTIONS_SAVED = 'Options saved';
   MSG_SOME_LOCKED = 'Some items were not affected because locked';
   MSG_ITEM_LOCKED = 'The item is locked';
@@ -157,16 +160,6 @@ resourcestring
   MSG_ENABLED =   'Option enabled';
   MSG_DISABLED = 'Option disabled';
   MSG_COMM_ERROR = 'Network error. Request failed.';
-  MSG_DDNS_badauth='invalid user/password';
-  MSG_DDNS_notfqdn='incomplete hostname, required form aaa.bbb.com';
-  MSG_DDNS_nohost='specified hostname does not exist';
-  MSG_DDNS_notyours='specified hostname belongs to another username';
-  MSG_DDNS_numhost='too many or too few hosts found';
-  MSG_DDNS_abuse='specified hostname is blocked for update abuse';
-  MSG_DDNS_dnserr='server error';
-  MSG_DDNS_911='server error';
-  MSG_DDNS_notdonator='an option specified requires payment';
-  MSG_DDNS_badagent='banned client';
 
 type
   Pboolean = ^boolean;
@@ -2149,7 +2142,8 @@ n:=parent.getFirstChild();
 while assigned(n) do
   begin
   result:=sameText(n.text, name);
-  if result then exit;
+  if result then
+    exit;
   n:=n.getNextSibling();
   end;
 end; // existsNodeWithName
@@ -2168,6 +2162,25 @@ i:=2;
 end; // getUniqueNodeName
 
 procedure updateDynDNS();
+resourcestring
+  MSG_DDNS_NO_REPLY = 'no reply';
+  MSG_DDNS_OK = 'successful';
+  MSG_DDNS_UNK = 'unknown reply: %s';
+  MSG_DDNS_ERR = 'error: %s';
+  MSG_DDNS_REQ = 'DNS update requested for %s: %s';
+  MSG_DDNS_DOING = 'Updating dynamic DNS...';
+  MSG_DDNS_FAIL = 'DNS update failed: %s'#13'User intervention is required.';
+  MSG_DDNS_REPLY_SIZE = '%d bytes reply';
+  MSG_DDNS_badauth='invalid user/password';
+  MSG_DDNS_notfqdn='incomplete hostname, required form aaa.bbb.com';
+  MSG_DDNS_nohost='specified hostname does not exist';
+  MSG_DDNS_notyours='specified hostname belongs to another username';
+  MSG_DDNS_numhost='too many or too few hosts found';
+  MSG_DDNS_abuse='specified hostname is blocked for update abuse';
+  MSG_DDNS_dnserr='server error';
+  MSG_DDNS_911='server error';
+  MSG_DDNS_notdonator='an option specified requires payment';
+  MSG_DDNS_badagent='banned client';
 
   function interpretResponse(s:string):string;
   const
@@ -2189,37 +2202,43 @@ procedure updateDynDNS();
   begin
   s:=trim(s);
   if s = '' then
-    exit('no reply');
+    exit(MSG_DDNS_NO_REPLY);
   code:='';
-  result:='successful';
+  result:=MSG_DDNS_OK;
   code:=trim(lowercase(getTill(' ',s)));
   if stringExists(code, ['good','nochg']) then exit;
   for i:=1 to length(ERRORS) do
     if code = ERRORS[i].code then
       begin
       dyndns.active:=FALSE;
-      exit('error: '+ERRORS[i].msg);
+      exit(format(MSG_DDNS_ERR,[ERRORS[i].msg]));
       end;
-  result:='unknown reply: '+s;
+  result:=format(MSG_DDNS_UNK,[s]);
   end; // interpretResponse
 
 var
   s: string;
 begin
 if externalIP = '' then exit;
-mainfrm.setStatusBarText('Updating dynamic DNS...');
+mainfrm.setStatusBarText(MSG_DDNS_DOING);
 dyndns.lastTime:=now();
-try s:=httpGet(replaceText(dyndns.url, '%ip%', externalIP));
-except s:='' end;
-if s > '' then dyndns.lastResult:=s;
-if not mainfrm.logOtherEventsChk.checked then exit;
-if length(s) > 30 then s:=intToStr(length(s))+' bytes reply'
-else s:=interpretResponse(s);
-mainfrm.add2log('DNS update requested for '+dyndns.lastIP+': '+s);
+try
+  s:=httpGet(replaceText(dyndns.url, '%ip%', externalIP));
+  if s > '' then
+    dyndns.lastResult:=s;
+except s:=''
+  end;
+if not mainfrm.logOtherEventsChk.checked then
+  exit;
+if length(s) > 30 then
+  s:=format(MSG_DDNS_REPLY_SIZE, [length(s)])
+else
+  s:=interpretResponse(s);
+mainfrm.add2log(format(MSG_DDNS_REQ, [dyndns.lastIP,s]));
 if dyndns.active then
   dyndns.lastIP:=externalIP
 else
-  msgDlg('DNS update failed.'#13+s+'.'#13'User intervention is required.', MB_ICONERROR);
+  msgDlg(format(MSG_DDNS_FAIL, [s]), MB_ICONERROR);
 mainfrm.setStatusBarText('');
 end; // updateDynDNS
 
@@ -3356,27 +3375,29 @@ end; // getAccountList
 
 function banAddress(ip:string):boolean;
 resourcestring
-  MSG_IP_MASK = 'IP mask';
+  MSG_BAN_MASK = 'Ban IP mask';
   MSG_IP_MASK_LONG = 'You can edit the address.'#13'Masks and ranges are allowed.';
-  MSG_KICK_ADDR = 'There are %d open connections from this address.'
-    +#13'Do you want to kick them all now?';
+  MSG_KICK_ADDR = 'There are %d open connections from this address.'#13'Do you want to kick them all now?';
+  MSG_BAN_ALREADY = 'This IP address is already banned';
+  MSG_BAN_CMT = 'Ban comment';
+  MSG_BAN_CMT_LONG = 'A comment for this ban...';
 var
   i: integer;
   comm: string;
 begin
 result:=FALSE;
 mainfrm.setFocus();
-if not InputQuery(MSG_IP_MASK,MSG_IP_MASK_LONG,ip) then exit;
+if not InputQuery(MSG_BAN_MASK,MSG_IP_MASK_LONG,ip) then exit;
 
 for i:=0 to length(banlist)-1 do
   if banlist[i].ip = ip then
     begin
-    msgDlg('This IP address is already banned', MB_ICONWARNING);
+    msgDlg(MSG_BAN_ALREADY, MB_ICONWARNING);
     exit;
     end;
 
 comm:='';
-if not InputQuery('Ban comment','A comment for this ban...',comm) then exit;
+if not InputQuery(MSG_BAN_CMT,MSG_BAN_CMT_LONG,comm) then exit;
 
 i:=length(banlist);
 setlength(banlist, i+1);
@@ -4073,7 +4094,7 @@ procedure setupDownloadIcon(data:TconnData);
   data.tray.setIcon(data.tray_ico);
   data.tray.setTip(
     if_( data.conn.reply.bodyMode=RBM_STRING, decodeURL(data.conn.request.url), data.lastFN )
-    +trayNL+format('%.1f KB/s', [data.averageSpeed/1000])
+    +trayNL+format(MSG_SPEED_KBS, [data.averageSpeed/1000])
     +trayNL+dotted(data.conn.bytesSentLastItem)+' bytes sent'
     +trayNL+data.address
   );
@@ -4531,6 +4552,23 @@ tplLast:=0;
 end; // setNewTplFile
 
 procedure Tmainfrm.httpEvent(event:ThttpEvent; conn:ThttpConn);
+resourcestring
+  MSG_LOG_SERVER_START = 'Server start';
+  MSG_LOG_SERVER_STOP = 'Server stop';
+  MSG_LOG_CONNECTED = 'Connected';
+  MSG_LOG_DISC_SRV = 'Disconnected by server';
+  MSG_LOG_DISC = 'Disconnected';
+  MSG_LOG_GOT = 'Got %d bytes';
+  MSG_LOG_BYTES_SENT = '%s bytes sent';
+  MSG_LOG_SERVED = 'Served %s';
+  MSG_LOG_HEAD = 'Served head';
+  MSG_LOG_NOT_MOD = 'Not modified, use cache';
+  MSG_LOG_REDIR = 'Redirected to %s';
+  MSG_LOG_NOT_SERVED = 'Not served: %d - %s';
+  MSG_LOG_UPL = 'Uploading %s';
+  MSG_LOG_UPLOADED = 'Fully uploaded %s - %s @ %sB/s';
+  MSG_LOG_UPL_FAIL = 'Upload failed %s';
+  MSG_LOG_DL = 'Fully downloaded - %s @ %sB/s - %s';
 var
   data: TconnData;
   f: Tfile;
@@ -4620,15 +4658,14 @@ var
   if not (event in [HE_OPEN, HE_CLOSE])
   and addressMatch(dontLogAddressMask, data.address) then
     exit;
-
   case event of
-    HE_OPEN: if logServerstartChk.Checked then add2log('Server start');
-    HE_CLOSE: if logServerstopChk.checked then add2log('Server stop');
-    HE_CONNECTED: if logconnectionsChk.Checked then add2log('Connected', data);
+    HE_OPEN: if logServerstartChk.Checked then add2log(MSG_LOG_SERVER_START);
+    HE_CLOSE: if logServerstopChk.checked then add2log(MSG_LOG_SERVER_STOP);
+    HE_CONNECTED: if logconnectionsChk.Checked then add2log(MSG_LOG_CONNECTED, data);
     HE_DISCONNECTED: if logDisconnectionsChk.checked then
-      add2log('Disconnected'+if_(conn.disconnectedByServer, ' by server')
+      add2log(if_(conn.disconnectedByServer, MSG_LOG_DISC_SRV,MSG_LOG_DISC)
         +nonEmptyConcat(': ', data.disconnectReason)
-        +if_(conn.bytesSent>0, ' - '+intToStr(conn.bytesSent)+' bytes sent'),
+        +if_(conn.bytesSent>0, ' - '+format(MSG_LOG_BYTES_SENT, [dotted(conn.bytesSent)])),
       data);
     HE_GOT:
       begin
@@ -4639,7 +4676,7 @@ var
           inc(data.bytesGotGrouping.bytes, i)
         else
           begin
-          add2log(format('Got %d bytes',[i+data.bytesGotGrouping.bytes]), data);
+          add2log(format(MSG_LOG_GOT,[i+data.bytesGotGrouping.bytes]), data);
           data.bytesGotGrouping.since:=now();
           data.bytesGotGrouping.bytes:=0;
           end;
@@ -4654,7 +4691,7 @@ var
           inc(data.bytesSentGrouping.bytes, i)
         else
           begin
-          add2log(format('Sent %d bytes',[i+data.bytesSentGrouping.bytes]), data);
+          add2log(format(MSG_LOG_BYTES_SENT,[dotted(i+data.bytesSentGrouping.bytes)]), data);
           data.bytesSentGrouping.since:=now();
           data.bytesSentGrouping.bytes:=0;
           end;
@@ -4677,34 +4714,34 @@ var
         end;
     HE_REPLIED:
       if logRepliesChk.checked then
-        case conn.reply.mode of
-          HRM_REPLY: if not data.fullDLlogged then add2log(format('Served %s', [smartSize(conn.bytesSentLastItem)]), data);
-          HRM_REPLY_HEADER: add2log('Served head', data);
-          HRM_NOT_MODIFIED: add2log('Not modified, use cache', data);
-          HRM_REDIRECT: add2log(format('Redirected to %s', [conn.reply.url]), data);
+       case conn.reply.mode of
+          HRM_REPLY: if not data.fullDLlogged then add2log(format(MSG_LOG_SERVED, [smartSize(conn.bytesSentLastItem)]), data);
+          HRM_REPLY_HEADER: add2log(MSG_LOG_HEAD, data);
+          HRM_NOT_MODIFIED: add2log(MSG_LOG_NOT_MOD, data);
+          HRM_REDIRECT: add2log(format(MSG_LOG_REDIR, [conn.reply.url]), data);
           else if not logOnlyServedChk.checked then
-            add2log(format('Not served: %d - %s', [HRM2CODE[conn.reply.mode], HRM2STR[conn.reply.mode] ])
+            add2log(format(MSG_LOG_NOT_SERVED, [HRM2CODE[conn.reply.mode], HRM2STR[conn.reply.mode] ])
               +nonEmptyConcat(': ', data.error), data);
           end;
     HE_POST_FILE:
       if logUploadsChk.checked and (data.uploadFailed = '') then
-        add2log(format('Uploading %s', [data.uploadSrc]), data);
+        add2log(format(MSG_LOG_UPL, [data.uploadSrc]), data);
     HE_POST_END_FILE:
       if logUploadsChk.checked then
         if data.uploadFailed = '' then
-          add2log(format('Fully uploaded %s - %s @ %sB/s', [
+          add2log(format(MSG_LOG_UPLOADED, [
             data.uploadSrc,
             smartSize(conn.bytesPostedLastItem),
             smartSize(calcAverageSpeed(conn.bytesPostedLastItem)) ]), data)
         else
-          add2log(format('Upload failed %s', [data.uploadSrc]), data);
+          add2log(format(MSG_LOG_UPL_FAIL, [data.uploadSrc]), data);
     HE_LAST_BYTE_DONE:
       if logFulldownloadsChk.checked
       and data.countAsDownload
       and (data.downloadingWhat in [DW_FILE, DW_ARCHIVE]) then
         begin
         data.fullDLlogged:=TRUE;
-        add2log(format('Fully downloaded - %s @ %sB/s - %s', [
+        add2log(format(MSG_LOG_DL, [
           smartSize(conn.bytesSentLastItem),
           smartSize(calcAverageSpeed(conn.bytesSentLastItem)),
           decodedUrl()]), data);
@@ -4817,7 +4854,7 @@ var
   procedure logUploadFailed();
   begin
   if not logUploadsChk.checked then exit;
-  add2log(format('Upload failed for %s: %s', [data.uploadSrc, data.uploadFailed]), data);
+  add2log(format(MSG_LOG_UPL_FAIL, [data.uploadSrc])+' : '+data.uploadFailed, data);
   end; // logUploadFile
 
   function eventToFilename(event:string; table:array of string):string;
@@ -4888,7 +4925,7 @@ var
 
   function sessionSetup():boolean;
   var
-    sid, s: string;
+    sid: string;
   begin
   result:=TRUE;
   if data = NIL then
@@ -5153,7 +5190,6 @@ var
 
     procedure deletion();
     var
-      i: integer;
       asUrl, s: string;
       doneRes, done, errors: TStringDynArray;
     begin
@@ -5659,13 +5695,15 @@ var
   end; // lastByte
 
   function canWriteFile():boolean;
+  resourcestring
+    MSG_MIN_DISK_REACHED = 'Minimum disk space reached.';
   begin
   result:=FALSE;
   if data.f = NIL then exit;
   result:= minDiskSpace <= diskSpaceAt(data.uploadDest) div MEGA;
   if result then exit;
   closeUploadingFile_partial();
-  data.uploadFailed:='Minimum disk space reached.';
+  data.uploadFailed:=MSG_MIN_DISK_REACHED;
   end; // canWriteFile
 
   function complyUploadFilter():boolean;
@@ -5678,22 +5716,26 @@ var
       result:='\'+PROTECTED_FILES_MASK; // the user can disable this default filter by inputing * as mask
     end;
 
+  resourcestring
+    MSG_UPL_NAME_FORB = 'File name or extension forbidden.';
   begin
   result:=validFilename(data.uploadSrc)
     and not sameText(data.uploadSrc, DIFF_TPL_FILE) // never allow this
     and not isExtension(data.uploadSrc, '.lnk')  // security matters (by mars)
     and fileMatch(getMask(), data.uploadSrc);
   if not result then
-    data.uploadFailed:='File name or extension forbidden.';
+    data.uploadFailed:=MSG_UPL_NAME_FORB;
   end; // complyUploadFilter
 
   function canCreateFile():boolean;
+  resourcestring
+    MSG_UPL_CANT_CREATE = 'Error creating file.';
   begin
   IOresult;
   rewrite(data.f^, 1);
   result:=IOresult=0;
   if result then exit;
-  data.uploadFailed:='Error creating file.';
+  data.uploadFailed:=MSG_UPL_CANT_CREATE;
   end; // canCreateFile
 
 var
@@ -5828,7 +5870,7 @@ case event of
     data.downloadingWhat:=DW_UNK;
     data.agent:=getAgentID(conn);
     data.fileXferStart:=now();
-    f:=findFileByURL(decodeURL(getTill('?',conn.request.url)));
+    f:=findFileByURL(decodeURL(AnsiString(getTill('?',conn.request.url))));
     data.lastFile:=f; // auto-freeing
     data.uploadSrc:=conn.post.filename;
     data.uploadFailed:='';
@@ -5990,6 +6032,8 @@ if not VFSmodified and VFScounterMod then
 end;
 
 function checkVfsOnQuit():boolean;
+resourcestring
+  MSG_SAVE_VFS = 'Your current file system is not saved.'#13'Save it?';
 var
   s: string;
 begin
@@ -6006,7 +6050,7 @@ else if windowsShuttingDown then
   lastFileOpen:=s;
   end
 else
-  case msgDlg('Your current file system is not saved.'#13'Save it?', MB_ICONQUESTION+if_(quitASAP, MB_YESNO, MB_YESNOCANCEL)) of
+  case msgDlg(MSG_SAVE_VFS, MB_ICONQUESTION+if_(quitASAP, MB_YESNO, MB_YESNOCANCEL)) of
     IDYES: mainfrm.saveVFS(lastFileOpen);
     IDNO: ; // just go on
     IDCANCEL: result:=FALSE;
@@ -6022,6 +6066,8 @@ VFSmodified:=inputqueryLong('Comment', format(MSG_INP_COMMENT, [f.name]), f.comm
 end; // inputComment
 
 function Tmainfrm.addFile(f:Tfile; parent:Ttreenode=NIL; skipComment:boolean=FALSE):Tfile;
+resourcestring
+  MSG_FILE_ADD_ABORT = 'File addition was aborted.'#13'The list of files is incomplete.';
 begin
 abortBtn.show();
 stopAddingItems:=FALSE;
@@ -6029,7 +6075,7 @@ try result:=addFileRecur(f,parent);
 finally abortBtn.hide() end;
 if result = NIL then exit;
 if stopAddingItems then
-  msgDlg('File addition was aborted.'#13'The list of files is incomplete.', MB_ICONWARNING);
+  msgDlg(MSG_FILE_ADD_ABORT, MB_ICONWARNING);
 if assigned(parent) then parent.expanded:=TRUE;
 filesbox.Selected:=result.node;
 
@@ -6040,6 +6086,8 @@ inputComment(f);
 end; // addFile
 
 function Tmainfrm.addFileRecur(f:Tfile; parent:Ttreenode=NIL):Tfile;
+resourcestring
+  MSG_ADDING = 'Adding item #%d';
 var
   n: Ttreenode;
   sr: TsearchRec;
@@ -6057,7 +6105,7 @@ if addingItemsCounter >= 0 then // counter enabled
   if addingItemsCounter and 15 = 0 then // step 16
     begin
     application.ProcessMessages();
-    setStatusBarText(format('Adding item #%d', [addingItemsCounter]));
+    setStatusBarText(format(MSG_ADDING, [addingItemsCounter]));
     end;
   end;
 
@@ -6152,6 +6200,8 @@ allowedit:=allowedit and not nodeToFile(node).isRoot()
 end;
 
 procedure TmainFrm.filesBoxEdited(Sender:TObject; Node:TTreeNode; var S:String);
+resourcestring
+  MSG_INV_FILENAME = 'Invalid filename';
 var
   f: Tfile;
 begin
@@ -6165,7 +6215,7 @@ or (pos('/',s) > 0)
 then
   begin
   s:=node.text;
-  msgDlg('Invalid filename', MB_ICONERROR);
+  msgDlg(MSG_INV_FILENAME, MB_ICONERROR);
   exit;
   end;
 
@@ -6195,6 +6245,8 @@ for i:=father+1 to length(nodes)-1 do
 end; // setNilChildrenFrom
 
 procedure Tmainfrm.remove(node:Ttreenode=NIL);
+resourcestring
+  MSG_DELETE = 'Delete?';
 var
   i: integer;
   list: TtreenodeDynArray;
@@ -6215,7 +6267,7 @@ if assigned(node) then
 i:=filesbox.SelectionCount;
 if (i = 0) or (i = 1) and selectedFile.isRoot() then exit;
 if not deleteDontAskChk.checked
-and (msgDlg('Delete?', MB_ICONQUESTION+MB_YESNO) = IDNO) then
+and (msgDlg(MSG_DELETE, MB_ICONQUESTION+MB_YESNO) = IDNO) then
   exit;
 list:=copySelection();
 // now proceed
@@ -6334,7 +6386,7 @@ end; // setAutosave
 
 procedure updateMenuSpeed(menu:TMenuItem; lab:string; v:Float32);
 begin
-menu.caption:=lab + format(MSG_MENU_VAL, [if_(v<0, DISABLED, floatToStr(v)+' KB/s' )]);
+menu.caption:=lab + format(MSG_MENU_VAL, [if_(v<0, DISABLED, format(MSG_SPEED_KBS, [v]))]);
 end;
 
 procedure setSpeedLimitIP(v:real);
@@ -7554,6 +7606,8 @@ resourcestring
   MSG_UPD_SAVE_ERROR = 'Cannot save the update';
   MSG_UPD_REQ_ONLY1 = 'The auto-update feature cannot work because it requires the "Only 1 instance" option enabled.'
     +#13#13'Your browser will now be pointed to the update, so you can install it manually.';
+  MSG_UPD_WAIT = 'Waiting for last requests to be served, then we''ll update';
+  MSG_UPD_DL = 'Downloading new version...';
 const
   UPDATE_BATCH_FILE = 'hfs.update.bat';
   UPDATE_BATCH = 'START %0:s /WAIT "%1:s" -q'+CRLF
@@ -7581,14 +7635,14 @@ and (srv.conns.count > 0) then
   updateASAP:=url;
   stopServer();
   mainfrm.kickidleconnections1Click(NIL);
-  mainfrm.setStatusBarText('Waiting for last requests to be served, then we''ll update', 20);
+  mainfrm.setStatusBarText(MSG_UPD_WAIT, 20);
   exit;
   end;
 // must ask BEFORE: when the batch will be running, nothing should stop it, or it will fail
 if not checkVfsOnQuit() then exit;
 VFSmodified:=FALSE;
 
-progFrm.show('Downloading new version...', TRUE);
+progFrm.show(MSG_UPD_DL, TRUE);
 try
   fn:=paramStr(0)+'.new';
   size:=sizeOfFile(fn);
@@ -7614,7 +7668,7 @@ if progFrm.cancelRequested then
   end;
 
 try
-  progFrm.show('Processing...');
+  progFrm.show(MSG_PROCESSING);
   saveTextFile(UPDATE_BATCH_FILE, format(UPDATE_BATCH, [
     if_(isNT(), '""'),
     paramStr(0),
@@ -7678,6 +7732,10 @@ procedure Tmainfrm.autoCheckUpdates();
 resourcestring
   MSG_CHK_UPD = 'Checking for updates';
   MSG_CHK_UPD_FAIL = 'Check update: failed';
+  MSG_CHK_UPD_HEAD = 'Check update: ';
+  MSG_CHK_UPD_VER = 'new version found: %s';
+  MSG_CHK_UPD_VER_EXT = 'Build #%s (current is #%s)';
+  MSG_CHK_UPD_NONE = 'no new version';
 var
   info: Ttpl;
   updateURL, ver, build: string;
@@ -7712,9 +7770,9 @@ try
     thereSnew('untested');
   // same version? we show build number
   if ver = VERSION then
-    ver:=format('Build #%s (current is #%s)', [build, VERSION_BUILD]);
+    ver:=format(MSG_CHK_UPD_VER_EXT, [build, VERSION_BUILD]);
   if logOtherEventsChk.checked then
-    add2log('Check update: '+ifThen(updateURL = '', 'no new version', 'new version found: '+ver));
+    add2log(MSG_CHK_UPD_HEAD+ifThen(updateURL = '', MSG_CHK_UPD_NONE, format(MSG_CHK_UPD_VER,[ver])));
   parseVersionNotice(info['version notice']);
   setStatusBarText('');
   if updateURL = '' then exit;
@@ -8400,6 +8458,8 @@ var
 
 resourcestring
   MSG_ITEM_EXISTS = '%s item(s) already exists:'#13'%s'#13#13'Continue?';
+  MSG_INSTALL_TPL = 'Install this template?';
+  MSG_FOLDER_UPLOAD = 'Do you want ANYONE to be able to upload to this folder?';
 const
   MAX_DUPE = 50;
 var
@@ -8418,14 +8478,14 @@ if singleLine(files) then
 
   // suggest template installation
   if (lowerCase(extractFileExt(files)) = '.tpl')
-  and (msgDlg('Install this template?', MB_YESNO) = MRYES) then
+  and (msgDlg(MSG_INSTALL_TPL, MB_YESNO) = MRYES) then
     begin
     setNewTplFile(files);
     exit;
     end;
 
   upload:=(ipos('upload', extractFilename(files)) > 0)
-    and (msgDlg('Do you want ANYONE to be able to upload to this folder?', MB_YESNO) = MRYES);
+    and (msgDlg(MSG_FOLDER_UPLOAD, MB_YESNO) = MRYES);
   end;
 // warn upon double filenames
 doubles:=NIL;
@@ -8580,9 +8640,34 @@ procedure TmainFrm.appEventsShowHint(var HintStr: String; var CanShow: Boolean; 
   end; // reduce
 
   function fileHint():string;
-  const
-    INHERITED_LABEL = ' [inherited]';
-    EXTERNAL_LABEL = ' [external]';
+  resourcestring
+    MSG_VFS_DRAG_INVIT = 'Drag your files here';
+    MSG_VFS_URL = 'URL: %s';
+    MSG_VFS_PATH = 'Path: %s';
+    MSG_VFS_SIZE = 'Size: %s';
+    MSG_VFS_DLS = 'Downloads: %s';
+    MSG_VFS_INVISIBLE = 'Invisible';
+    MSG_VFS_DL_FORB = 'Download forbidden';
+    MSG_VFS_DONT_LOG = 'Don''t log';
+    MSG_VFS_HIDE_EMPTY = 'Hidden if empty';
+    MSG_VFS_NOT_BROW = 'Not browsable';
+    MSG_VFS_HIDE_EMPTY_FLD = 'Hide empty folders';
+    MSG_VFS_HIDE_EXT = 'Hide extention';
+    MSG_VFS_ARCABLE = 'Archivable';
+    MSG_VFS_DEF_MASK = 'Default file mask: %s';
+    MSG_VFS_ACCESS = 'Access for';
+    MSG_VFS_UPLOAD = 'Upload allowed for';
+    MSG_VFS_DELETE = 'Delete allowed for';
+    MSG_VFS_COMMENT = 'Comment: %s';
+    MSG_VFS_REALM = 'Realm: %s';
+    MSG_VFS_DIFF_TPL = 'Diff template: %s';
+    MSG_VFS_FILES_FLT = 'Files filter: %s';
+    MSG_VFS_FLD_FLT = 'Folders filter: %s';
+    MSG_VFS_UPL_FLT = 'Upload filter: %s';
+    MSG_VFS_DONT_CONS_DL = 'Don''t consider as download';
+    MSG_VFS_DONT_CONS_DL_MASK = 'Don''t consider as download (mask): %s';
+    MSG_VFS_INHERITED = ' [inherited]';
+    MSG_VFS_EXTERNAL = ' [external]';
   var
     f, parent: Tfile;
     s, s2: string;
@@ -8596,7 +8681,7 @@ procedure TmainFrm.appEventsShowHint(var HintStr: String; var CanShow: Boolean; 
       inh: boolean;
     begin
     result:=if_(f.hasRecursive(att, @inh), #13+lbl);
-    result:=result+if_(inh, INHERITED_LABEL);
+    result:=result+if_(inh, MSG_VFS_INHERITED);
     end; // flagR
 
     procedure perm(action:TfileAction; msg:string);
@@ -8604,86 +8689,87 @@ procedure TmainFrm.appEventsShowHint(var HintStr: String; var CanShow: Boolean; 
       s: string;
     begin
     s:=join(', ', f.getAccountsFor(action, TRUE, @inheritd));
-    if (s > '') and inheritd then s:=s+INHERITED_LABEL;
+    if (s > '') and inheritd then s:=s+MSG_VFS_INHERITED;
     if s > '' then result:=result+#13+msg+': '+s;
     end;
 
   begin
-  result:=if_(HintsfornewcomersChk.checked,'Drag your files here');
+  result:=if_(HintsfornewcomersChk.checked,MSG_VFS_DRAG_INVIT);
   f:=pointedFile();
   if f = NIL then exit;
   parent:=f.parent;
 
-  result:='URL: '+f.url()
-    +if_(f.isRealFolder() or f.isFile(), #13'Path: '+f.resource);
+  result:=format(MSG_VFS_URL,[f.url()])
+    +if_(f.isRealFolder() or f.isFile(), #13+format(MSG_VFS_PATH,[f.resource]));
   if f.isFile() then
-    result:=result+format(#13'Size: %s'#13'Downloads: %d',
+    result:=result+format(#13+MSG_VFS_SIZE+#13+MSG_VFS_DLS,
       [ smartsize(sizeofFile(f.resource)), f.DLcount ]);
 
-  s:=flagR('Invisible', FA_HIDDENTREE, TRUE);
-  if s = '' then s:=flag('Invisible', FA_HIDDEN);
+  s:=flagR(MSG_VFS_INVISIBLE, FA_HIDDENTREE, TRUE);
+  if s = '' then s:=flag(MSG_VFS_INVISIBLE, FA_HIDDEN);
   result:=result+s
-    +flag('Download forbidden', FA_DL_FORBIDDEN)
-    +flagR('Don''t log', FA_DONT_LOG);
+    +flag(MSG_VFS_DL_FORB, FA_DL_FORBIDDEN)
+    +flagR(MSG_VFS_DONT_LOG, FA_DONT_LOG);
 
   if f.isFolder() then
     begin
     if assigned(parent) and parent.hasRecursive(FA_HIDE_EMPTY_FOLDERS) then
-        result:=result+#13'Hidden if empty'+INHERITED_LABEL;
+        result:=result+#13+MSG_VFS_HIDE_EMPTY+MSG_VFS_INHERITED;
 
     result:=result
-      +flag('Not browsable', FA_BROWSABLE, FALSE)
-      +flag('Hide empty folders', FA_HIDE_EMPTY_FOLDERS)
-      +flagR('Hide extention', FA_HIDE_EXT)
-      +flagR('Archivable', FA_ARCHIVABLE)
+      +flag(MSG_VFS_NOT_BROW, FA_BROWSABLE, FALSE)
+      +flag(MSG_VFS_HIDE_EMPTY_FLD, FA_HIDE_EMPTY_FOLDERS)
+      +flagR(MSG_VFS_HIDE_EXT, FA_HIDE_EXT)
+      +flagR(MSG_VFS_ARCABLE, FA_ARCHIVABLE)
     end;
 
   s:=f.getRecursiveFileMask();
-  if (s > '') and (f.defaultFileMask = '') then s:=s+INHERITED_LABEL;
-  if s > '' then result:=result+#13'Default file mask: '+s;
+  if (s > '') and (f.defaultFileMask = '') then s:=s+MSG_VFS_INHERITED;
+  if s > '' then result:=result+#13+format(MSG_VFS_DEF_MASK,[s]);
 
-  perm(FA_ACCESS, 'Access for');
-  if f.isRealFolder() then perm(FA_UPLOAD, 'Upload allowed for');
-  perm(FA_DELETE, 'Delete allowed for');
+  perm(FA_ACCESS, MSG_VFS_ACCESS);
+  if f.isRealFolder() then perm(FA_UPLOAD, MSG_VFS_UPLOAD);
+  perm(FA_DELETE, MSG_VFS_DELETE);
 
   s:=reduce(f.getDynamicComment());
-  if (s > '') and (f.comment = '') then s:=s+EXTERNAL_LABEL;
-  if s > '' then result:=result+#13'Comment: '+s;
+  if (s > '') and (f.comment = '') then s:=s+MSG_VFS_EXTERNAL;
+  if s > '' then result:=result+#13+format(MSG_VFS_COMMENT,[s]);
 
   s:=reduce(f.getShownRealm());
-  if (s > '') and (f.realm = '') then s:=s+INHERITED_LABEL;
-  if s > '' then result:=result+#13'Realm: '+s;
+  if (s > '') and (f.realm = '') then s:=s+MSG_VFS_INHERITED;
+  if s > '' then result:=result+#13+format(MSG_VFS_REALM,[s]);
 
   s:=reduce(f.getRecursiveDiffTplAsStr(@inheritd, @externl));
   if s > '' then
     begin
-    if inheritd then s:=s+INHERITED_LABEL;
-    if externl then s:=s+EXTERNAL_LABEL;
-    result:=result+#13'Diff template: '+s;
+    if inheritd then s:=s+MSG_VFS_INHERITED;
+    if externl then s:=s+MSG_VFS_EXTERNAL;
+    result:=result+#13+format(MSG_VFS_DIFF_TPL,[s]);
     end;
 
   f.getFiltersRecursively(s, s2);
   result:=result
-    +if_(s>'', #13'Files filter: '+s
-      +if_(f.filesFilter = '', INHERITED_LABEL))
-    +if_(s2>'', #13'Folders filter: '+s2
-      +if_(f.foldersFilter = '', INHERITED_LABEL))
-    +if_(f.uploadFilterMask>'', #13'Upload filter: '+f.uploadFilterMask)
-    +flag('Don''t consider as download', FA_DONT_COUNT_AS_DL)
+    +if_(s>'', #13+format(MSG_VFS_FILES_FLT,[s])
+      +if_(f.filesFilter = '', MSG_VFS_INHERITED))
+    +if_(s2>'', #13+format(MSG_VFS_FLD_FLT, [s2])
+      +if_(f.foldersFilter = '', MSG_VFS_INHERITED))
+    +if_(f.uploadFilterMask>'', #13+format(MSG_VFS_UPL_FLT,[f.uploadFilterMask]))
+    +flag(MSG_VFS_DONT_CONS_DL, FA_DONT_COUNT_AS_DL)
     +if_(f.dontCountAsDownloadMask>'',
-      #13'Don''t consider as download (mask): '+f.dontCountAsDownloadMask)
+      #13+format(MSG_VFS_DONT_CONS_DL_MASK, [f.dontCountAsDownloadMask]))
   end; // filehint
 
   function connHint():string;
+  resourcestring
+    MSG_CON_HINT = 'Connection time: %s'#13'Last request time: %s'#13'Agent: %s';
   var
     cd: TconnData;
   begin
   cd:=pointedConnection();
-  result:=if_(HintsForNewcomersChk.checked, 'This box shows info about current connections');
-  if cd = NIL then exit;
-  result:='Connection time: '+dateTimeToStr(cd.time)
-    +#13'Last request time: '+dateTimeToStr(cd.requestTime)
-    +#13'Agent: '+first(cd.agent,'<unknown>');
+  if assigned(cd) then
+    result:=format(MSG_CON_HINT, [dateTimeToStr(cd.time), dateTimeToStr(cd.requestTime), first(cd.agent,'<unknown>')])
+  else
+    result:=if_(HintsForNewcomersChk.checked, 'This box shows info about current connections');
   end;
 
 begin
@@ -8940,8 +9026,17 @@ else if isReceivingFile(cd) then
 end;
 
 procedure TmainFrm.connBoxData(Sender: TObject; Item: TListItem);
+resourcestring
+  MSG_CON_STATE_IDLE = 'idle';
+  MSG_CON_STATE_REQ = 'requesting';
+  MSG_CON_STATE_RCV = 'receiving';
+  MSG_CON_STATE_THINK = 'thinking';
+  MSG_CON_STATE_REP = 'replying';
+  MSG_CON_STATE_SEND = 'sending';
+  MSG_CON_STATE_DISC = 'disconnected';
 const
-  HCS2STR :array [ThttpConnState] of string = ('idle', 'requesting', 'receiving', 'thinking', 'replying', 'sending', 'disconnected');
+  HCS2STR :array [ThttpConnState] of string = (MSG_CON_STATE_IDLE, MSG_CON_STATE_REQ, MSG_CON_STATE_RCV,
+    MSG_CON_STATE_THINK, MSG_CON_STATE_REP, MSG_CON_STATE_SEND, MSG_CON_STATE_DISC);
 var
   data: TconnData;
 
@@ -8953,13 +9048,17 @@ var
   end;
 
   function getStatus():string;
+  resourcestring
+    MSG_CON_PAUSED = 'paused';
+    MSG_CON_SENT = '%s / %s sent';
+    MSG_CON_RECEIVED = '%s / %s received';
   begin
   if isSendingFile(data) then
     begin
     if data.conn.paused then
-      result:='paused'
+      result:=MSG_CON_PAUSED
     else
-      result:=format('%s / %s sent', [
+      result:=format(MSG_CON_SENT, [
         dotted(data.conn.bytesSentLastItem),
         dotted(data.conn.bytesPartial)
       ]);
@@ -8967,7 +9066,7 @@ var
     end;
   if isReceivingFile(data) then
     begin
-    result:=format('%s / %s received', [
+    result:=format(MSG_CON_received, [
       dotted(data.conn.bytesPosted),
       dotted(data.conn.post.length)
     ]);
@@ -8987,7 +9086,7 @@ var
     else d:=data.averageSpeed;
     end;
   if d < 1 then result:='-'
-  else result:=format('%.1f KB/s',[d/1000])
+  else result:=format(MSG_SPEED_KBS,[d/1000])
   end; // getSpeed
 
 var
@@ -9131,12 +9230,14 @@ resetOptions1.Enabled:=TRUE;
 end;
 
 procedure TmainFrm.Restoredefault1Click(Sender: TObject);
+resourcestring
+  MSG_TPL_RESET = 'The template has been reset';
 begin
-if msgDlg('Continue?', MB_ICONQUESTION+MB_YESNO) = MRNO then exit;
+if msgDlg(MSG_CONTINUE, MB_ICONQUESTION+MB_YESNO) = MRNO then exit;
 tplFilename:='';
 tplLast:=-1;
 tplImport:=TRUE;
-setStatusBarText('The template has been reset');
+setStatusBarText(MSG_TPL_RESET);
 end;
 
 procedure TmainFrm.Reverttopreviousversion1Click(Sender: TObject);
@@ -9150,7 +9251,7 @@ const
     +'DEL %%0'+CRLF;
 begin
 try
-  progFrm.show('Processing...');
+  progFrm.show(MSG_PROCESSING);
   saveTextFile(FN, format(REVERT_BATCH, [
     if_(isNT(), '""'),
     paramStr(0),
@@ -9167,8 +9268,7 @@ begin setTrayShows('connections') end;
 procedure TmainFrm.NumberofdifferentIPaddresses1Click(Sender: TObject);
 begin setTrayShows('ips') end;
 
-procedure TmainFrm.NumberofdifferentIPaddresseseverconnected1Click(
-  Sender: TObject);
+procedure TmainFrm.NumberofdifferentIPaddresseseverconnected1Click(Sender: TObject);
 begin setTrayShows('ips-ever') end;
 
 procedure TmainFrm.Numberofloggeddownloads1Click(Sender: TObject);
@@ -9605,20 +9705,22 @@ VFSmodified:=TRUE
 end;
 
 function blockLoadSave():boolean;
+resourcestring MSG_CANT_LOAD_SAVE = 'Cannot load or save while adding files';
 begin
 result:=addingItemsCounter > 0;
 if not result then exit;
-msgDlg('Cannot load or save while adding files', MB_ICONERROR);
+msgDlg(MSG_CANT_LOAD_SAVE, MB_ICONERROR);
 end; // blockLoadSave
 
 procedure TmainFrm.Loadfilesystem1Click(Sender: TObject);
+resourcestring MSG_OPEN_VFS = 'Open VFS file';
 var
   fn: string;
 begin
 if blockLoadSave() then exit;
 if not checkVfsOnQuit() then exit;
 fn:='';
-if promptForFileName(fn, 'VirtualFileSystem|*.vfs', 'vfs', 'Open VFS file') then
+if promptForFileName(fn, 'VirtualFileSystem|*.vfs', 'vfs', MSG_OPEN_VFS) then
   loadVFS(fn);
 end;
 
@@ -9679,10 +9781,10 @@ cnv.Font.Name:='Small Fonts';
 cnv.font.size:=7;
 SetBkMode(cnv.handle, TRANSPARENT);
 top:=(graph.maxV/1000)*safeDiv(10.0, graph.rate);
-s:=format(TOP_SPEED+': %.1f KB/s    ---    %d kbps', [top, round(top*8)]);
+s:=format(TOP_SPEED+':'+MSG_SPEED_KBS+'    ---    %d kbps', [top, round(top*8)]);
 cnv.TextOut(r.right-cnv.TextWidth(s)-20, 3, s);
 if assigned(globalLimiter) and (globalLimiter.maxSpeed < MAXINT) then
-  cnv.TextOut(r.right-180+25, 15, format(LIMIT+': %.1f KB/s', [globalLimiter.maxSpeed/1000]));
+  cnv.TextOut(r.right-180+25, 15, format(LIMIT+': '+MSG_SPEED_KBS, [globalLimiter.maxSpeed/1000]));
 end; // drawGraphOn
 
 procedure TmainFrm.graphBoxPaint(Sender: TObject);
@@ -11874,6 +11976,11 @@ function Tmainfrm.finalInit():boolean;
       end;
   end; // strToConnColumns
 
+resourcestring
+  MSG_TRAY_DEF = '%ip%'#13'Uptime: %uptime%'#13'Downloads: %downloads%';
+  MSG_CLEAN_START = 'Clean start';
+  MSG_RESTORE_BAK = 'A file system backup has been created for a system shutdown.'#13'Do you want to restore this backup?';
+  MSG_EXT_ADDR_FAIL = 'Search for external address failed';
 var
   params: TStringDynArray;
 begin
@@ -11890,9 +11997,7 @@ sbar.canvas.font.assign(sbar.font); // this is just a workaround, i don't exactl
 // some windows versions do not support multiline tray tips
 if winVersion < WV_2000 then trayNL:='  ';
 
-trayMsg:='%ip%'
-  +trayNL+'Uptime: %uptime%'
-  +trayNL+'Downloads: %downloads%';
+trayMsg:=MSG_TRAY_DEF;
 
 startingImagesCount:=mainfrm.images.count;
 srv:=ThttpSrv.create();
@@ -11902,9 +12007,8 @@ srv.onEvent:=httpEvent;
 tray_ico:=Ticon.create();
 tray:=TmyTrayicon.create(self);
 DragAcceptFiles(handle, true);
-caption:=format('HFS ~ HTTP File Server %s%sBuild %s',
-  [VERSION, stringOfChar(' ',80), VERSION_BUILD]);
-application.Title:=format('HFS %s (%s)', [VERSION, VERSION_BUILD]);
+caption:=format('HFS ~ HTTP File Server %s', [VERSION]);
+application.Title:=format('HFS %s', [VERSION]);
 setSpeedLimit(-1);
 setSpeedLimitIP(-1);
 setGraphRate(10);
@@ -11936,7 +12040,7 @@ cfgLoaded:=FALSE;
 if not holdingKey(VK_SHIFT) then
   cfgLoaded:=loadAndApplyCFG()
 else
-  setStatusBarText('Clean start');
+  setStatusBarText(MSG_CLEAN_START);
 
 // CTRL avoids the only1instance setting
 if not holdingKey(VK_CONTROL)
@@ -12002,7 +12106,7 @@ if not quitASAP then
       lastFileOpen:='';
 
   if getMtime(VFS_TEMP_FILE) > getMtime(lastFileOpen) then
-    if msgDlg('A file system backup has been created for a system shutdown.'#13'Do you want to restore this backup?', MB_YESNO+MB_ICONWARNING) = MRYES then
+    if msgDlg(MSG_RESTORE_BAK, MB_YESNO+MB_ICONWARNING) = MRYES then
       begin
       deleteFile(lastFileOpen+BAK_EXT);
       if renameFile(lastFileOpen, lastFileOpen+BAK_EXT) then
@@ -12036,7 +12140,7 @@ show();
 strToConnColumns(serializedConnColumns);
 if startminimizedChk.checked then application.Minimize();
 if findExtOnStartupChk.checked and (externalIP = '') then
-  setStatusBarText('Search for external address failed', 30);
+  setStatusBarText(MSG_EXT_ADDR_FAIL, 30);
 updatePortBtn();
 fixAddToHFS();
 filesBox.setFocus();
@@ -12054,13 +12158,14 @@ if srv.active then
 end; // finalInit
 
 function expertModeNeededMsg():string;
-begin result:=if_(easyMode, 'Switch to expert mode.') end;
+resourcestring MSG_TO_EXPERT = 'Switch to expert mode.';
+begin result:=if_(easyMode, MSG_TO_EXPERT) end;
 
 procedure TmainFrm.Dontlogsomefiles1Click(Sender: TObject);
+resourcestring MSG_DONT_LOG_HINT = 'Select the files/folder you don''t want to be logged,'
+  +#13'then right click and select "Don''t log".';
 begin
-msgDlg(expertModeNeededMsg()
-  +#13'Select the files/folder you don''t want to be logged,'
-  +#13'then right click and select "Don''t log".');
+msgDlg(expertModeNeededMsg() +#13+MSG_DONT_LOG_HINT );
 end;
 
 procedure TmainFrm.progFrmHttpGetUpdate(sender:Tobject; buffer:pointer; len:integer);
@@ -12073,9 +12178,10 @@ with sender as ThttpCli do
 end; // progFrmHttpGetUpdate
 
 procedure TmainFrm.statusBarHttpGetUpdate(sender:Tobject; buffer:pointer; len:integer);
+resourcestring MSG_DL_PERC = 'Downloading %d%%';
 begin
 with sender as ThttpCli do
-  setStatusBarText( 'Downloading '+intToStr(safeDiv(RcvdCount*100, contentLength))+'%' );
+  setStatusBarText( format(MSG_DL_PERC, [safeDiv(RcvdCount*100, contentLength)]) );
 end; // statusBarHttpGetUpdate
 
 function purgeFilesCB(f:Tfile; childrenDone:boolean; par, par2:integer):TfileCallbackReturn;
@@ -12114,9 +12220,10 @@ f.recursiveApply(purgeFilesCB);
 end;
 
 procedure TmainFrm.UninstallHFS1Click(Sender: TObject);
+resourcestring MSG_UNINSTALL_WARN = 'Delete HFS and all settings?';
 begin
 if checkMultiInstance() then exit;
-if msgDlg('Delete HFS and all settings?', MB_ICONQUESTION+MB_YESNO) <> IDYES then
+if msgDlg(MSG_UNINSTALL_WARN, MB_ICONQUESTION+MB_YESNO) <> IDYES then
   exit;
 uninstall();
 end;
@@ -12346,6 +12453,7 @@ procedure TmainFrm.defaultToRealChkClick(Sender: TObject);
 begin addFolderDefault:='real' end;
 
 procedure TmainFrm.Addicons1Click(Sender: TObject);
+resourcestring MSG_ICONS_ADDED = '%d new icons added';
 var
   files: TStringDynArray;
   i, n: integer;
@@ -12355,7 +12463,7 @@ n:=images.Count;
 for i:=0 to length(files)-1 do
   getImageIndexForFile(files[i]);
 n:=images.Count-n;
-msgDlg(format('%d new icons added',[n]));
+msgDlg(format(MSG_ICONS_ADDED,[n]));
 end;
 
 procedure TmainFrm.Iconmasks1Click(Sender: TObject);
@@ -12387,9 +12495,10 @@ procedure TmainFrm.filesBoxExit(Sender: TObject);
 begin setFilesBoxExtras(filesBox.MouseInClient) end;
 
 procedure TmainFrm.Disable1Click(Sender: TObject);
+resourcestring MSG_DDNS_DISABLED = 'Dynamic DNS updater disabled';
 begin
 dyndns.url:='';
-msgDlg('Dynamic DNS updater disabled');
+msgDlg(MSG_DDNS_DISABLED);
 end;
 
 procedure TmainFrm.saveNewFingerprintsChkClick(Sender: TObject);
@@ -12418,7 +12527,17 @@ except msgDlg(MSG_INVALID_VALUE, MB_ICONERROR) end;
 end;
 
 procedure TmainFrm.Howto1Click(Sender: TObject);
-begin msgDLg(getRes('uploadHowTo')) end;
+resourcestring MSG_UPL_HOWTO = '1. Add a folder (choose "real folder")'
+  +#13
+  +#13'You should now see a RED folder in your virtual file sytem, inside HFS'
+  +#13
+  +#13'2. Right click on this folder'
+  +#13'3. Properties -> Permissions -> Upload'
+  +#13'4. Check on "Anyone"'
+  +#13'5. Ok'
+  +#13
+  +#13'Now anyone who has access to your HFS server can upload files to you.';
+begin msgDLg(MSG_UPL_HOWTO) end;
 
 procedure TmainFrm.Name1Click(Sender: TObject);
 begin defSorting:='name' end;
