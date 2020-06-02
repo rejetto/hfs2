@@ -334,6 +334,7 @@ uses
   Windows, ansistrings;
 const
   CRLF = #13#10;
+  HEADER_LIMITER: ansistring = CRLF+CRLF;
   MAX_REQUEST_LENGTH = 64*1024;
   MAX_INPUT_BUFFER_LENGTH = 256*1024;
   // used as body content when the user did not specify any
@@ -672,7 +673,7 @@ end; // chopline
 
 function chopLine(var s:ansistring):ansistring; overload;
 begin
-result:=chop(pos(#10,s),1,s);
+result:=chop(#10,s);
 if (result>'') and (result[length(result)]=#13) then
   setlength(result, length(result)-1);
 end; // chopline
@@ -1209,8 +1210,8 @@ procedure ThttpConn.processInputBuffer();
 
   var
     i: integer;
-    s, l, k, c: string;
-
+    s, l, k, v: ansistring;
+    ws: widestring;
   begin
     repeat
     { When the buffer is stuffed with file bytes only, we can avoid calling pos() and chop().
@@ -1251,11 +1252,12 @@ procedure ThttpConn.processInputBuffer();
       break;
       end;
     // we wait for the header to be complete
-    if posEx(CRLF+CRLF, buffer, i+length(post.boundary)) = 0 then break;
+    if posEx(HEADER_LIMITER, buffer, i+length(post.boundary)) = 0 then
+      break;
     handleLeftData(i);
     post.filename:='';
     post.data:='';
-    post.header:=chop(CRLF+CRLF, buffer);
+    post.header:=chop(HEADER_LIMITER, buffer);
     chopLine(post.header);
     // parse the header part
     s:=post.header;
@@ -1264,25 +1266,28 @@ procedure ThttpConn.processInputBuffer();
       l:=chopLine(s);
       if l = '' then continue;
       k:=chop(':', l);
-      if not sameText(k, 'Content-Disposition') then continue; // we are not interested in other fields
+      if not sameText(k, 'Content-Disposition') then // we are only interested in content-disposition: form-data
+        continue;
       k:=trim(chop(';', l));
-      if not sameText(k, 'form-data') then continue;
+      if not sameText(k, 'form-data') then
+        continue;
       while l > '' do
         begin
-        c:=chop(nonQuotedPos(';', l), l);
-        k:=UTF8toString(rawByteString(trim(chop('=', c))));
-        c:=UTF8toString(rawByteString(ansiDequotedStr(c,'"')));
+        v:=chop(nonQuotedPos(';', l), 1, l);
+        k:=trim(chop('=', v));
+        ws:=UTF8toString(ansiDequotedStr(v,'"'));
         if sameText(k, 'filename') then
           begin
-          delete(c, 1, lastDelimiter('/\',c));
-          post.filename:=c;
-          end;
-        if sameText(k, 'name') then
-          post.varname:=c;
+          delete(ws, 1, lastDelimiter('/\',ws));
+          post.filename:=ws;
+          end
+        else if sameText(k, 'name') then
+          post.varname:=ws;
         end;
       end;
     lastPostItemPos:=bytesPosted-length(buffer);
-    if post.filename = '' then continue;
+    if post.filename = '' then
+      continue;
     firstPostFile:=FALSE;
     tryNotify(HE_POST_FILE);
     until false;
