@@ -8703,7 +8703,7 @@ procedure TmainFrm.appEventsShowHint(var HintStr: String; var CanShow: Boolean; 
     +if_(f.isRealFolder() or f.isFile(), #13+format(MSG_VFS_PATH,[f.resource]));
   if f.isFile() then
     result:=result+format(#13+MSG_VFS_SIZE+#13+MSG_VFS_DLS,
-      [ smartsize(sizeofFile(f.resource)), f.DLcount ]);
+      [ smartsize(sizeofFile(f.resource)), dotted(f.DLcount) ]);
 
   s:=flagR(MSG_VFS_INVISIBLE, FA_HIDDENTREE, TRUE);
   if s = '' then s:=flag(MSG_VFS_INVISIBLE, FA_HIDDEN);
