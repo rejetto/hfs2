@@ -36,8 +36,8 @@ uses
   HSlib, traylib, monoLib, progFrmLib, classesLib;
 
 const
-  VERSION = '2.4.0 beta9';
-  VERSION_BUILD = '311';
+  VERSION = '2.4.0 beta10';
+  VERSION_BUILD = '312';
   VERSION_STABLE = {$IFDEF STABLE } TRUE {$ELSE} FALSE {$ENDIF};
   CURRENT_VFS_FORMAT :integer = 1;
   CRLF = #13#10;
