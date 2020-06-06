@@ -156,6 +156,7 @@ type
     P_requestCount: integer;
     P_destroying: boolean;  // destroying is in progress
     P_sndBuf: integer;
+    P_v6: boolean;
     persistent: boolean;
     disconnecting: boolean; // disconnected() has been called
     lockCount: integer;     // prevent freeing of the object
@@ -219,6 +220,7 @@ type
     function  initInputStream():boolean;
     property address:string read P_address;      // other peer ip address
     property port:string read P_port;            // other peer port
+    property v6:boolean read P_v6;
     property requestCount:integer read P_requestCount;
     property bytesToSend:int64 read getBytesToSend;
     property bytesToPost:int64 read getBytesToPost;
@@ -978,6 +980,7 @@ limiters:=TObjectList.create;
 limiters.ownsObjects:=FALSE;
 P_address:=sock.GetPeerAddr();
 P_port:=sock.GetPeerPort();
+P_v6:=pos(':', address) > 0;
 state:=HCS_IDLE;
 srv:=server;
 srv.conns.add(self);

@@ -4179,11 +4179,13 @@ if lines = '' then
 else
   rest:=reReplace(lines, '^', '> ')+CRLF;
 
-addr:='';
 if assigned(cd) and assigned(cd.conn) then
   addr:=nonEmptyConcat('', cd.user, '@')
-    +cd.address+':'+cd.conn.port
-    +nonEmptyConcat(' {', localDNSget(cd.address), '}');
+    +ifThen(cd.conn.v6, '['+cd.address+']', cd.address)
+    +':'+cd.conn.port
+    +nonEmptyConcat(' {', localDNSget(cd.address), '}')
+else
+  addr:='';
 
 if (logFile.filename > '') and (logFile.apacheFormat = '') then
   begin
@@ -11371,7 +11373,7 @@ pt:=logbox.caretpos;
 if pt.y >= logbox.lines.count then
   exit;
 s:=logbox.lines[pt.y];
-s:=reGet(s, '^.+  (\S+@)?(\S+):\d+  ', 2);
+s:=reGet(s, '^.+  (\S+@)?\[?(\S+?)\]?:\d+  ', 2);
 if checkAddressSyntax(s,FALSE) then
   result:=s;
 end; // ipPointedInLog
