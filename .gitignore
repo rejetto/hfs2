@@ -3,6 +3,7 @@ __history/
 __recovery/
 win32/
 .vscode/
+.idea/
 *.vfs
 *.dcu
 *.exe

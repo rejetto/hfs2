@@ -9968,7 +9968,7 @@ end; // setGraphRate
 
 procedure TmainFrm.Maxconnections1Click(Sender: TObject);
 resourcestring
-  MSG_MAX_SIM = 'Max simultaneous connections to serve.'
+  MSG_MAX_CON_LONG = 'Max simultaneous connections to serve.'
     +#13'Most people don''t know this function well, and have problems. If you are unsure, please use the "Max simultaneous downloads".';
   MSG_WARN_CONN = 'In this moment there are %d active connections';
 var
@@ -9976,7 +9976,7 @@ var
 begin
 if maxConnections > 0 then s:=intToStr(maxConnections)
 else s:='';
-if inputquery(MSG_SET_LIMIT, MSG_MAX_SIM+#13+MSG_EMPTY_NO_LIMIT, s) then
+if inputquery(MSG_SET_LIMIT, MSG_MAX_CON_LONG+#13+MSG_EMPTY_NO_LIMIT, s) then
 	try setMaxConnections(strToUInt(s))
   except msgDlg(MSG_INVALID_VALUE, MB_ICONERROR)
   end;
@@ -10005,7 +10005,7 @@ end;
 
 procedure TmainFrm.Maxconnectionsfromsingleaddress1Click(Sender: TObject);
 resourcestring
-  MSG_MAX_SIM_SING = 'Max simultaneous connections to accept from a single IP address.'
+  MSG_MAX_CON_SING_LONG = 'Max simultaneous connections to accept from a single IP address.'
     +#13'Most people don''t know this function well, and have problems. If you are unsure, please use the "Max simultaneous downloads from a single IP address".';
 var
   s: string;
@@ -10014,7 +10014,7 @@ var
 begin
 if maxConnectionsIP > 0 then s:=intToStr(maxConnectionsIP)
 else s:='';
-if inputquery(MSG_SET_LIMIT, MSG_MAX_SIM_SING+#13+MSG_EMPTY_NO_LIMIT, s) then
+if inputquery(MSG_SET_LIMIT, MSG_MAX_CON_SING_LONG+#13+MSG_EMPTY_NO_LIMIT, s) then
 	try setMaxConnectionsIP(strToUInt(s))
   except msgDlg(MSG_INVALID_VALUE, MB_ICONERROR)
   end;
@@ -10029,8 +10029,6 @@ if assigned(addresses) then
 end;
 
 procedure TmainFrm.MaxDLsIP1Click(Sender: TObject);
-resourcestring
-  MSG_MAX_SIM_DL_SING = 'Max simultaneous downloads from a single IP address.';
 var
   s: string;
   addresses: TStringDynArray;
