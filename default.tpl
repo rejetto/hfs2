@@ -69,7 +69,7 @@ COMMENT with the ones above you can disable some features of the template. They 
 
     function changePwd() {
         {.if|{.can change pwd.}
-        | ask('<i class="fa fa-key"></i> {.!Change password.}', 'password', function(s){
+        | ask('{.!Warning: the password will be sent unencrypted to the server. For better security change the password from HFS window..}<hr><i class="fa fa-key"></i> {.!Enter new password.}', 'password', function(s){
             s && ajax('changepwd', {'new':s}, getStdAjaxCB(function(){
 				showLoading(false)				
                 showMsg("{.!Password changed.}")
