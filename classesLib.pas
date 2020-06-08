@@ -1,5 +1,5 @@
 {
-Copyright (C) 2002-2012  Massimo Melina (www.rejetto.com)
+Copyright (C) 2002-2020  Massimo Melina (www.rejetto.com)
 
 This file is part of HFS ~ HTTP File Server.
 
