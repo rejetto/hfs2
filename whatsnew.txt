@@ -12,20 +12,24 @@ propaganda
   Mobile-friendly template
   Unicode support
   Encrypted login, and logout
+  DoS protection
   IPv6
 /propaganda
 + new default template
 + new login system, session based, with logout
 + IPv6 support
++ DoS protection https://rejetto.com/forum/index.php?topic=13060.msg1065962#msg1065962
 + {.set item|name.}
 + {.get item|icon.}
 + {.set cfg.}
 + {.for line.}
 + {.if|var}
 + cache for jquery and template sections
-+ new template commands: base64, base64decode, md5, sha1
++ new template commands: base64, base64decode, md5, sha1, sha256
 + *.diff.tpl in exe's folder
 + default mime-type for mkv
++ 'no list' section flag
++ https client support (not server)
 - fixed template handling of section names with both '+' and '=' present
 - fixed LNK files to deleted items
 - fixed comments files were not updated upon deletion of files

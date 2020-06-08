@@ -24,9 +24,12 @@
 + macros missing to cache a folder: {.reply|content=|var=|code=|filename=|mime=.}
 - unexpected scripting behavior http://www.rejetto.com/forum/index.php/topic,9728.msg1054517.html#msg1054517
     in handleItem() translate only symbols, and run all macros at the end
+document: {.if|var}
+document: {.for line.}
 document: {.exec|out|timeout|exitcode.}
 document: [+section]
 document: {.set item|diff template.}
+document: {.calc| ][ }
 document: single line diff templates
 document: disconnection reason|if=XXX
 document: %url%

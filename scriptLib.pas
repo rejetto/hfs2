@@ -1977,6 +1977,8 @@ try
       result:=strMD5(p);
     if name = 'sha1' then
       result:=strSHA1(p);
+    if name = 'sha256' then
+      result:=strSHA256(p);
 
     if name = 'vfs select' then
       if pars.count = 0 then
