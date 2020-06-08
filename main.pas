@@ -1,4 +1,4 @@
-﻿{
+{
 Copyright (C) 2002-2014  Massimo Melina (www.rejetto.com)
 
 This file is part of HFS ~ HTTP File Server.
@@ -3607,17 +3607,21 @@ var
 
 const ip2availability: Tdictionary<string,Tdatetime> = NIL;
 const folderConcurrents: integer = 0;
+const MAX_CONCURRENTS = 3;
 
   procedure updateAvailability();
   var
     pair: Tpair<string,Tdatetime>;
     t: Tdatetime;
   begin
-  dec(folderConcurrents);
   t:=now();
-  ip2availability[cd.address]:=t+1/SECONDS;
+  if folderConcurrents = MAX_CONCURRENTS then // serving multiple addresses at max capacity, let's give a grace period for others
+    ip2availability[cd.address]:=t + 1/SECONDS
+  else
+    ip2availability.Remove(cd.address);
+  dec(folderConcurrents);
   // purge leftovers
-   for pair in ip2availability do 
+   for pair in ip2availability do
     if pair.Value < t then
       ip2availability.Remove(pair.Key);
   end;
@@ -3631,7 +3635,7 @@ const folderConcurrents: integer = 0;
       exit(FALSE);
   except
     end;
-  if folderConcurrents >= 3 then   // max number of concurrent folder loading, others are postponed
+  if folderConcurrents >= MAX_CONCURRENTS then   // max number of concurrent folder loading, others are postponed
     exit(FALSE);
   inc(folderConcurrents);
   ip2availability.AddOrSetValue(cd.address, now()+1);
