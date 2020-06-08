@@ -746,6 +746,8 @@ function removeString(s:string; var a:TStringDynArray; onlyOnce:boolean=TRUE; ci
 var i, lessen:integer;
 begin
 result:=FALSE;
+if a = NIL then
+  exit;
 lessen:=0;
 try
   for i:=length(a)-1 to 0 do
