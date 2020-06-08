@@ -160,12 +160,17 @@ COMMENT with the ones above you can disable some features of the template. They 
 <i class="fa fa-globe"></i> {.!title.}
 <i class="fa fa-lightbulb" id="switch-theme"></i>
 <script>
-$('body').addClass(getCookie('theme'))
+var themes = ['light','dark']
+var themePostfix = '-theme'
+var darkOs = window.matchMedia('(prefers-color-scheme:dark)').matches
+var curTheme = getCookie('theme')
+if (!themes.includes(curTheme))
+	curTheme = themes[+darkOs]
+$('body').addClass(curTheme+themePostfix)
 $(function(){
 
     var titleBar = $('#title-bar')
 	var h = titleBar.height()
-	var on = true
 	var k = 'shrink'
     window.onscroll = function(){
         if (window.scrollY > h)
@@ -174,10 +179,11 @@ $(function(){
             titleBar.removeClass(k)
     }
 
-    $('#switch-theme').click(function(ev) {
-        var k = 'dark-theme';
-        $('body').toggleClass(k);
-        setCookie('theme', $('body').hasClass(k) ? k : '');
+    $('#switch-theme').click(()=>{
+        $('body').toggleClass(curTheme+themePostfix);
+		curTheme = themes[themes.indexOf(curTheme) ^1]
+        $('body').toggleClass(curTheme+themePostfix);
+        setCookie('theme', curTheme);
     });
 });
 </script>
