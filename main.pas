@@ -1,4 +1,4 @@
-{
+﻿{
 Copyright (C) 2002-2014  Massimo Melina (www.rejetto.com)
 
 This file is part of HFS ~ HTTP File Server.
@@ -36,8 +36,8 @@ uses
   HSlib, traylib, monoLib, progFrmLib, classesLib;
 
 const
-  VERSION = '2.4.0 RC1';
-  VERSION_BUILD = '313';
+  VERSION = '2.4.0 RC2';
+  VERSION_BUILD = '314';
   VERSION_STABLE = {$IFDEF STABLE } TRUE {$ELSE} FALSE {$ENDIF};
   CURRENT_VFS_FORMAT :integer = 1;
   CRLF = #13#10;
@@ -3645,16 +3645,12 @@ const MAX_CONCURRENTS = 3;
 var
   i, n: integer;
   f: Tfile;
+  useList: boolean;
+  mainSection: PtplSection;
 begin
 result:='';
 if (folder = NIL) or not folder.isFolder() then exit;
 
-if not available() then
-  begin
-  cd.conn.reply.mode:=HRM_OVERLOAD;
-  cd.conn.addHeader('Refresh: '+intToStr(1+random(2))); // random for less collisions
-  exit('Please wait, server busy');
-  end;  
 if macrosLogChk.checked and not appendmacroslog1.checked then
   resetLog();
 diffTpl:=Ttpl.create();
@@ -3676,6 +3672,18 @@ try
   if otpl <> filelistTpl then
     diffTpl.fullText:=folder.getRecursiveDiffTplAsStr();
 
+  mainSection:=diffTpl.getSection('');
+  if mainSection = NIL then
+    exit;
+  useList:=not mainSection.noList;
+
+  if useList and not available() then
+    begin
+    cd.conn.reply.mode:=HRM_OVERLOAD;
+    cd.conn.addHeader('Refresh: '+intToStr(1+random(2))); // random for less collisions
+    exit('Please wait, server busy');
+    end;
+
   fullEncode:=FALSE;
   ofsRelUrl:=length(folder.url(fullEncode))+1;
   ofsRelItemUrl:=length(folder.pathTill())+1;
@@ -3693,81 +3701,88 @@ try
   result:=diffTpl['special:begin'];
   tryApplyMacrosAndSymbols(result, md, FALSE);
 
-  // cache these values
-  fileTpl:=xtpl(diffTpl['file'], table);
-  folderTpl:=xtpl(diffTpl['folder'], table);
-  linkTpl:=xtpl(diffTpl['link'], table);
-  // this may be heavy to calculate, only do it upon request
-  img_file:=pos('~img_file', fileTpl) > 0;
+  if useList then
+    begin
+    // cache these values
+    fileTpl:=xtpl(diffTpl['file'], table);
+    folderTpl:=xtpl(diffTpl['folder'], table);
+    linkTpl:=xtpl(diffTpl['link'], table);
+    // this may be heavy to calculate, only do it upon request
+    img_file:=pos('~img_file', fileTpl) > 0;
 
-  // build %list% based on dir[]
-  numberFolders:=0; numberFiles:=0; numberLinks:=0;
-  totalBytes:=0;
-  oneAccessible:=FALSE;
-  fast:=TfastStringAppend.Create();
-  listing:=TfileListing.create();
-  hasher:=Thasher.create();
-  if fingerprintsChk.checked then
-    hasher.loadFrom(folder.resource);
-  try
-    listing.fromFolder( folder, cd, recur );
-    listing.sort(cd, if_(recur or (otpl = filelistTpl), '?', diffTpl['sort by']) ); // '?' is just a way to cause the sort to fail in case the sort key is not defined by the connection
+    // build %list% based on dir[]
+    numberFolders:=0; numberFiles:=0; numberLinks:=0;
+    totalBytes:=0;
+    oneAccessible:=FALSE;
+    fast:=TfastStringAppend.Create();
+    listing:=TfileListing.create();
+    hasher:=Thasher.create();
+    if fingerprintsChk.checked then
+      hasher.loadFrom(folder.resource);
+    try
+      listing.fromFolder( folder, cd, recur );
+      listing.sort(cd, if_(recur or (otpl = filelistTpl), '?', diffTpl['sort by']) ); // '?' is just a way to cause the sort to fail in case the sort key is not defined by the connection
 
-    n:=length(listing.dir);
-    for i:=0 to n-1 do
-      begin
-      f:=listing.dir[i];
-      if f.size > 0 then
-        inc(totalBytes, f.size);
-      if f.isLink() then
-        inc(numberLinks)
-      else if f.isFolder() then
-        inc(numberFolders)
-      else
-        inc(numberFiles);
+      n:=length(listing.dir);
+      for i:=0 to n-1 do
+        begin
+        f:=listing.dir[i];
+        if f.size > 0 then
+          inc(totalBytes, f.size);
+        if f.isLink() then
+          inc(numberLinks)
+        else if f.isFolder() then
+          inc(numberFolders)
+        else
+          inc(numberFiles);
+        end;
+      {TODO these symbols will be available when executing macros in handleItem. Having
+        them at this stage is useful only in case immediate calculations are required.
+        This may happen seldom, but maybe some template is using it since we got this here.
+        Each symbols is an extra iteration on the template piece and we may be tempted
+        to consider for optimizations. To not risk legacy problems we should consider
+        treating table symbols with a regular expression and a Tdictionary instead.
+      }
+      table:=toSA([
+        '%upload-link%', if_(accountAllowed(FA_UPLOAD, cd, folder), diffTpl['upload-link']),
+        '%files%', diffTpl[if_(n>0, 'files','nofiles')],
+        '%number%', intToStr(n),
+        '%number-files%', intToStr(numberFiles),
+        '%number-folders%', intToStr(numberFolders),
+        '%number-links%', intToStr(numberlinks),
+        '%total-bytes%', intToStr(totalBytes),
+        '%total-kbytes%', intToStr(totalBytes div KILO),
+        '%total-size%', smartsize(totalBytes)
+      ]);
+
+      for i:=0 to length(listing.dir)-1 do
+        begin
+        application.ProcessMessages();
+        if cd.conn.state = HCS_DISCONNECTED then exit;
+        cd.lastActivityTime:=now();
+        handleItem(listing.dir[i])
+        end;
+      list:=fast.reset();
+    finally
+      listing.free;
+      fast.free;
+      hasher.free;
       end;
-    {TODO this symbols will be available when executing macros in handleItem. Having
-      them at this stage is useful only in case immediate calculations are required.
-      This may happen seldom, but maybe some template is using it since we got this here.
-      Each symbols is an extra iteration on the template piece and we may be tempted
-      to consider for optimizations. To not risk legacy problems we should consider
-      treating table symbols with a regular expression and a Tdictionary instead.
-    }
-    table:=toSA([
-      '%upload-link%', if_(accountAllowed(FA_UPLOAD, cd, folder), diffTpl['upload-link']),
-      '%files%', diffTpl[if_(n>0, 'files','nofiles')],
-      '%number%', intToStr(n),
-      '%number-files%', intToStr(numberFiles),
-      '%number-folders%', intToStr(numberFolders),
-      '%number-links%', intToStr(numberlinks),
-      '%total-bytes%', intToStr(totalBytes),
-      '%total-kbytes%', intToStr(totalBytes div KILO),
-      '%total-size%', smartsize(totalBytes)
-    ]);
 
-    for i:=0 to length(listing.dir)-1 do
-      begin
-      application.ProcessMessages();
-      if cd.conn.state = HCS_DISCONNECTED then exit;
-      cd.lastActivityTime:=now();
-      handleItem(listing.dir[i])
-      end;
-    list:=fast.reset();
-  finally
-    listing.free;
-    fast.free;
-    hasher.free;
-    end;
+    if cd.conn.state = HCS_DISCONNECTED then exit;
 
-  if cd.conn.state = HCS_DISCONNECTED then exit;
+    // build final page
+    if not oneAccessible then
+      md.archiveAvailable:=FALSE;
+    end
+  else
+    list:='';
 
-  // build final page
-  if not oneAccessible then md.archiveAvailable:=FALSE;
   md.table:=table;
   addArray(md.table, [
     '%list%',list
   ]);
-  result:=diffTpl[''];
+  result:=mainSection.txt;
   md.f:=NIL;
   md.afterTheList:=TRUE;
   try tryApplyMacrosAndSymbols(result, md)
@@ -3777,7 +3792,8 @@ try
   result:=replaceText(result, '%build-time%',
     floatToStrF((now()-buildTime)*SECONDS, ffFixed, 7,3) );
 finally
-  updateAvailability();    
+  if useList then
+    updateAvailability();
   folder.unlock();
   diffTpl.free;
   end;
@@ -4987,6 +5003,7 @@ var
         data.session:=sessions[sid];
         if data.session.ip <> conn.address then
           begin
+          conn.delCookie(SESSION_COOKIE); // legitimate clients that changed address must clear their cookie, or they will be stuck with this invalid session
           conn.reply.mode:=HRM_DENY;
           result:=FALSE;
           exit;

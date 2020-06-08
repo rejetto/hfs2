@@ -139,7 +139,7 @@ type
   PtplSection = ^TtplSection;
   TtplSection = record
     name, txt: string;
-    nolog, nourl, cache: boolean;
+    nolog, nourl, noList, cache: boolean;
     ts: Tdatetime;
     end;
 
@@ -1023,9 +1023,10 @@ var
   // there may be flags after |
   s:=cur_section;
   cur_section:=chop('|', s);
-  base.nolog:=ansiPos('no log', s) > 0;
-  base.nourl:=ansiPos('private', s) > 0;
-  base.cache:=ansiPos('cache', s) > 0;
+  base.nolog:=containsStr('no log', s);
+  base.nourl:=containsStr('private', s);
+  base.noList:=containsStr('no list', s);
+  base.cache:=containsStr('cache', s);
   base.ts:=now();
 
   s:=cur_section;
