@@ -1,5 +1,4 @@
 Welcome! This is the default template for HFS 2.4
-template revision TR3.
 
 Here below you'll find some options affecting the template.
 Consider 1 is used for "yes", and 0 is used for "no".
@@ -11,12 +10,14 @@ and following all the options you want to change, using the same syntax you see 
 That's all. To know more about diff templates read the documentation.
 
 [+special:strings]
-
 option.newfolder=1
 option.move=1
 option.comment=1
 option.rename=1
 COMMENT with the ones above you can disable some features of the template. They apply to all users.
+
+[template id]
+def 3.0
 
 [common-head]
 <!DOCTYPE html>
