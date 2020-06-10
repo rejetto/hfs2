@@ -164,7 +164,7 @@ def 3.0
 var themes = ['light','dark']
 var themePostfix = '-theme'
 var darkOs = window.matchMedia('(prefers-color-scheme:dark)').matches
-var curTheme = getCookie('theme')
+var curTheme = localStorage['theme']
 if (!themes.includes(curTheme))
 	curTheme = themes[+darkOs]
 $('body').addClass(curTheme+themePostfix)
@@ -184,7 +184,7 @@ $(function(){
         $('body').toggleClass(curTheme+themePostfix);
 		curTheme = themes[themes.indexOf(curTheme) ^1]
         $('body').toggleClass(curTheme+themePostfix);
-        setCookie('theme', curTheme);
+        localStorage.setItem('theme', curTheme);
     });
 });
 </script>
@@ -1091,7 +1091,7 @@ function log(){
 function toggleTs(){
     var k = 'hideTs'
     $('#files').toggleClass(k)
-    setCookie('ts', Number(!$('#files').hasClass(k)));
+    localStorage.setItem('ts', Number(!$('#files').hasClass(k)));
 }
 
 function decodeURL(urlData) {
@@ -1135,7 +1135,7 @@ sortOptions = {
 
 $(function(){
     $('.trash-me').detach(); // this was hiding things for those w/o js capabilities
-    if (Number(getCookie('ts')))
+    if (Number(localStorage['ts']))
         toggleTs()
 
     $('body').on('click','.item-menu', function(ev){
