@@ -1,4 +1,4 @@
-﻿{
+{
 Copyright (C) 2002-2020  Massimo Melina (www.rejetto.com)
 
 This file is part of HFS ~ HTTP File Server.
@@ -36,8 +36,8 @@ uses
   HSlib, traylib, monoLib, progFrmLib, classesLib;
 
 const
-  VERSION = '2.4.0 RC2';
-  VERSION_BUILD = '314';
+  VERSION = '2.4.0 RC3';
+  VERSION_BUILD = '315';
   VERSION_STABLE = {$IFDEF STABLE } TRUE {$ELSE} FALSE {$ENDIF};
   CURRENT_VFS_FORMAT :integer = 1;
   CRLF = #13#10;
