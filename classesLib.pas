@@ -192,7 +192,7 @@ type
 
   ThttpClient = class(TSslHttpCli)
     constructor Create(AOwner: TComponent); override;
-    destructor destroy;
+    destructor Destroy; override;
     class function createURL(url:string):ThttpClient;
     end;
 
@@ -238,11 +238,11 @@ agent:=HFS_HTTP_AGENT;
 SslContext := TSslContext.Create(NIL);
 end; // create
 
-destructor ThttpClient.destroy;
+destructor ThttpClient.Destroy;
 begin
 SslContext.free;
 SslContext:=NIl;
-inherited;
+inherited destroy;
 end;
 
 constructor TperIp.create();
@@ -1058,6 +1058,7 @@ var
       sect.txt:=from.txt+base.txt;
       sect.nolog:=from.nolog or base.nolog;
       sect.nourl:=from.nourl or base.nourl;
+      sect.noList:=from.noList or base.noList;
       continue;
       end;
     sect^:=base;
@@ -1066,14 +1067,13 @@ var
   end; // saveInSection
 
 const
-  BOM = #$EF#$BB#$BF;
+  UTF8_BOM = #$EF#$BB#$BF;
 var
   first: boolean;
 begin
-// this is used by some unicode files. at the moment we just ignore it.
-if ansiStartsStr(BOM, txt) then
-  delete(txt, 1, length(BOM));
-  
+if ansiStartsStr(UTF8_BOM, txt) then
+  delete(txt, 1, length(UTF8_BOM));
+
 if txt = '' then exit;
 src:=src+txt;
 cur_section:='';
