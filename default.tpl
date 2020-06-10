@@ -26,10 +26,10 @@ def 3.0
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="shortcut icon" href="/favicon.ico">
-	<link rel="stylesheet" href="/?mode=section&id=style.css" type="text/css">
+	<link rel="stylesheet" href="/~style.css" type="text/css">
     <script type="text/javascript" src="/?mode=jquery"></script>
     <script>var HFS = { user:'{.js encode|%user%.}', folder:'{.js encode|%folder%.}', sid:"{.cookie|HFS_SID_.}" }</script>
-	<script type="text/javascript" src="/?mode=section&id=lib.js"></script>
+	<script type="text/javascript" src="/~lib.js"></script>
 
 []
 {.$common-head.}
@@ -80,18 +80,6 @@ def 3.0
 		.}
     }//changePwd
 
-    function ajax(method, data, cb) {
-        if (!data)
-            data = {};
-        data.token = "{.cookie|HFS_SID_.}";
-		showLoading()
-        return $.post("?mode=section&id=ajax."+method, data).then(function(){ 
-			if (cb)
-				showLoading(false)
-			;(cb||getStdAjaxCB()).apply(this,arguments)
-		}, ajaxError);
-    }//ajax
-	
 </script>
 
 <div id='menu-panel'>
@@ -630,6 +618,19 @@ add bytes=switch|{.cut|-1||$1.}|,|0,1,2,3,4,5,6,7,8,9|$1 {.!Bytes.}|K,M,G,T|$1B
 // <script> // this is here for the syntax highlighter
 
 {.$sha256.js.}
+
+function ajax(method, data, cb) {
+    if (!data)
+        data = {};
+    data.token = HFS.sid; // avoid CSRF attacks
+    showLoading()
+    return $.post("?~ajax."+method, data).then(function(){
+        if (cb)
+            showLoading(false)
+        ;(cb||getStdAjaxCB()).apply(this,arguments)
+    }, ajaxError);
+}//ajax
+
 function outsideV(e, additionalMargin) {
     outsideV.w || (outsideV.w = $(window));
     if (!(e instanceof $))
