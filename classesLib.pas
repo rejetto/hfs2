@@ -1037,6 +1037,9 @@ var
         or (s > '') and (VERSION_BUILD < s) then // min
           exit(FALSE);
         end
+      else if k = 'ver' then
+        if fileMatch(v, VERSION) then continue
+        else exit(FALSE)
       else if k = 'template' then
         if fileMatch(v, getTill(#13,getTxt('template id'))) then continue
         else exit(FALSE)

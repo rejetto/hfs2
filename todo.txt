@@ -1,12 +1,12 @@
 - update doesn't work without 'only 1 instance' (it's the -q)
 + replace shellExtDlg.gif with transparent png (english system)
++ self-test supporting https
 + expiring links
 * dismiss regexp lib http://docwiki.embarcadero.com/Libraries/Rio/en/System.RegularExpressions.TRegEx
 + load *.events
 + url auth limited to resource
 + global limit speed for downloads (browsing excluded)
-+ [tpl id] [SECTION|for-tpl=MASK]
-* consider letting comment "protected" files. Can it really cause harm? 
+* consider letting comment "protected" files. Can it really cause harm?
 * flag to enable lnk files in a folder (disabled by default)
 + sign exe http://www.rejetto.com/forum/hfs-~-http-file-server/'unsafe'/msg1061437/#msg1061437
 * cache reReplace
@@ -24,17 +24,17 @@
 + macros missing to cache a folder: {.reply|content=|var=|code=|filename=|mime=.}
 - unexpected scripting behavior http://www.rejetto.com/forum/index.php/topic,9728.msg1054517.html#msg1054517
     in handleItem() translate only symbols, and run all macros at the end
+document: [section|ver=MASK|build=MIN-MAX|template=MASK]
 document: {.if|var}
-document: {.for line.}
 document: {.exec|out|timeout|exitcode.}
 document: [+section]
 document: {.set item|diff template.}
 document: {.calc| ][ }
-document: single line diff templates
-document: disconnection reason|if=XXX
+document: single line diff templates (file path)
+document: {.disconnection reason|if=XXX.}
 document: %url%
 document: commands returning white space: add folder, save, set account, exec, mkdir, chdir, delete, rename, move copy, set
-document: dir, disk free, filetime, file changed, load tpl
+document: dir, disk free, filetime, file changed, load tpl, sha256, for line
 + event to filter logging http://www.rejetto.com/forum/index.php/topic,9784.0.html
 - wrong browser http://www.rejetto.com/forum/index.php/topic,9710.0.html
     solution:
@@ -45,12 +45,9 @@ document: dir, disk free, filetime, file changed, load tpl
 + upload to non-browsable folder
 - android doesn't upload http://www.rejetto.com/forum/index.php/topic,9699.0/topicseen.html#msg1054287
 - android doesn't work with passwords http://www.rejetto.com/forum/index.php/topic,9575.msg1054029.html#msg1054029
-? default tpl: check with IE6
 ? default tpl: consider css data uri http://www.nczonline.net/blog/2010/07/06/data-uris-make-css-sprites-obsolete/
-+ default tpl: support for rawr thumbnails
-+ next VFS file format version should be XML-based
++ next VFS file format version should be text (yaml or json)
 + remove the "progress" from "log what", and use [progress|no log] instead
-? {.rename.} should update descript.ion
 + folder archive depth limit http://www.rejetto.com/forum/index.php/topic,8546.msg1050027.html#msg1050027
 ? in getPage() many %symbols% are translated in a way incompatible with {.section.}
 ? Windows Script Interfaces
@@ -70,8 +67,6 @@ document: dir, disk free, filetime, file changed, load tpl
 + log event to filter www.rejetto.com/forum/?topic=7332.0
 ? integration with mediainfo.dll www.rejetto.com/forum/?topic=7329
 + folder archive log, just as for deletion http://www.rejetto.com/forum/index.php?topic=6904.msg1042974;topicseen#msg1042974
-- upload doesn't work on chinese folders with uneven length  www.rejetto.com/forum/?topic=5382
-- chinese problems since #161 www.rejetto.com/forum/?topic=5344
 - AV with RealVNC on hints by mouse hovering www.rejetto.com/forum/?topic=5261
 - N-Stalker can locally crash HFS
 - AV in #179 http://www.rejetto.com/forum/index.php?topic=5653.msg1033457#msg1033457  www.rejetto.com/forum/?topic=5681
@@ -98,7 +93,6 @@ document: dir, disk free, filetime, file changed, load tpl
 + make %list% available in every page
 + support for ALT+F4 with option "Minimize to tray clicking the close button" www.rejetto.com/forum/?topic=6351 
 + replace and delete icons http://www.rejetto.com/forum/index.php?topic=6317.msg1038157#msg1038157
-+ self-test supporting https
 ? currently the delete permission is only inside a folder. you can't mark a file or delete the marked folder. is this ok?
 + when a link is protected (no access for this user) it may be displayed as a link to the %item-name%, then 401, and if login is successful provide a redirection 
 + change folder/link/generic-file icons (via GUI, without editing the template) 
