@@ -1006,10 +1006,44 @@ var
 
   procedure saveInSection();
   var
-    ss: TStringDynArray;
-    s: string;
-    i: integer;
     base: TtplSection;
+
+    function parseFlagsAndAcceptSection(flags:TStringDynArray):boolean;
+    var
+      f, k, v, s: string;
+      i: integer;
+    begin
+    for f in flags do
+      begin
+      i:=pos('=',f);
+      if i = 0 then
+        begin
+        if f='no log' then
+          base.nolog:=TRUE
+        else if f='private' then
+          base.nourl:=TRUE
+        else if f='no list' then
+          base.noList:=TRUE
+        else if f='cache' then
+          base.cache:=TRUE;
+        Continue;
+        end;
+      k:=copy(f,1,i-1);
+      v:=copy(f,i+1,MAXINT);
+      if k = 'build' then
+        begin
+        s:=chop('-',v);
+        if (v > '') and (VERSION_BUILD > v) // max
+        or (s > '') and (VERSION_BUILD < s) then // min
+          exit(FALSE);
+        end
+      end;
+    result:=TRUE;
+    end;
+
+  var
+    ss: TStringDynArray;
+    s, si: string;
     till: pchar;
     append: boolean;
     sect, from: PtplSection;
@@ -1019,29 +1053,27 @@ var
   if till^ = #10 then dec(till);
   if till^ = #13 then dec(till);
 
+  base:=default(TtplSection);
   base.txt:=getStr(ptxt, till);
-  // there may be flags after |
-  s:=cur_section;
-  cur_section:=chop('|', s);
-  base.nolog:=containsStr('no log', s);
-  base.nourl:=containsStr('private', s);
-  base.noList:=containsStr('no list', s);
-  base.cache:=containsStr('cache', s);
   base.ts:=now();
+  ss:=split('|',cur_section);
+  cur_section:=popString(ss);
+  if not parseFlagsAndAcceptSection(ss) then
+    exit;
 
-  s:=cur_section;
-  append:=ansiStartsStr('+', s);
+  append:=ansiStartsStr('+', cur_section);
   if append then
-    delete(s,1,1);
+    delete(cur_section,1,1);
 
   // there may be several section names separated by =
-  ss:=split('=', s);
+  ss:=split('=', cur_section);
   // handle the main section specific case
-  if ss = NIL then addString('', ss);
+  if ss = NIL then
+    addString('', ss);
   // assign to every name the same txt
-  for i:=0 to length(ss)-1 do
+  for si in ss do
     begin
-    s:=trim(ss[i]);
+    s:=trim(si);
     sect:=getSection(s, FALSE);
     from:=NIL;
     if sect = NIL then // not found
