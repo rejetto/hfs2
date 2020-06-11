@@ -956,7 +956,7 @@ else
 end; // getTxt
 
 function Ttpl.getTxtByExt(fileExt:string):string;
-begin result:=getTxt('file.'+fileExt) end;
+begin result:=getTxt('file'+fileExt) end;
 
 procedure Ttpl.fromString(txt:string);
 var

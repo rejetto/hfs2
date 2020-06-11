@@ -1932,7 +1932,7 @@ try
       disconnect();
 
     if name = 'stop server' then
--      begin
+      begin
       stopServer();
       exit('');
       end;

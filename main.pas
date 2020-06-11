@@ -5609,8 +5609,7 @@ var
     s:='';
   if (s > '') and f.isFolder() and not ansiStartsText('special:', s) then
     with tplFromFile(f) do // temporarily builds from diff tpls
-      try
-        // NB: section [] is not accessible, because of the s>'' test
+      try 
         section:=getsection(s);
         if assigned(section) and not section.nourl then // it has to exist and be accessible 
           begin
@@ -5619,7 +5618,8 @@ var
             getPage(s, data, f, me());
           exit;
           end;
-      finally free end;
+      finally free 
+        end;
 
   if f.isFolder() and not (FA_BROWSABLE in f.flags)
   and stringExists(urlCmd,['','~folder.tar','~files.lst']) then
