@@ -941,7 +941,7 @@ if sections.containsKey(section) then
   result:=sections[section]
 else
   result:=NIL;
-if inherit and assigned(over) and ((result = NIL) or (trim(result.txt) = '')) then
+if inherit and assigned(over) and (result = NIL) then
   result:=over.getSection(section);
 end; // getSection
 

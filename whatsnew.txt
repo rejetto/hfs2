@@ -37,6 +37,7 @@ propaganda
 - fixed double "Content-Length" header on compressed pages
 - fixed log text base color not matching system settings http://rejetto.com/forum/index.php?topic=13233.0
 - fixed while renaming a file in the GUI, CTRL+C/V didn't work on the text
+- fixed diff tpl logic: an empty section will now override the inherited one
 
 VER 2.3m
 propaganda
