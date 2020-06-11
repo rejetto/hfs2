@@ -12777,7 +12777,10 @@ MIMEtypes:=toSA([
   '*.txt', 'text/plain',
   '*.css', 'text/css',
   '*.js',  'text/javascript',
-  '*.mkv', 'video/x-matroska'
+  '*.mkv', 'video/x-matroska',
+  '*.mp3', 'audio/mp3',
+  '*.mp4', 'video/mp4',
+  '*.m3u8', 'application/x-mpegURL'
 ]);
 
 systemimages:=getSystemimages();
