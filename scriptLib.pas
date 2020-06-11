@@ -665,11 +665,30 @@ var
   end; // inc_
 
   procedure convert();
+  var
+    dst, s: string;
+    c: ansichar;
   begin
-  if sameText(p, 'ansi') and sameText(par(1), 'utf-8') then
-    result:=string(ansiToUTF8(ansistring(par(2))))
-  else if sameText(p, 'utf-8') and sameText(par(1), 'ansi') then
-    result:=utf8ToAnsi(ansistring(par(2)))
+  dst:=par(1);
+  s:=par(2);
+  if sameText(p, 'ansi') and sameText(dst, 'utf-8') then
+    result:=string(ansiToUTF8(ansistring(s)))
+  else if sameText(p, 'utf-8') then
+    if sameText(dst, 'ansi') then
+      result:=utf8ToAnsi(ansistring(s))
+    else if dst='dec' then
+      begin
+      result:='';
+      for c in UTF8encode(s) do
+        result:=result+intToStr(ord(c))+',';
+      setLength(result, length(result)-1);
+      end
+    else if dst='hex' then
+      begin
+      result:='';
+      for c in UTF8encode(s) do
+        result:=result+intToHex(ord(c));
+      end
   end; // convert
 
   procedure encodeuri();
@@ -1913,9 +1932,15 @@ try
       disconnect();
 
     if name = 'stop server' then
+-      begin
       stopServer();
+      exit('');
+      end;
     if name = 'start server' then
+      begin
       startServer();
+      exit('');
+      end;
 
 
     if name = 'focus' then
