@@ -579,7 +579,8 @@ if url = '' then
 encodeHTML:=[];
 if nonascii then
   encodeHTML:=[#128..#255];
-encodePerc:=[#0..#31,'#','%','?','"','''','&','<','>',':'];
+encodePerc:=[#0..#31,'#','%','?','"','''','&','<','>',':',
+  ',',';']; // these for content-disposition
 // actually ':' needs encoding only in relative url
 if spaces then include(encodePerc,' ');
 if not htmlEncoding then
