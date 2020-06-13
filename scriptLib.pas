@@ -1472,7 +1472,8 @@ var
     exit;
     end;
   a:=findEnabledLinkedAccount(a, split(';',s));
-  if assigned(a) then result:=a.user;
+  if assigned(a) then
+    result:=a.user;
   end; // memberOf
 
   procedure canArchive(f:Tfile);

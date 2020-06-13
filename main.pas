@@ -4971,7 +4971,7 @@ var
   begin
   s:=ansistring(HSlib.encodeURL(data.lastFN));
   conn.addHeader( ansistring('Content-Disposition: '+if_(attach, 'attachment; ')
-    +'filename*=UTF-8''''"'+s+'"; filename="'+s+'"'));
+    +'filename*=UTF-8'''''+s+'; filename='+s));
   end;
 
   function sessionRedirect():boolean;
