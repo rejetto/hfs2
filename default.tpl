@@ -618,7 +618,8 @@ function ajax(method, data, cb) {
         data = {};
     data.token = HFS.sid; // avoid CSRF attacks
     showLoading()
-    return $.post("/~ajax."+method, data).then(function(){
+    // calling this section 'under' the current folder will affect permissions commands like {.get|can delete.}
+    return $.post("?mode=section&id=ajax."+method, data).then(function(){
         if (cb)
             showLoading(false)
         ;(cb||getStdAjaxCB()).apply(this,arguments)
