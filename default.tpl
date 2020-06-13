@@ -624,7 +624,7 @@ function ajax(method, data, cb) {
         data = {};
     data.token = HFS.sid; // avoid CSRF attacks
     showLoading()
-    return $.post("?~ajax."+method, data).then(function(){
+    return $.post("/~ajax."+method, data).then(function(){
         if (cb)
             showLoading(false)
         ;(cb||getStdAjaxCB()).apply(this,arguments)
