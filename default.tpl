@@ -107,8 +107,9 @@ def 3.0
 		</button>
 
 		{.if|{.get|can archive.}|
-		<button id='archiveBtn' title="{.!Download selected files as a single archive.}"
-			onclick='ask("{.!Download these files as a single archive?.}", ()=> submit({ files: getSelectedItemsName() }, "{.get|url|mode=archive|recursive.}") )'>
+		<button id='archiveBtn' title="{.!Download selected files as a single archive.}" onclick='
+			ask("{.!Download these files as a single archive?.}", ()=> 
+				submit({ selection: getSelectedItemsName() }, "{.get|url|mode=archive|recursive.}") )'>
 			<i class="fa fa-file-archive"></i>
 			<span>{.!Archive.}</span>
 		</button>
@@ -688,7 +689,6 @@ function submit(data, url) {
 				f.append("<input type='hidden' name='"+k+"' value='"+v2+"' />")
         	})
     }
-	showLoading()
     f.submit()
 }//submit
 
@@ -805,9 +805,11 @@ function getSelectedItemsName() {
 }//getSelectedItemsName
 
 function deleteFiles(files) {
-	ask("{.!confirm.}", ()=> 
-		submit({ action:'delete', files }))
-}
+	ask("{.!confirm.}", ()=>{
+		submit({ action:'delete', selection:files })
+		showLoading()
+	})
+}//deleteFiles
 
 function moveFiles(files) {
 	ask("{.!Enter the destination folder.}", 'text', function(dst) {

@@ -4473,7 +4473,7 @@ end; // apacheLogCb
 procedure removeFilesFromComments(files:TStringDynArray);
 var
   fn, lastPath, path: string;
-  trancheStart, trancheEnd: integer; // the tranche is a window within 'files' of items sharing the same path
+  trancheStart, trancheEnd: integer; // the tranche is a window within 'selection' of items sharing the same path
   ss: TstringList;
 
   procedure doTheTranche();
@@ -5038,7 +5038,7 @@ var
   begin
   result:=NIL;
   for i:=0 to data.postvars.count-1 do
-    if sameText('files', data.postvars.names[i]) then
+    if sameText('selection', data.postvars.names[i]) then
       addString(getTill('#', data.postvars.valueFromIndex[i]), result) // omit #anchors
   end; // getFilesSelection
 
