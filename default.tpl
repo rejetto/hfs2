@@ -28,7 +28,14 @@ def 3.0
 	<link rel="shortcut icon" href="/favicon.ico">
 	<link rel="stylesheet" href="/~style.css" type="text/css">
     <script type="text/javascript" src="/?mode=jquery"></script>
-    <script>var HFS = { user:'{.js encode|%user%.}', folder:'{.js encode|%folder%.}', sid:"{.cookie|HFS_SID_.}" }</script>
+    <script>
+	var HFS = { 
+		user: '{.js encode|%user%.}', 
+		folder: '{.js encode|%folder%.}', 
+		sid: '{.cookie|HFS_SID_.}',
+		canChangePwd: '{.can change pwd.}',
+	}
+	</script>
 	<script type="text/javascript" src="/~lib.js"></script>
 
 []
@@ -67,19 +74,6 @@ def 3.0
         if ($('#menu-panel').css('position').indexOf('sticky') < 0) // sticky is not supported
             setInterval(function(){ $('#wrapper').css('margin-top', $('#menu-panel').height()+5) }, 300); // leave space for the fixed panel
     });
-
-    function changePwd() {
-        {.if|{.can change pwd.}
-        | ask('{.!Warning: the password will be sent unencrypted to the server. For better security change the password from HFS window..}<hr><i class="fa fa-key"></i> {.!Enter new password.}', 'password', function(s){
-            s && ajax('changepwd', {'new':s}, getStdAjaxCB(function(){
-				showLoading(false)				
-                showMsg("{.!Password changed.}")
-            }))
-        })
-        | showError("{.!Sorry, you lack permissions for this action.}")
-		.}
-    }//changePwd
-
 </script>
 
 <div id='menu-panel'>
@@ -605,7 +599,7 @@ can mkdir=and|{.get|can upload.}|{.!option.newfolder.}
 can comment=and|{.get|can upload.}|{.!option.comment.}
 can rename=and|{.get|can delete.}|{.!option.rename.}
 can delete=get|can delete
-can change pwd=member of|can change password
+can change pwd={.{.member of|can change password.} >.}
 can move=and|{.get|can delete.}|{.!option.move.}
 escape attr=replace|"|&quot;|$1
 commentNL=if|{.pos|<br|$1.}|$1|{.replace|{.chr|10.}|<br />|$1.}
@@ -630,6 +624,21 @@ function ajax(method, data, cb) {
         ;(cb||getStdAjaxCB()).apply(this,arguments)
     }, ajaxError);
 }//ajax
+
+function changePwd() {
+	if (!HFS.canChangePwd)
+		return showError("{.!Sorry, you lack permissions for this action.}")
+	ask(`{.!Warning: the password will be sent unencrypted to the server. For better security change the password from HFS window..}
+		<hr><i class="fa fa-key"></i> {.!Enter new password.}`, 
+		'password', 
+		s=>
+			s && ajax('changepwd', {'new':s}, getStdAjaxCB(function(){
+				showLoading(false)				
+				showMsg("{.!Password changed.}")
+			}))
+	)
+}//changePwd
+
 
 function outsideV(e, additionalMargin) {
     outsideV.w || (outsideV.w = $(window));
