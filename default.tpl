@@ -82,15 +82,16 @@ def 3.0
 	</div>
 	<div id="menu-bar">
 		{.if| {.length|%user%.}
-		| <button onclick='showAccount()'><i class='fa fa-user-circle'></i><span>%user%</span></button>
+		| <button title="{.!Account panel.}" onclick='showAccount()'><i class='fa fa-user-circle'></i><span>%user%</span></button>
 		| <button title="{.!Login.}" onclick='showLogin()'><i class='fa fa-user'></i><span>{.!Login.}</span></button>
 		.}
 		{.if| {.get|can recur.} |
-		<button onclick="{.if|{.length|{.?search.}.}| location = '.'| $('#search-panel').toggle().find(':input:first').focus().}">
+		<button title="{.!Search.}"
+		    onclick="{.if|{.length|{.?search.}.}| location = '.'| $('#search-panel').toggle().find(':input:first').focus().}">
 			<i class='fa fa-search'></i><span>{.!Search.}</span>
 		</button>
 		/if.}
-		<button id="multiselection" title="{.!Enable multi-selection.}"  onclick='toggleSelection()'>
+		<button id="multiselection" title="{.!Enable multi-selection.}" onclick='toggleSelection()'>
 			<i class='fa fa-check'></i>
 			<span>{.!Selection.}</span>
 		</button>
@@ -100,13 +101,14 @@ def 3.0
 				<span>{.!New folder.}</span>
 			</button>
 		.}
-		<button id="toggleTs" title="{.!Display timestamps.}"  onclick="toggleTs()">
+		<button id="toggleTs" title="{.!Display timestamps.}" onclick="toggleTs()">
 			<i class='fa fa-clock'></i>
 			<span>{.!Toggle timestamp.}</span>
 		</button>
 
 		{.if|{.get|can archive.}|
-		<button id='archiveBtn' onclick='ask("{.!Download these files as a single archive?.}", ()=> submit({ files: getSelectedItemsName() }, "{.get|url|mode=archive|recursive.}") )'>
+		<button id='archiveBtn' title="{.!Download selected files as a single archive.}"
+			onclick='ask("{.!Download these files as a single archive?.}", ()=> submit({ files: getSelectedItemsName() }, "{.get|url|mode=archive|recursive.}") )'>
 			<i class="fa fa-file-archive"></i>
 			<span>{.!Archive.}</span>
 		</button>
@@ -118,7 +120,7 @@ def 3.0
 			</button>
 		:}.}
 
-		<button id="sort" onclick="changeSort()">
+		<button id="sort" title="{.!Change list order.}" onclick="changeSort()">
 			<i class='fa fa-sort'></i>
 			<span></span>
 		</button>
