@@ -594,7 +594,7 @@ z-index:1; /* without this .item-menu will be over*/ }
 {.if|{.length|{.set account||password={.postvar|new.}.}/length.}|ok|failed.}
 
 [special:alias]
-check session=if|{.{.cookie|HFS_SID_.} != {.postvar|token.}.}|{:{.cookie|HFS_SID_|value=|expires=-1.} {.break|result=bad session.}:}
+check session=break|if={.{.cookie|HFS_SID_.} != {.postvar|token.}.}|result=bad token
 can mkdir=and|{.get|can upload.}|{.!option.newfolder.}
 can comment=and|{.get|can upload.}|{.!option.comment.}
 can rename=and|{.get|can delete.}|{.!option.rename.}
@@ -789,10 +789,7 @@ function getStdAjaxCB(what2do) {
         if (res === "ok")
 			return (typeof what2do==='function') ? what2do() : location.reload()
 		showLoading(false)
-		showError(res, function(){
-			if (res === 'bad session')
-				location.reload()
-		})
+		showError(res)
     }
 }//getStdAjaxCB
 
