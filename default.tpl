@@ -19,6 +19,9 @@ COMMENT with the ones above you can disable some features of the template. They 
 [template id]
 def 3.0
 
+[api level]
+2
+
 [common-head]
 <!DOCTYPE html>
 <html>
