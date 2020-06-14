@@ -1,4 +1,4 @@
-{
+﻿{
 Copyright (C) 2002-2020  Massimo Melina (www.rejetto.com)
 
 This file is part of HFS ~ HTTP File Server.
@@ -36,8 +36,8 @@ uses
   HSlib, traylib, monoLib, progFrmLib, classesLib;
 
 const
-  VERSION = '2.4.0 RC3';
-  VERSION_BUILD = '315';
+  VERSION = '2.4.0 RC4';
+  VERSION_BUILD = '316';
   VERSION_STABLE = {$IFDEF STABLE } TRUE {$ELSE} FALSE {$ENDIF};
   CURRENT_VFS_FORMAT :integer = 1;
   CRLF = #13#10;
@@ -4572,13 +4572,17 @@ resourcestring
   MSG_TPL_INCOMPATIBLE = 'The template you are trying to load is not compatible with current HFS version.'
     +#13'HFS will now use default template.'
     +#13'Ask on the forum if you need further help.';
+var
+  sec: PtplSection;
 begin
 result:=FALSE; // mod by mars
 //patch290();
 if trim(text) = trim(defaultTpl.fullText) then
   text:='';
 tpl.fullText:=text;
-if tpl.sectionExist('unauthorized') then
+sec:=tpl.getSection('api level', FALSE);
+if (text>'')
+and ((sec=NIL) or (strToIntDef(sec.txt.trim,0) < 2)) then
   begin
   tpl.fullText:='';
   tplFilename:='';
