@@ -139,7 +139,7 @@ type
   PtplSection = ^TtplSection;
   TtplSection = record
     name, txt: string;
-    nolog, nourl, noList, cache: boolean;
+    nolog, public, noList, cache: boolean;
     ts: Tdatetime;
     end;
 
@@ -1020,8 +1020,8 @@ var
         begin
         if f='no log' then
           base.nolog:=TRUE
-        else if f='private' then
-          base.nourl:=TRUE
+        else if f='public' then
+          base.public:=TRUE
         else if f='no list' then
           base.noList:=TRUE
         else if f='cache' then
@@ -1095,7 +1095,7 @@ var
       begin // inherit from it
       sect.txt:=from.txt+base.txt;
       sect.nolog:=from.nolog or base.nolog;
-      sect.nourl:=from.nourl or base.nourl;
+      sect.public:=from.public or base.public;
       sect.noList:=from.noList or base.noList;
       continue;
       end;

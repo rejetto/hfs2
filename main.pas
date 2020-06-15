@@ -1,4 +1,4 @@
-﻿{
+{
 Copyright (C) 2002-2020  Massimo Melina (www.rejetto.com)
 
 This file is part of HFS ~ HTTP File Server.
@@ -36,8 +36,8 @@ uses
   HSlib, traylib, monoLib, progFrmLib, classesLib;
 
 const
-  VERSION = '2.4.0 RC4';
-  VERSION_BUILD = '316';
+  VERSION = '2.4.0 RC5';
+  VERSION_BUILD = '317';
   VERSION_STABLE = {$IFDEF STABLE } TRUE {$ELSE} FALSE {$ENDIF};
   CURRENT_VFS_FORMAT :integer = 1;
   CRLF = #13#10;
@@ -5615,7 +5615,7 @@ var
     with tplFromFile(f) do // temporarily builds from diff tpls
       try 
         section:=getsection(s);
-        if assigned(section) and not section.nourl then // it has to exist and be accessible 
+        if assigned(section) and section.public then // it has to exist and be accessible
           begin
           if not section.cache
           or not notModified(conn, s+floatToStr(section.ts), '') then
