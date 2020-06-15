@@ -1,4 +1,4 @@
-{
+﻿{
 Copyright (C) 2002-2020  Massimo Melina (www.rejetto.com)
 
 This file is part of HFS ~ HTTP File Server.
@@ -5350,6 +5350,7 @@ var
     data.user:=acc.user;
     data.pwd:=acc.pwd;
     data.session.redirect:='.';
+    runEventScript('login')
     end; //urlAuth
     
   var
@@ -5463,12 +5464,17 @@ var
         end
       else
         s:='bad password'; //TODO shouldn't this change http code?
+    if s='ok' then
+      runEventScript('login')
+    else
+      runEventScript('unauthorized');
     replyWithString(s);
     exit;
     end;
   s:=urlAuth();
   if s > '' then
     begin
+    runEventScript('unauthorized');
     conn.reply.mode:=HRM_DENY;
     replyWithString(s);
     exit;
