@@ -660,8 +660,11 @@ var
 
   procedure inc_(v:integer=+1);
   begin
-  result:='';
-  try setVar(p, intToStr(strToIntDef(getVar(p),0)+v*parI(1,1))) except end;
+  try
+    setVar(p, intToStr(strToIntDef(getVar(p),0)+v*parI(1,1)));
+    result:='';
+  except
+    end;
   end; // inc_
 
   procedure convert();
@@ -1367,19 +1370,20 @@ var
   if not satisfied(space) then exit;
   // set the table variable as text
   v:=par(1);
-  space.values[p]:=nonEmptyConcat('', space.values[p], CRLF)+v;
   // access the table object
   i:=space.indexOfName(p);
-  h:=space.objects[i] as THashedStringList;
-  if h = NIL then
+  if i < 0 then
     begin
     h:=ThashedStringList.create();
-    space.objects[i]:=h;
-    end;
+    space.AddPair(p, v, h);
+    end
+  else
+    h:=space.objects[i] as THashedStringList;
   // fill the object
   k:=chop('=',v);
   v:=macroDequote(v);
   h.values[k]:=v;
+  space.values[p]:=h.text;
   end; // setTable
 
   procedure disconnect();
