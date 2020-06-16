@@ -1,4 +1,4 @@
-﻿{
+{
 Copyright (C) 2002-2020  Massimo Melina (www.rejetto.com)
 
 This file is part of HFS ~ HTTP File Server.
@@ -5410,6 +5410,13 @@ var
     end;
 
   runEventScript('pre-filter-request');
+  if conn.disconnectedByServer then
+    exit;
+  if data.disconnectReason > '' then
+    begin
+    getPage('deny', data);
+    exit;
+    end;
 
   if (length(conn.request.user) > 100) or anycharIn('/\:?*<>|', conn.request.user) then
     begin
