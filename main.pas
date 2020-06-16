@@ -1,4 +1,4 @@
-{
+﻿{
 Copyright (C) 2002-2020  Massimo Melina (www.rejetto.com)
 
 This file is part of HFS ~ HTTP File Server.
@@ -7867,7 +7867,12 @@ finally freeAndNIL(info) end;
 end; // autoCheckUpdates
 
 procedure loadEvents();
-begin eventScripts.fullText:=loadTextFile(cfgpath+EVENTSCRIPTS_FILE) end;
+begin
+if not newMtime(cfgpath+EVENTSCRIPTS_FILE, eventScriptsLast) then
+  exit;
+eventScripts.fullText:=loadTextFile(cfgpath+EVENTSCRIPTS_FILE);
+runEventScript('init');
+end;
 
 procedure Tmainfrm.updateCopyBtn();
 resourcestring
@@ -8124,9 +8129,7 @@ var
   updateCopyBtn();
   keepTplUpdated();
   updateCurrentCFG();
-
-  if newMtime(cfgpath+EVENTSCRIPTS_FILE, eventScriptsLast) then
-    loadEvents();
+  loadEvents();
 
   if assigned(runScriptFrm) and runScriptFrm.visible
   and runScriptFrm.autorunChk.checked and newMtime(tempScriptFilename, runScriptLast) then
