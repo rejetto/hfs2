@@ -1962,10 +1962,7 @@ try
       begin
       try
         if isFalse(parEx('if')) then
-          begin
-          result:='';
-          exit;
-          end;
+          exit('');
       except end;
       result:=md.cd.disconnectReason; // return the previous state
       if pars.count > 0 then md.cd.disconnectReason:=p;

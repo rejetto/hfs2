@@ -2576,7 +2576,8 @@ var
   i:=mImp+dir;
     repeat
     j:=i+dir;
-    if (j > 0) and (j <= length(s)) and charInSet(s[j], ['0'..'9','.']) then
+    if (j > 0) and (j <= length(s))
+    and (charInSet(s[j], ['0'..'9','.','E']) or (j>1) and charInSet(s[j],['+','-']) and (s[j-1]='E')) then
       i:=j
     else
       break;
@@ -2606,6 +2607,7 @@ begin
       end;
 
     if (i = 1) // a starting operator is not an operator
+    or (s[i-1]='E') // exponential syntax
     or (v <= mImpV) // left-to-right precedence
     then continue;
     // we got a better one, record it
