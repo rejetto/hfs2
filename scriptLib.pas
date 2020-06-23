@@ -691,7 +691,9 @@ var
       result:='';
       for c in UTF8encode(s) do
         result:=result+intToHex(ord(c));
-      end
+      end;
+  if isFalse(par('macros')) then
+    result:=noMacrosAllowed(result);
   end; // convert
 
   procedure encodeuri();
@@ -1999,7 +2001,11 @@ try
     if name = 'base64' then
       result:=string(base64encode(UTF8encode(p)));
     if name = 'base64decode' then
+      begin
       result:=utf8ToString(base64decode(ansistring(p)));
+      if isFalse(par('macros')) then
+        result:=noMacrosAllowed(result);
+      end;
     if name = 'md5' then
       result:=strMD5(p);
     if name = 'sha1' then
@@ -2078,7 +2084,7 @@ try
       encodeuri();
 
     if name = 'decodeuri' then
-      result:=decodeURL(ansistring(p));
+      result:=noMacrosAllowed(decodeURL(ansistring(p)));
 
     if name = 'set cfg' then
       trueIf(mainfrm.setcfg(p));
