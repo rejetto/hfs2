@@ -1228,20 +1228,20 @@ var
       'information=64'
     );
   var
-    i, j, code: integer;
+    code: integer;
     decode: TStringDynArray;
-    s: string;
+    s, d: string;
     buttons, icon: boolean;
   begin
   decode:=split(' ',par(1));
   code:=0;
-  for i:=0 to length(decode)-1 do
-    for j:=1 to length(STR2CODE) do
-      begin
-      s:=STR2CODE[j];
-      if ansiStartsStr(decode[i], s) then
-        inc(code, strToIntDef(substr(s, 1+pos('=',s)), 0));
-      end;
+  for d in decode do
+    for s in STR2CODE do
+      if startsStr(d+'=', s) then
+        begin
+        inc(code, strToIntDef(substr(s, 2+d.length), 0));
+        Break
+        end;
   buttons:=code AND 15 > 0;
   icon:=code SHR 4 > 0;
   if not icon and buttons then

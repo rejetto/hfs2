@@ -34,7 +34,8 @@ document: single line diff templates (file path)
 document: {.disconnection reason|if=XXX.}
 document: %url%
 document: commands returning white space: add folder, save, set account, exec, mkdir, chdir, delete, rename, move copy, set
-document: dir, disk free, filetime, file changed, load tpl, sha256, for line
+document: base64, base64decode, dir, disk free, filetime, file changed, load tpl, sha256, for line
+document: new event [login]
 + event to filter logging http://www.rejetto.com/forum/index.php/topic,9784.0.html
 - wrong browser http://www.rejetto.com/forum/index.php/topic,9710.0.html
     solution:
@@ -52,7 +53,6 @@ document: dir, disk free, filetime, file changed, load tpl, sha256, for line
 ? in getPage() many %symbols% are translated in a way incompatible with {.section.}
 ? Windows Script Interfaces
 ? {.image|src=file|width=x|dst=outfile.}
-+ replace /~imgXX with ?mode=icon&id=XX
 + user input through {.dialog.}
 + show missing files in VFS http://www.rejetto.com/forum/index.php/topic,8203.new.html
 * {.cache.} should be able to work on a simple variable

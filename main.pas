@@ -5551,7 +5551,7 @@ var
     url:=chop(lastDelimiter('/', urlCmd)+1, 0, urlCmd);
     // we know an urlCmd must begin with ~
     // favicon is handled as an urlCmd: we provide HFS icon.
-    // an non-existent ~file will be detected a hundred lines below.
+    // a non-existent ~file will be detected a hundred lines below.
     if ansiStartsStr('~', urlCmd) or (urlCmd = 'favicon.ico') then
       f:=findFileByURL(url);
     end;
