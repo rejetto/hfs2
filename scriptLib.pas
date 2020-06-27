@@ -955,9 +955,9 @@ var
     i: integer;
   begin
   code:=macroDequote(par(pars.count-1));
+  lines:=TStringList.create();
   with TfastStringAppend.create do
     try
-      lines:=TStringList.create();
       lines.text:= getVar(par('var'));
       for line in lines do
         begin

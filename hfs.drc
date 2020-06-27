@@ -8,272 +8,273 @@
   resources were bound to the produced executable.
 */
 
-#define main_MSG_NUM_ADDR_DL 64656
-#define main_MSG_MAX_LINES 64657
-#define main_MSG_APACHE_LOG_FMT 64658
-#define main_MSG_APACHE_LOG_FMT_LONG 64659
-#define main_MSG_ICONS_ADDED 64660
-#define main_MSG_DDNS_DISABLED 64661
-#define main_MSG_MD5_WARN 64662
-#define main_MSG_AUTO_MD5 64663
-#define main_MSG_AUTO_MD5_LONG 64664
-#define main_MSG_UPL_HOWTO 64665
-#define main_MSG_EDIT_RES 64672
-#define main_MSG_TPL_USE_MACROS 64673
-#define main_REMOVE_SHELL 64674
-#define main_S_OFF 64675
-#define main_S_ON 64676
-#define main_LOG 64677
-#define main_MSG_RE_NOIP 64678
-#define main_MSG_TRAY_DEF 64679
-#define main_MSG_CLEAN_START 64680
-#define main_MSG_RESTORE_BAK 64681
-#define main_MSG_EXT_ADDR_FAIL 64682
-#define main_MSG_TO_EXPERT 64683
-#define main_MSG_DONT_LOG_HINT 64684
-#define main_MSG_DL_PERC 64685
-#define main_MSG_UNINSTALL_WARN 64686
-#define main_MSG_NUM_ADDR 64687
-#define main_MSG_SELF_6 64688
-#define main_MSG_SELF_7 64689
-#define main_MSG_RET_EXT 64690
-#define main_MSG_SELF_CANT_ON 64691
-#define main_MSG_SELF_CANT_LIST 64692
-#define main_MSG_SELF_CANT_S 64693
-#define main_MSG_SELF_ING 64694
-#define main_MSG_TEST_CANC 64695
-#define main_MSG_TEST_INET 64696
-#define main_MSG_SELF_UNAV 64697
-#define main_MSG_SELF_NO_INET 64698
-#define main_MSG_SELF_NO_ANSWER 64699
-#define main_MSG_OPEN_BROW 64700
-#define main_MSG_OPEN_BROW_LONG 64701
-#define main_MSG_HIDE_PORT 64702
-#define main_MSG_EVENTS_HLP 64703
-#define main_MSG_DISAB_FIND_EXT 64704
-#define main_MSG_ENT_URL 64705
-#define main_MSG_ENT_URL_LONG 64706
-#define main_MSG_ENT_USR 64707
-#define main_MSG_ENT_PWD 64708
-#define main_MSG_ENT_HOST 64709
-#define main_MSG_ENT_HOST_LONG 64710
-#define main_MSG_HOST_FORM 64711
-#define main_MSG_MIN_SPACE 64712
-#define main_MSG_MIN_SPACE_LONG 64713
-#define main_MSG_REN_PART 64714
-#define main_MSG_REN_PART_LONG 64715
-#define main_MSG_SELF_BEFORE 64716
-#define main_MSG_SELF_OK 64717
-#define main_MSG_SELF_OK_PORT 64718
-#define main_MSG_SELF_3 64719
-#define main_MSG_LOG_FILE_LONG 64720
-#define main_MSG_SET_URL 64721
-#define main_MSG_SET_URL_LONG 64722
-#define main_MSG_REALM 64723
-#define main_MSG_REALM_LONG 64724
-#define main_MSG_INACT_TIMEOUT 64725
-#define main_MSG_INACT_TIMEOUT_LONG 64726
-#define main_MSG_CHANGES_LOST 64727
-#define main_MSG_FLAG_NEW 64728
-#define main_MSG_FLAG_NEW_LONG 64729
-#define main_MSG_DONT_LOG_MASK 64730
-#define main_MSG_DONT_LOG_MASK_LONG 64731
-#define main_MSG_CUST_IP 64732
-#define main_MSG_CUST_IP_LONG 64733
-#define main_MSG_NO_EXT_IP 64734
-#define main_MSG_RESET_TOT 64735
-#define main_MSG_LOADING_VFS 64736
-#define main_MSG_VFS_OLD 64737
-#define main_MSG_UNK_FK 64738
-#define main_MSG_VIS_ONLY_ANON 64739
-#define main_MSG_AUTO_DISABLED 64740
-#define main_MSG_CORRUPTED 64741
-#define main_MSG_MACROS_FOUND 64742
-#define main_MSG_UPD_INFO 64743
-#define main_MSG_NEWER 64744
-#define main_MSG_SRC_UPD 64745
-#define main_ARE_EXPERT 64746
-#define main_ARE_EASY 64747
-#define main_SW2EXPERT 64748
-#define main_SW2EASY 64749
-#define main_MSG_DL_TIMEOUT_LONG 64750
-#define main_MSG_LOG_FILE 64751
-#define main_MSG_ZLIB 64752
-#define main_MSG_BAKAVAILABLE 64753
-#define main_MSG_CANT_LOAD_SAVE 64754
-#define main_MSG_OPEN_VFS 64755
-#define main_LIMIT 64756
-#define main_TOP_SPEED 64757
-#define main_MSG_MAX_BW 64758
-#define main_MSG_LIM0 64759
-#define main_MSG_MAX_BW_1 64760
-#define main_MSG_GRAPH_RATE_MENU 64761
-#define main_MSG_MAX_CON_LONG 64762
-#define main_MSG_WARN_CONN 64763
-#define main_MSG_WARN_ACT_DL 64764
-#define main_MSG_MAX_CON_SING_LONG 64765
-#define main_MSG_GRAPH_RATE 64766
-#define main_MSG_TENTH_SEC 64767
-#define main_MSG_CON_STATE_IDLE 64768
-#define main_MSG_CON_STATE_REQ 64769
-#define main_MSG_CON_STATE_RCV 64770
-#define main_MSG_CON_STATE_THINK 64771
-#define main_MSG_CON_STATE_REP 64772
-#define main_MSG_CON_STATE_SEND 64773
-#define main_MSG_CON_STATE_DISC 64774
-#define main_MSG_CON_PAUSED 64775
-#define main_MSG_CON_SENT 64776
-#define main_MSG_CON_RECEIVED 64777
-#define main_MSG_TPL_RESET 64778
-#define main_MSG_ALLO_REF 64779
-#define main_MSG_ALLO_REF_LONG 64780
-#define main_MSG_BETTERSTOP 64781
-#define main_MSG_BADCRC 64782
-#define main_MSG_NEWER 64783
-#define main_MSG_VFS_ARCABLE 64784
-#define main_MSG_VFS_DEF_MASK 64785
-#define main_MSG_VFS_ACCESS 64786
-#define main_MSG_VFS_UPLOAD 64787
-#define main_MSG_VFS_DELETE 64788
-#define main_MSG_VFS_COMMENT 64789
-#define main_MSG_VFS_REALM 64790
-#define main_MSG_VFS_DIFF_TPL 64791
-#define main_MSG_VFS_FILES_FLT 64792
-#define main_MSG_VFS_FLD_FLT 64793
-#define main_MSG_VFS_UPL_FLT 64794
-#define main_MSG_VFS_DONT_CONS_DL 64795
-#define main_MSG_VFS_DONT_CONS_DL_MASK 64796
-#define main_MSG_VFS_INHERITED 64797
-#define main_MSG_VFS_EXTERNAL 64798
-#define main_MSG_CON_HINT 64799
-#define main_VFS_ITEMS 64800
-#define main_MSG_ITEM_EXISTS 64801
-#define main_MSG_INSTALL_TPL 64802
-#define main_MSG_FOLDER_UPLOAD 64803
-#define main_MSG_VFS_DRAG_INVIT 64804
-#define main_MSG_VFS_URL 64805
-#define main_MSG_VFS_PATH 64806
-#define main_MSG_VFS_SIZE 64807
-#define main_MSG_VFS_DLS 64808
-#define main_MSG_VFS_INVISIBLE 64809
-#define main_MSG_VFS_DL_FORB 64810
-#define main_MSG_VFS_DONT_LOG 64811
-#define main_MSG_VFS_HIDE_EMPTY 64812
-#define main_MSG_VFS_NOT_BROW 64813
-#define main_MSG_VFS_HIDE_EMPTY_FLD 64814
-#define main_MSG_VFS_HIDE_EXT 64815
-#define main_MSG_CHK_UPD_FAIL 64816
-#define main_MSG_CHK_UPD_HEAD 64817
-#define main_MSG_CHK_UPD_VER 64818
-#define main_MSG_CHK_UPD_VER_EXT 64819
-#define main_MSG_CHK_UPD_NONE 64820
-#define main_TO_CLIP 64821
-#define main_ALREADY_CLIP 64822
-#define main_MSG_NO_SPACE 64823
-#define main_CONN 64824
-#define main_TOT_IN 64825
-#define main_TOT_OUT 64826
-#define main_OUT_SPEED 64827
-#define main_IN_SPEED 64828
-#define main_BANS 64829
-#define main_MEMORY 64830
-#define main_CUST_TPL 64831
-#define main_AUTOSAVE 64832
-#define main_SECONDS 64833
-#define main_MSG_SPD_LIMIT_SING 64834
-#define main_MSG_SPD_LIMIT 64835
-#define main_MSG_AUTO_SAVE 64836
-#define main_MSG_AUTO_SAVE_LONG 64837
-#define main_MSG_MIN 64838
-#define main_MSG_BAN 64839
-#define main_MSG_CANT_SAVE_OPT 64840
-#define main_MSG_UPD_SAVE_ERROR 64841
-#define main_MSG_UPD_REQ_ONLY1 64842
-#define main_MSG_UPD_WAIT 64843
-#define main_MSG_UPD_DL 64844
-#define main_MSG_UPDATE 64845
-#define main_MSG_REQUESTING 64846
-#define main_MSG_CHK_UPD 64847
-#define main_MSG_LOG_UPL 64848
-#define main_MSG_LOG_UPLOADED 64849
-#define main_MSG_LOG_UPL_FAIL 64850
-#define main_MSG_LOG_DL 64851
-#define main_MSG_LOGIN_FAILED 64852
-#define main_MSG_MIN_DISK_REACHED 64853
-#define main_MSG_UPL_NAME_FORB 64854
-#define main_MSG_UPL_CANT_CREATE 64855
-#define main_FINGERPRINT 64856
-#define main_NO_FINGERPRINT 64857
-#define main_MSG_SAVE_VFS 64858
-#define main_MSG_INP_COMMENT 64859
-#define main_MSG_FILE_ADD_ABORT 64860
-#define main_MSG_ADDING 64861
-#define main_MSG_INV_FILENAME 64862
-#define main_MSG_DELETE 64863
-#define main_MSG_PORT_USED_BY 64864
-#define main_MSG_PORT_BLOCKED 64865
-#define main_MSG_KICK_ALL 64866
-#define main_MSG_TPL_INCOMPATIBLE 64867
-#define main_MSG_LOG_SERVER_START 64868
-#define main_MSG_LOG_SERVER_STOP 64869
-#define main_MSG_LOG_CONNECTED 64870
-#define main_MSG_LOG_DISC_SRV 64871
-#define main_MSG_LOG_DISC 64872
-#define main_MSG_LOG_GOT 64873
-#define main_MSG_LOG_BYTES_SENT 64874
-#define main_MSG_LOG_SERVED 64875
-#define main_MSG_LOG_HEAD 64876
-#define main_MSG_LOG_NOT_MOD 64877
-#define main_MSG_LOG_REDIR 64878
-#define main_MSG_LOG_NOT_SERVED 64879
-#define main_MSG_DDNS_nohost 64880
-#define main_MSG_DDNS_notyours 64881
-#define main_MSG_DDNS_numhost 64882
-#define main_MSG_DDNS_abuse 64883
-#define main_MSG_DDNS_dnserr 64884
-#define main_MSG_DDNS_911 64885
-#define main_MSG_DDNS_notdonator 64886
-#define main_MSG_DDNS_badagent 64887
-#define main_MSG_BAN_MASK 64888
-#define main_MSG_IP_MASK_LONG 64889
-#define main_MSG_KICK_ADDR 64890
-#define main_MSG_BAN_ALREADY 64891
-#define main_MSG_BAN_CMT 64892
-#define main_MSG_BAN_CMT_LONG 64893
-#define main_MSG_BREAK_DYN_DNS 64894
-#define main_MSG_CANT_OPEN_PORT 64895
-#define main_MSG_NO_TEMP 64896
-#define main_MSG_ERROR_REGISTRY 64897
-#define main_MSG_MANY_ITEMS 64898
-#define main_MSG_ADD_TO_HFS 64899
-#define main_MSG_SINGLE_INSTANCE 64900
-#define main_MSG_COMM_ERROR 64901
-#define main_MSG_DDNS_NO_REPLY 64902
-#define main_MSG_DDNS_OK 64903
-#define main_MSG_DDNS_UNK 64904
-#define main_MSG_DDNS_ERR 64905
-#define main_MSG_DDNS_REQ 64906
-#define main_MSG_DDNS_DOING 64907
-#define main_MSG_DDNS_FAIL 64908
-#define main_MSG_DDNS_REPLY_SIZE 64909
-#define main_MSG_DDNS_badauth 64910
-#define main_MSG_DDNS_notfqdn 64911
-#define main_MSG_MAX_SIM_ADDR 64912
-#define main_MSG_MAX_SIM_ADDR_DL 64913
-#define main_MSG_MAX_SIM_DL_SING 64914
-#define main_MSG_MAX_SIM_DL 64915
-#define main_MSG_SET_LIMIT 64916
-#define main_MSG_UNPROTECTED_LINKS 64917
-#define main_MSG_SAME_NAME 64918
-#define main_MSG_CONTINUE 64919
-#define main_MSG_PROCESSING 64920
-#define main_MSG_SPEED_KBS 64921
-#define main_MSG_OPTIONS_SAVED 64922
-#define main_MSG_SOME_LOCKED 64923
-#define main_MSG_ITEM_LOCKED 64924
-#define main_MSG_INVALID_VALUE 64925
-#define main_MSG_EMPTY_NO_LIMIT 64926
-#define main_MSG_ADDRESSES_EXCEED 64927
+#define main_MSG_NUM_ADDR 64656
+#define main_MSG_NUM_ADDR_DL 64657
+#define main_MSG_MAX_LINES 64658
+#define main_MSG_APACHE_LOG_FMT 64659
+#define main_MSG_APACHE_LOG_FMT_LONG 64660
+#define main_MSG_ICONS_ADDED 64661
+#define main_MSG_DDNS_DISABLED 64662
+#define main_MSG_MD5_WARN 64663
+#define main_MSG_AUTO_MD5 64664
+#define main_MSG_AUTO_MD5_LONG 64665
+#define main_MSG_UPL_HOWTO 64666
+#define main_MSG_EVENTS_HLP 64672
+#define main_MSG_EDIT_RES 64673
+#define main_MSG_TPL_USE_MACROS 64674
+#define main_REMOVE_SHELL 64675
+#define main_S_OFF 64676
+#define main_S_ON 64677
+#define main_LOG 64678
+#define main_MSG_RE_NOIP 64679
+#define main_MSG_TRAY_DEF 64680
+#define main_MSG_CLEAN_START 64681
+#define main_MSG_RESTORE_BAK 64682
+#define main_MSG_EXT_ADDR_FAIL 64683
+#define main_MSG_TO_EXPERT 64684
+#define main_MSG_DONT_LOG_HINT 64685
+#define main_MSG_DL_PERC 64686
+#define main_MSG_UNINSTALL_WARN 64687
+#define main_MSG_SELF_3 64688
+#define main_MSG_SELF_6 64689
+#define main_MSG_SELF_7 64690
+#define main_MSG_RET_EXT 64691
+#define main_MSG_SELF_CANT_ON 64692
+#define main_MSG_SELF_CANT_LIST 64693
+#define main_MSG_SELF_CANT_S 64694
+#define main_MSG_SELF_ING 64695
+#define main_MSG_TEST_CANC 64696
+#define main_MSG_TEST_INET 64697
+#define main_MSG_SELF_UNAV 64698
+#define main_MSG_SELF_NO_INET 64699
+#define main_MSG_SELF_NO_ANSWER 64700
+#define main_MSG_OPEN_BROW 64701
+#define main_MSG_OPEN_BROW_LONG 64702
+#define main_MSG_HIDE_PORT 64703
+#define main_MSG_RESET_TOT 64704
+#define main_MSG_DISAB_FIND_EXT 64705
+#define main_MSG_ENT_URL 64706
+#define main_MSG_ENT_URL_LONG 64707
+#define main_MSG_ENT_USR 64708
+#define main_MSG_ENT_PWD 64709
+#define main_MSG_ENT_HOST 64710
+#define main_MSG_ENT_HOST_LONG 64711
+#define main_MSG_HOST_FORM 64712
+#define main_MSG_MIN_SPACE 64713
+#define main_MSG_MIN_SPACE_LONG 64714
+#define main_MSG_REN_PART 64715
+#define main_MSG_REN_PART_LONG 64716
+#define main_MSG_SELF_BEFORE 64717
+#define main_MSG_SELF_OK 64718
+#define main_MSG_SELF_OK_PORT 64719
+#define main_MSG_LOG_FILE 64720
+#define main_MSG_LOG_FILE_LONG 64721
+#define main_MSG_SET_URL 64722
+#define main_MSG_SET_URL_LONG 64723
+#define main_MSG_REALM 64724
+#define main_MSG_REALM_LONG 64725
+#define main_MSG_INACT_TIMEOUT 64726
+#define main_MSG_INACT_TIMEOUT_LONG 64727
+#define main_MSG_CHANGES_LOST 64728
+#define main_MSG_FLAG_NEW 64729
+#define main_MSG_FLAG_NEW_LONG 64730
+#define main_MSG_DONT_LOG_MASK 64731
+#define main_MSG_DONT_LOG_MASK_LONG 64732
+#define main_MSG_CUST_IP 64733
+#define main_MSG_CUST_IP_LONG 64734
+#define main_MSG_NO_EXT_IP 64735
+#define main_MSG_TENTH_SEC 64736
+#define main_MSG_LOADING_VFS 64737
+#define main_MSG_VFS_OLD 64738
+#define main_MSG_UNK_FK 64739
+#define main_MSG_VIS_ONLY_ANON 64740
+#define main_MSG_AUTO_DISABLED 64741
+#define main_MSG_CORRUPTED 64742
+#define main_MSG_MACROS_FOUND 64743
+#define main_MSG_UPD_INFO 64744
+#define main_MSG_NEWER 64745
+#define main_MSG_SRC_UPD 64746
+#define main_ARE_EXPERT 64747
+#define main_ARE_EASY 64748
+#define main_SW2EXPERT 64749
+#define main_SW2EASY 64750
+#define main_MSG_DL_TIMEOUT_LONG 64751
+#define main_MSG_NEWER 64752
+#define main_MSG_ZLIB 64753
+#define main_MSG_BAKAVAILABLE 64754
+#define main_MSG_CANT_LOAD_SAVE 64755
+#define main_MSG_OPEN_VFS 64756
+#define main_LIMIT 64757
+#define main_TOP_SPEED 64758
+#define main_MSG_MAX_BW 64759
+#define main_MSG_LIM0 64760
+#define main_MSG_MAX_BW_1 64761
+#define main_MSG_GRAPH_RATE_MENU 64762
+#define main_MSG_MAX_CON_LONG 64763
+#define main_MSG_WARN_CONN 64764
+#define main_MSG_WARN_ACT_DL 64765
+#define main_MSG_MAX_CON_SING_LONG 64766
+#define main_MSG_GRAPH_RATE 64767
+#define main_MSG_CON_HINT 64768
+#define main_MSG_CON_STATE_IDLE 64769
+#define main_MSG_CON_STATE_REQ 64770
+#define main_MSG_CON_STATE_RCV 64771
+#define main_MSG_CON_STATE_THINK 64772
+#define main_MSG_CON_STATE_REP 64773
+#define main_MSG_CON_STATE_SEND 64774
+#define main_MSG_CON_STATE_DISC 64775
+#define main_MSG_CON_PAUSED 64776
+#define main_MSG_CON_SENT 64777
+#define main_MSG_CON_RECEIVED 64778
+#define main_MSG_TPL_RESET 64779
+#define main_MSG_ALLO_REF 64780
+#define main_MSG_ALLO_REF_LONG 64781
+#define main_MSG_BETTERSTOP 64782
+#define main_MSG_BADCRC 64783
+#define main_MSG_VFS_HIDE_EXT 64784
+#define main_MSG_VFS_ARCABLE 64785
+#define main_MSG_VFS_DEF_MASK 64786
+#define main_MSG_VFS_ACCESS 64787
+#define main_MSG_VFS_UPLOAD 64788
+#define main_MSG_VFS_DELETE 64789
+#define main_MSG_VFS_COMMENT 64790
+#define main_MSG_VFS_REALM 64791
+#define main_MSG_VFS_DIFF_TPL 64792
+#define main_MSG_VFS_FILES_FLT 64793
+#define main_MSG_VFS_FLD_FLT 64794
+#define main_MSG_VFS_UPL_FLT 64795
+#define main_MSG_VFS_DONT_CONS_DL 64796
+#define main_MSG_VFS_DONT_CONS_DL_MASK 64797
+#define main_MSG_VFS_INHERITED 64798
+#define main_MSG_VFS_EXTERNAL 64799
+#define main_CUST_TPL 64800
+#define main_VFS_ITEMS 64801
+#define main_MSG_ITEM_EXISTS 64802
+#define main_MSG_INSTALL_TPL 64803
+#define main_MSG_FOLDER_UPLOAD 64804
+#define main_MSG_VFS_DRAG_INVIT 64805
+#define main_MSG_VFS_URL 64806
+#define main_MSG_VFS_PATH 64807
+#define main_MSG_VFS_SIZE 64808
+#define main_MSG_VFS_DLS 64809
+#define main_MSG_VFS_INVISIBLE 64810
+#define main_MSG_VFS_DL_FORB 64811
+#define main_MSG_VFS_DONT_LOG 64812
+#define main_MSG_VFS_HIDE_EMPTY 64813
+#define main_MSG_VFS_NOT_BROW 64814
+#define main_MSG_VFS_HIDE_EMPTY_FLD 64815
+#define main_MSG_CHK_UPD 64816
+#define main_MSG_CHK_UPD_FAIL 64817
+#define main_MSG_CHK_UPD_HEAD 64818
+#define main_MSG_CHK_UPD_VER 64819
+#define main_MSG_CHK_UPD_VER_EXT 64820
+#define main_MSG_CHK_UPD_NONE 64821
+#define main_TO_CLIP 64822
+#define main_ALREADY_CLIP 64823
+#define main_MSG_NO_SPACE 64824
+#define main_CONN 64825
+#define main_TOT_IN 64826
+#define main_TOT_OUT 64827
+#define main_OUT_SPEED 64828
+#define main_IN_SPEED 64829
+#define main_BANS 64830
+#define main_MEMORY 64831
+#define main_MSG_DELETE 64832
+#define main_AUTOSAVE 64833
+#define main_SECONDS 64834
+#define main_MSG_SPD_LIMIT_SING 64835
+#define main_MSG_SPD_LIMIT 64836
+#define main_MSG_AUTO_SAVE 64837
+#define main_MSG_AUTO_SAVE_LONG 64838
+#define main_MSG_MIN 64839
+#define main_MSG_BAN 64840
+#define main_MSG_CANT_SAVE_OPT 64841
+#define main_MSG_UPD_SAVE_ERROR 64842
+#define main_MSG_UPD_REQ_ONLY1 64843
+#define main_MSG_UPD_WAIT 64844
+#define main_MSG_UPD_DL 64845
+#define main_MSG_UPDATE 64846
+#define main_MSG_REQUESTING 64847
+#define main_MSG_LOG_NOT_SERVED 64848
+#define main_MSG_LOG_UPL 64849
+#define main_MSG_LOG_UPLOADED 64850
+#define main_MSG_LOG_UPL_FAIL 64851
+#define main_MSG_LOG_DL 64852
+#define main_MSG_LOGIN_FAILED 64853
+#define main_MSG_MIN_DISK_REACHED 64854
+#define main_MSG_UPL_NAME_FORB 64855
+#define main_MSG_UPL_CANT_CREATE 64856
+#define main_FINGERPRINT 64857
+#define main_NO_FINGERPRINT 64858
+#define main_MSG_SAVE_VFS 64859
+#define main_MSG_INP_COMMENT 64860
+#define main_MSG_FILE_ADD_ABORT 64861
+#define main_MSG_ADDING 64862
+#define main_MSG_INV_FILENAME 64863
+#define main_MSG_CANT_OPEN_PORT 64864
+#define main_MSG_PORT_USED_BY 64865
+#define main_MSG_PORT_BLOCKED 64866
+#define main_MSG_KICK_ALL 64867
+#define main_MSG_TPL_INCOMPATIBLE 64868
+#define main_MSG_LOG_SERVER_START 64869
+#define main_MSG_LOG_SERVER_STOP 64870
+#define main_MSG_LOG_CONNECTED 64871
+#define main_MSG_LOG_DISC_SRV 64872
+#define main_MSG_LOG_DISC 64873
+#define main_MSG_LOG_GOT 64874
+#define main_MSG_LOG_BYTES_SENT 64875
+#define main_MSG_LOG_SERVED 64876
+#define main_MSG_LOG_HEAD 64877
+#define main_MSG_LOG_NOT_MOD 64878
+#define main_MSG_LOG_REDIR 64879
+#define main_MSG_DDNS_notfqdn 64880
+#define main_MSG_DDNS_nohost 64881
+#define main_MSG_DDNS_notyours 64882
+#define main_MSG_DDNS_numhost 64883
+#define main_MSG_DDNS_abuse 64884
+#define main_MSG_DDNS_dnserr 64885
+#define main_MSG_DDNS_911 64886
+#define main_MSG_DDNS_notdonator 64887
+#define main_MSG_DDNS_badagent 64888
+#define main_MSG_BAN_MASK 64889
+#define main_MSG_IP_MASK_LONG 64890
+#define main_MSG_KICK_ADDR 64891
+#define main_MSG_BAN_ALREADY 64892
+#define main_MSG_BAN_CMT 64893
+#define main_MSG_BAN_CMT_LONG 64894
+#define main_MSG_BREAK_DYN_DNS 64895
+#define main_MSG_ADDRESSES_EXCEED 64896
+#define main_MSG_NO_TEMP 64897
+#define main_MSG_ERROR_REGISTRY 64898
+#define main_MSG_MANY_ITEMS 64899
+#define main_MSG_ADD_TO_HFS 64900
+#define main_MSG_SINGLE_INSTANCE 64901
+#define main_MSG_COMM_ERROR 64902
+#define main_MSG_DDNS_NO_REPLY 64903
+#define main_MSG_DDNS_OK 64904
+#define main_MSG_DDNS_UNK 64905
+#define main_MSG_DDNS_ERR 64906
+#define main_MSG_DDNS_REQ 64907
+#define main_MSG_DDNS_DOING 64908
+#define main_MSG_DDNS_FAIL 64909
+#define main_MSG_DDNS_REPLY_SIZE 64910
+#define main_MSG_DDNS_badauth 64911
+#define main_MSG_MAX_CON_SING 64912
+#define main_MSG_MAX_SIM_ADDR 64913
+#define main_MSG_MAX_SIM_ADDR_DL 64914
+#define main_MSG_MAX_SIM_DL_SING 64915
+#define main_MSG_MAX_SIM_DL 64916
+#define main_MSG_SET_LIMIT 64917
+#define main_MSG_UNPROTECTED_LINKS 64918
+#define main_MSG_SAME_NAME 64919
+#define main_MSG_CONTINUE 64920
+#define main_MSG_PROCESSING 64921
+#define main_MSG_SPEED_KBS 64922
+#define main_MSG_OPTIONS_SAVED 64923
+#define main_MSG_SOME_LOCKED 64924
+#define main_MSG_ITEM_LOCKED 64925
+#define main_MSG_INVALID_VALUE 64926
+#define main_MSG_EMPTY_NO_LIMIT 64927
 #define JclResources_RsIntelCacheDescrF0 64928
 #define JclResources_RsIntelCacheDescrF1 64929
 #define JclResources_RsIntelCacheDescrFF 64930
@@ -281,15 +282,15 @@
 #define JclResources_RsOSVersionWinServer2012 64932
 #define JclResources_RsOSVersionWin81 64933
 #define JclResources_RsOSVersionWinServer2012R2 64934
-#define optionsDlg_MSG_INVERT_BAN 64935
-#define main_S_PORT_LABEL 64936
-#define main_S_PORT_ANY 64937
-#define main_DISABLED 64938
-#define main_S_OK 64939
-#define main_MSG_MENU_VAL 64940
-#define main_MSG_DL_TIMEOUT 64941
-#define main_MSG_MAX_CON 64942
-#define main_MSG_MAX_CON_SING 64943
+#define classesLib_MSG_ANTIDOS_REPLY 64935
+#define optionsDlg_MSG_INVERT_BAN 64936
+#define main_S_PORT_LABEL 64937
+#define main_S_PORT_ANY 64938
+#define main_DISABLED 64939
+#define main_S_OK 64940
+#define main_MSG_MENU_VAL 64941
+#define main_MSG_DL_TIMEOUT 64942
+#define main_MSG_MAX_CON 64943
 #define JclResources_RsIntelCacheDescrCA 64944
 #define JclResources_RsIntelCacheDescrD0 64945
 #define JclResources_RsIntelCacheDescrD1 64946
@@ -884,6 +885,7 @@
 #define System_SysConst_SDiskFull 65535
 STRINGTABLE
 BEGIN
+	main_MSG_NUM_ADDR,	L"In this moment there are %d different addresses"
 	main_MSG_NUM_ADDR_DL,	L"In this moment there are %d different addresses downloading"
 	main_MSG_MAX_LINES,	L"Max lines on screen."
 	main_MSG_APACHE_LOG_FMT,	L"Apache log file format"
@@ -894,6 +896,7 @@ BEGIN
 	main_MSG_AUTO_MD5,	L"Auto fingerprint"
 	main_MSG_AUTO_MD5_LONG,	L"When you add files and no fingerprint is found, it is calculated.\rTo avoid long waitings, set a limit to file size (in KiloBytes).\rLeave empty to disable, and have no fingerprint created."
 	main_MSG_UPL_HOWTO,	L"1. Add a folder (choose \"real folder\")\r\rYou should now see a RED folder in your virtual file sytem, inside HFS\r\r2. Right click on this folder\r3. Properties -> Permissions -> Upload\r4. Check on \"Anyone\"\r5. Ok\r\rNow anyone who has access to your HFS server can upload files to you."
+	main_MSG_EVENTS_HLP,	L"For help on how to use this file please refer http://www.rejetto.com/wiki/?title=HFS:_Event_scripts"
 	main_MSG_EDIT_RES,	L"Edit resource"
 	main_MSG_TPL_USE_MACROS,	L"The current template is using macros.\rDo you want to cancel this action?"
 	main_REMOVE_SHELL,	L"Remove from shell context menu"
@@ -909,7 +912,7 @@ BEGIN
 	main_MSG_DONT_LOG_HINT,	L"Select the files/folder you don't want to be logged,\rthen right click and select \"Don't log\"."
 	main_MSG_DL_PERC,	L"Downloading %d%%"
 	main_MSG_UNINSTALL_WARN,	L"Delete HFS and all settings?"
-	main_MSG_NUM_ADDR,	L"In this moment there are %d different addresses"
+	main_MSG_SELF_3,	L"You may be behind a router or firewall."
 	main_MSG_SELF_6,	L"You are behind a router.\rEnsure it is configured to forward port %s to your computer."
 	main_MSG_SELF_7,	L"You may be behind a firewall.\rEnsure nothing is blocking HFS."
 	main_MSG_RET_EXT,	L"Retrieving external address..."
@@ -925,7 +928,7 @@ BEGIN
 	main_MSG_OPEN_BROW,	L"Open directly in browser"
 	main_MSG_OPEN_BROW_LONG,	L"\"Suggest\" the browser to open directly the specified files.\rOther files should pop up a save dialog."
 	main_MSG_HIDE_PORT,	L"You should not use this option unless you really know its meaning.\rContinue?"
-	main_MSG_EVENTS_HLP,	L"For help on how to use this file please refer http://www.rejetto.com/wiki/?title=HFS:_Event_scripts"
+	main_MSG_RESET_TOT,	L"Do you want to reset total in/out?"
 	main_MSG_DISAB_FIND_EXT,	L"This option makes pointless the option \"Find external address at startup\", which has now been disabled for your convenience."
 	main_MSG_ENT_URL,	L"Enter URL"
 	main_MSG_ENT_URL_LONG,	L"Enter URL for updating.\r%ip% will be translated to your external IP."
@@ -941,7 +944,7 @@ BEGIN
 	main_MSG_SELF_BEFORE,	L"Here you can test if your server does work on the Internet.\rIf you are not interested in serving files over the Internet, this is NOT for you.\r\rWe'll now perform a test involving network activity.\rIn order to complete this test, you may need to allow HFS's activity in your firewall, by clicking Allow on the warning prompt.\r\rWARNING: for the duration of the test, all ban rules and limits on the number of connections won't apply."
 	main_MSG_SELF_OK,	L"The test is successful. The server should be working fine."
 	main_MSG_SELF_OK_PORT,	L"Port %s is not working, but another working port has been found and set: %s."
-	main_MSG_SELF_3,	L"You may be behind a router or firewall."
+	main_MSG_LOG_FILE,	L"Log file"
 	main_MSG_LOG_FILE_LONG,	L"This function does not save any previous information to the log file.\rInstead, it saves all information that appears in the log box in real-time (from when you click \"OK\", below).\rSpecify a filename for the log.\rIf you leave the filename blank, no log file is saved.\r\rHere are some symbols you can use in the filename to split the log:\r  %d% -- day of the month (1..31)\r  %m% -- month (1..12)\r  %y% -- year (2000..)\r  %dow% -- day of the week (0..6)\r  %w% -- week of the year (1..53)\r  %user% -- username surrounded by parenthesis"
 	main_MSG_SET_URL,	L"Set URL"
 	main_MSG_SET_URL_LONG,	L"Please insert an URL for the link\r\rDo not forget to specify http:// or whatever.\r%%ip%% will be translated to your address"
@@ -957,7 +960,7 @@ BEGIN
 	main_MSG_CUST_IP,	L"Custom IP addresses"
 	main_MSG_CUST_IP_LONG,	L"Specify your addresses, each per line"
 	main_MSG_NO_EXT_IP,	L"Can't find external address\r( %s )"
-	main_MSG_RESET_TOT,	L"Do you want to reset total in/out?"
+	main_MSG_TENTH_SEC,	L"Tenths of second"
 	main_MSG_LOADING_VFS,	L"Loading VFS"
 	main_MSG_VFS_OLD,	L"This file is old and uses different settings.\rThe \"let browse\" folder option will be reset.\rRe-saving the file will update its format."
 	main_MSG_UNK_FK,	L"This file has been created with a newer version.\rSome data was discarded because unknown.\rIf you save the file now, the discarded data will NOT be saved."
@@ -973,7 +976,7 @@ BEGIN
 	main_SW2EXPERT,	L"Switch to Expert mode"
 	main_SW2EASY,	L"Switch to Easy mode"
 	main_MSG_DL_TIMEOUT_LONG,	L"Enter the number of MINUTES with no download after which the program automatically shuts down.\rLeave blank to get no timeout."
-	main_MSG_LOG_FILE,	L"Log file"
+	main_MSG_NEWER,	L"This file has been created with a newer and incompatible version."
 	main_MSG_ZLIB,	L"This file is corrupted (ZLIB)."
 	main_MSG_BAKAVAILABLE,	L"This file is corrupted but a backup is available.\rContinue with backup?"
 	main_MSG_CANT_LOAD_SAVE,	L"Cannot load or save while adding files"
@@ -989,7 +992,7 @@ BEGIN
 	main_MSG_WARN_ACT_DL,	L"In this moment there are %d active downloads"
 	main_MSG_MAX_CON_SING_LONG,	L"Max simultaneous connections to accept from a single IP address.\rMost people don't know this function well, and have problems. If you are unsure, please use the \"Max simultaneous downloads from a single IP address\"."
 	main_MSG_GRAPH_RATE,	L"Graph refresh rate"
-	main_MSG_TENTH_SEC,	L"Tenths of second"
+	main_MSG_CON_HINT,	L"Connection time: %s\rLast request time: %s\rAgent: %s"
 	main_MSG_CON_STATE_IDLE,	L"idle"
 	main_MSG_CON_STATE_REQ,	L"requesting"
 	main_MSG_CON_STATE_RCV,	L"receiving"
@@ -1005,7 +1008,7 @@ BEGIN
 	main_MSG_ALLO_REF_LONG,	L"Leave empty to disable this feature.\rHere you can specify a mask.\rWhen a file is requested, if the mask doesn't match the \"Referer\" HTTP field, the request is rejected."
 	main_MSG_BETTERSTOP,	L"\rGoing on may lead to problems.\rIt is adviced to stop loading.\rStop?"
 	main_MSG_BADCRC,	L"This file is corrupted (CRC)."
-	main_MSG_NEWER,	L"This file has been created with a newer and incompatible version."
+	main_MSG_VFS_HIDE_EXT,	L"Hide extention"
 	main_MSG_VFS_ARCABLE,	L"Archivable"
 	main_MSG_VFS_DEF_MASK,	L"Default file mask: %s"
 	main_MSG_VFS_ACCESS,	L"Access for"
@@ -1021,7 +1024,7 @@ BEGIN
 	main_MSG_VFS_DONT_CONS_DL_MASK,	L"Don't consider as download (mask): %s"
 	main_MSG_VFS_INHERITED,	L" [inherited]"
 	main_MSG_VFS_EXTERNAL,	L" [external]"
-	main_MSG_CON_HINT,	L"Connection time: %s\rLast request time: %s\rAgent: %s"
+	main_CUST_TPL,	L"Customized template"
 	main_VFS_ITEMS,	L"VFS: %d items"
 	main_MSG_ITEM_EXISTS,	L"%s item(s) already exists:\r%s\r\rContinue?"
 	main_MSG_INSTALL_TPL,	L"Install this template?"
@@ -1037,7 +1040,7 @@ BEGIN
 	main_MSG_VFS_HIDE_EMPTY,	L"Hidden if empty"
 	main_MSG_VFS_NOT_BROW,	L"Not browsable"
 	main_MSG_VFS_HIDE_EMPTY_FLD,	L"Hide empty folders"
-	main_MSG_VFS_HIDE_EXT,	L"Hide extention"
+	main_MSG_CHK_UPD,	L"Checking for updates"
 	main_MSG_CHK_UPD_FAIL,	L"Check update: failed"
 	main_MSG_CHK_UPD_HEAD,	L"Check update: "
 	main_MSG_CHK_UPD_VER,	L"new version found: %s"
@@ -1053,7 +1056,7 @@ BEGIN
 	main_IN_SPEED,	L"In: %.1f KB/s"
 	main_BANS,	L"Ban rules: %d"
 	main_MEMORY,	L"Mem"
-	main_CUST_TPL,	L"Customized template"
+	main_MSG_DELETE,	L"Delete?"
 	main_AUTOSAVE,	L"Auto save every: "
 	main_SECONDS,	L"%d seconds"
 	main_MSG_SPD_LIMIT_SING,	L"Speed limit for single address"
@@ -1069,7 +1072,7 @@ BEGIN
 	main_MSG_UPD_DL,	L"Downloading new version..."
 	main_MSG_UPDATE,	L"You are invited to use the new version.\r\rUpdate now?"
 	main_MSG_REQUESTING,	L"Requesting..."
-	main_MSG_CHK_UPD,	L"Checking for updates"
+	main_MSG_LOG_NOT_SERVED,	L"Not served: %d - %s"
 	main_MSG_LOG_UPL,	L"Uploading %s"
 	main_MSG_LOG_UPLOADED,	L"Fully uploaded %s - %s @ %sB/s"
 	main_MSG_LOG_UPL_FAIL,	L"Upload failed %s"
@@ -1085,7 +1088,7 @@ BEGIN
 	main_MSG_FILE_ADD_ABORT,	L"File addition was aborted.\rThe list of files is incomplete."
 	main_MSG_ADDING,	L"Adding item #%d"
 	main_MSG_INV_FILENAME,	L"Invalid filename"
-	main_MSG_DELETE,	L"Delete?"
+	main_MSG_CANT_OPEN_PORT,	L"Cannot open port."
 	main_MSG_PORT_USED_BY,	L"It is already used by %s"
 	main_MSG_PORT_BLOCKED,	L"Something is blocking, maybe your system firewall."
 	main_MSG_KICK_ALL,	L"There are %d connections open.\rDo you want to close them now?"
@@ -1101,7 +1104,7 @@ BEGIN
 	main_MSG_LOG_HEAD,	L"Served head"
 	main_MSG_LOG_NOT_MOD,	L"Not modified, use cache"
 	main_MSG_LOG_REDIR,	L"Redirected to %s"
-	main_MSG_LOG_NOT_SERVED,	L"Not served: %d - %s"
+	main_MSG_DDNS_notfqdn,	L"incomplete hostname, required form aaa.bbb.com"
 	main_MSG_DDNS_nohost,	L"specified hostname does not exist"
 	main_MSG_DDNS_notyours,	L"specified hostname belongs to another username"
 	main_MSG_DDNS_numhost,	L"too many or too few hosts found"
@@ -1117,7 +1120,7 @@ BEGIN
 	main_MSG_BAN_CMT,	L"Ban comment"
 	main_MSG_BAN_CMT_LONG,	L"A comment for this ban..."
 	main_MSG_BREAK_DYN_DNS,	L"This option is NOT compatible with \"dynamic dns updater\".\rContinue?"
-	main_MSG_CANT_OPEN_PORT,	L"Cannot open port."
+	main_MSG_ADDRESSES_EXCEED,	L"The following addresses exceed the limit:\r%s"
 	main_MSG_NO_TEMP,	L"Cannot save temporary file"
 	main_MSG_ERROR_REGISTRY,	L"Can't write to registry.\rYou may lack necessary rights."
 	main_MSG_MANY_ITEMS,	L"You are putting many files.\rTry using real folders instead of virtual folders.\rRead documentation or ask on the forum for help."
@@ -1133,7 +1136,7 @@ BEGIN
 	main_MSG_DDNS_FAIL,	L"DNS update failed: %s\rUser intervention is required."
 	main_MSG_DDNS_REPLY_SIZE,	L"%d bytes reply"
 	main_MSG_DDNS_badauth,	L"invalid user/password"
-	main_MSG_DDNS_notfqdn,	L"incomplete hostname, required form aaa.bbb.com"
+	main_MSG_MAX_CON_SING,	L"Max connections from single address"
 	main_MSG_MAX_SIM_ADDR,	L"Max simultaneous addresses"
 	main_MSG_MAX_SIM_ADDR_DL,	L"Max simultaneous addresses downloading"
 	main_MSG_MAX_SIM_DL_SING,	L"Max simultaneous downloads from single address"
@@ -1149,7 +1152,6 @@ BEGIN
 	main_MSG_ITEM_LOCKED,	L"The item is locked"
 	main_MSG_INVALID_VALUE,	L"Invalid value"
 	main_MSG_EMPTY_NO_LIMIT,	L"Leave blank to get no limits."
-	main_MSG_ADDRESSES_EXCEED,	L"The following addresses exceed the limit:\r%s"
 	JclResources_RsIntelCacheDescrF0,	L"64-Byte Prefetching"
 	JclResources_RsIntelCacheDescrF1,	L"128-Byte Prefetching"
 	JclResources_RsIntelCacheDescrFF,	L"CPUID leaf 2 does not report cache descriptor information, use CPUID leaf 4 to query cache parameters"
@@ -1157,6 +1159,7 @@ BEGIN
 	JclResources_RsOSVersionWinServer2012,	L"Windows Server 2012"
 	JclResources_RsOSVersionWin81,	L"Windows 8.1"
 	JclResources_RsOSVersionWinServer2012R2,	L"Windows Server 2012 R2"
+	classesLib_MSG_ANTIDOS_REPLY,	L"Please wait, server busy"
 	optionsDlg_MSG_INVERT_BAN,	L"Normal behavior of the Ban is to prevent access to the addresses you specify (also called black-list).\rIf you want the opposite, to allow the addresses that you specify (white-list), enter all addresses in a single row preceded by a \\ character.\r\rLet say you want to allow all your 192.168 local network plus your office at 1.1.1.1.\rJust put this IP address mask: \\192.168.*;1.1.1.1\rThe opening \\ character inverts the logic, so everything else is banned.\r\rIf you want to know more about address masks, check the guide."
 	main_S_PORT_LABEL,	L"Port: %s"
 	main_S_PORT_ANY,	L"any"
@@ -1165,7 +1168,6 @@ BEGIN
 	main_MSG_MENU_VAL,	L" (%s)"
 	main_MSG_DL_TIMEOUT,	L"No downloads timeout"
 	main_MSG_MAX_CON,	L"Max connections"
-	main_MSG_MAX_CON_SING,	L"Max connections from single address"
 	JclResources_RsIntelCacheDescrCA,	L"Shared 2nd-Level TLB: 4 KByte pages, 4-way associative, 512 entries"
 	JclResources_RsIntelCacheDescrD0,	L"3rd-level cache: 512 KByte, 4-way set associative, 64 byte line size"
 	JclResources_RsIntelCacheDescrD1,	L"3rd-level cache: 1 MByte, 4-way set associative, 64 byte line size"

@@ -35,6 +35,7 @@ document: {.disconnection reason|if=XXX.}
 document: %url%
 document: commands returning white space: add folder, save, set account, exec, mkdir, chdir, delete, rename, move copy, set
 document: base64, base64decode, dir, disk free, filetime, file changed, load tpl, sha256, for line
+document {.convert|macros|dec|hex.}
 document: new event [login]
 + event to filter logging http://www.rejetto.com/forum/index.php/topic,9784.0.html
 - wrong browser http://www.rejetto.com/forum/index.php/topic,9710.0.html
@@ -53,7 +54,7 @@ document: new event [login]
 ? in getPage() many %symbols% are translated in a way incompatible with {.section.}
 ? Windows Script Interfaces
 ? {.image|src=file|width=x|dst=outfile.}
-+ user input through {.dialog.}
++ user input through {.dialog.} or similar
 + show missing files in VFS http://www.rejetto.com/forum/index.php/topic,8203.new.html
 * {.cache.} should be able to work on a simple variable
 + plugins system http://www.rejetto.com/wiki/index.php/HFS:_plugins_design

@@ -27,6 +27,16 @@ uses
   OverbyteIcsWSocket, OverbyteIcshttpProt;
 
 type
+  TantiDos = class
+  protected
+    accepted: boolean;
+    Paddress: string;
+  public
+    constructor create;
+    destructor Destroy; override;
+    function accept(conn:ThttpConn; address:string=''):boolean;
+    end;
+
   TfastStringAppend = class
   protected
     buff: string;
@@ -220,6 +230,70 @@ implementation
 
 uses
   utilLib, main, windows, dateUtils, forms;
+
+const folderConcurrents: integer = 0;
+const MAX_CONCURRENTS = 3;
+const ip2availability: Tdictionary<string,Tdatetime> = NIL;
+
+constructor TantiDos.create();
+begin
+accepted:=FALSE;
+end;
+
+function TantiDos.accept(conn:ThttpConn; address:string=''):boolean;
+
+  procedure reject();
+  resourcestring
+    MSG_ANTIDOS_REPLY = 'Please wait, server busy';
+  begin
+  conn.reply.mode:=HRM_OVERLOAD;
+  conn.addHeader(ansistring('Refresh: '+intToStr(1+random(2)))); // random for less collisions
+  conn.reply.body:=UTF8Encode(MSG_ANTIDOS_REPLY);
+  end;
+
+begin
+if address= '' then
+  address:=conn.address;
+if ip2availability = NIL then
+  ip2availability:=Tdictionary<string,Tdatetime>.create();
+try
+  if ip2availability[address] > now() then // this specific address has to wait?
+    begin
+    reject();
+    exit(FALSE);
+    end;
+except
+  end;
+if folderConcurrents >= MAX_CONCURRENTS then   // max number of concurrent folder loading, others are postponed
+  begin
+  reject();
+  exit(FALSE);
+  end;
+inc(folderConcurrents);
+Paddress:=address;
+ip2availability.AddOrSetValue(address, now()+1/HOURS);
+accepted:=TRUE;
+Result:=TRUE;
+end;
+
+destructor TantiDos.Destroy;
+var
+  pair: Tpair<string,Tdatetime>;
+  t: Tdatetime;
+begin
+if not accepted then
+  exit;
+t:=now();
+if folderConcurrents = MAX_CONCURRENTS then // serving multiple addresses at max capacity, let's give a grace period for others
+  ip2availability[Paddress]:=t + 1/SECONDS
+else
+  ip2availability.Remove(Paddress);
+dec(folderConcurrents);
+// purge leftovers
+ for pair in ip2availability do
+  if pair.Value < t then
+    ip2availability.Remove(pair.Key);
+end;
 
 class function ThttpClient.createURL(url:string):ThttpClient;
 begin

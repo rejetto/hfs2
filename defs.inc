@@ -1,3 +1,5 @@
+{$A+,B-,C+,E-,F-,G+,H+,I-,J+,K-,L+,M-,N+,O+,P+,Q-,R-,S-,T-,U-,V+,X+,Y+,Z1}
+
 {$DEFINE NOT STABLE }
 {$IFDEF STABLE }
   {$ASSERTIONS OFF}

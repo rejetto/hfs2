@@ -17,7 +17,6 @@ This file is part of HFS ~ HTTP File Server.
     along with HFS; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 }
-{$A+,B-,C+,E-,F-,G+,H+,I-,J+,K-,L+,M-,N+,O+,P+,Q-,R-,S-,T-,U-,V+,X+,Y+,Z1}
 {$INCLUDE defs.inc }
 
 unit main;
@@ -36,8 +35,8 @@ uses
   HSlib, traylib, monoLib, progFrmLib, classesLib;
 
 const
-  VERSION = '2.4.0 RC5';
-  VERSION_BUILD = '317';
+  VERSION = '2.4.0 RC6';
+  VERSION_BUILD = '318';
   VERSION_STABLE = {$IFDEF STABLE } TRUE {$ELSE} FALSE {$ENDIF};
   CURRENT_VFS_FORMAT :integer = 1;
   CRLF = #13#10;
@@ -386,7 +385,7 @@ type
     str:string;
     int:integer;
     end;
-    
+
   TmainFrm = class(TForm)
     filemenu: TPopupMenu;
     newfolder1: TMenuItem;
@@ -2508,7 +2507,7 @@ begin
 result:=FALSE;
 if not isFolder() then exit;
 listing:=TfileListing.create();
-//** i fear it is not ok to use fromFolder() to know if the folder is empty, because it gives empty also for unallowed folders. 
+//** i fear it is not ok to use fromFolder() to know if the folder is empty, because it gives empty also for unallowed folders.
 listing.fromFolder( self, cd, FALSE, 1 );
 result:= length(listing.dir) = 0;
 listing.free;
@@ -2611,7 +2610,7 @@ end; // fixTreeStructure
 
 function Tfile.getParent():Tfile;
 begin
-if node = NIL then 
+if node = NIL then
   exit(NIL);
 if node.data <> self then // the tree structure is unreliable, at least on DISPLAYCHANGE event. This will workaround it
   fixTreeStructure(mainFrm.filesBox.Items[0]);
@@ -2852,7 +2851,7 @@ result:='';
 diff:='';
 runPath:='';
 f:=self;
-if assigned(outInherited) then outInherited^:=FALSE;     
+if assigned(outInherited) then outInherited^:=FALSE;
 if assigned(outFromDisk) then outFromDisk^:=FALSE;
 first:=TRUE;
 while assigned(f) do
@@ -3093,7 +3092,7 @@ f:=self;
 while assigned(f) do
   begin
   list:=f.accounts[FA_ACCESS]; // shortcut
-  
+
   if (username = '') and stringExists(USER_ANONYMOUS, list, TRUE) then break;
   // first check in user/pass
   if (f.user > '') and sameText(f.user, username) and (f.pwd = password) then break;
@@ -3107,7 +3106,7 @@ while assigned(f) do
     if assigned(a) and (a.pwd = password) and
       (stringExists(USER_ANY_ACCOUNT, list, TRUE) or (findEnabledLinkedAccount(a, list, TRUE) <> NIL))
     then break;
-      
+
     exit;
     end;
   // there's a user/pass restriction, but the password didn't match (if we got this far). We didn't exit before to give accounts a chance.
@@ -3212,7 +3211,7 @@ end; // getSafeHost
 
 function nodeIsLocked(n:Ttreenode):boolean;
 begin
-if (n = NIL) or (n.data = NIL) then 
+if (n = NIL) or (n.data = NIL) then
   exit(FALSE);
 result:=nodeToFile(n).isLocked();
 end; // nodeIsLocked
@@ -3274,7 +3273,7 @@ var
   while i < length(parts) do
     begin
     if parts[i] = '.' then
-      goto REMOVE; // 10+ years have passed since the last time i used labels in pascal. It's a thrill. 
+      goto REMOVE; // 10+ years have passed since the last time i used labels in pascal. It's a thrill.
     if parts[i] <> '..' then
       begin
       inc(i);
@@ -3605,48 +3604,12 @@ var
   fast.append(s);
   end; // handleItem
 
-const ip2availability: Tdictionary<string,Tdatetime> = NIL;
-const folderConcurrents: integer = 0;
-const MAX_CONCURRENTS = 3;
-
-  procedure updateAvailability();
-  var
-    pair: Tpair<string,Tdatetime>;
-    t: Tdatetime;
-  begin
-  t:=now();
-  if folderConcurrents = MAX_CONCURRENTS then // serving multiple addresses at max capacity, let's give a grace period for others
-    ip2availability[cd.address]:=t + 1/SECONDS
-  else
-    ip2availability.Remove(cd.address);
-  dec(folderConcurrents);
-  // purge leftovers
-   for pair in ip2availability do
-    if pair.Value < t then
-      ip2availability.Remove(pair.Key);
-  end;
-
-  function available():boolean;
-  begin
-  if ip2availability = NIL then
-    ip2availability:=Tdictionary<string,Tdatetime>.create();
-  try 
-    if ip2availability[cd.address] > now() then // this specific address has to wait?
-      exit(FALSE);
-  except
-    end;
-  if folderConcurrents >= MAX_CONCURRENTS then   // max number of concurrent folder loading, others are postponed
-    exit(FALSE);
-  inc(folderConcurrents);
-  ip2availability.AddOrSetValue(cd.address, now()+1);
-  result:=TRUE;
-  end; // available
-
 var
   i, n: integer;
   f: Tfile;
   useList: boolean;
   mainSection: PtplSection;
+  antiDos: TantiDos;
 begin
 result:='';
 if (folder = NIL) or not folder.isFolder() then exit;
@@ -3677,12 +3640,9 @@ try
     exit;
   useList:=not mainSection.noList;
 
-  if useList and not available() then
-    begin
-    cd.conn.reply.mode:=HRM_OVERLOAD;
-    cd.conn.addHeader('Refresh: '+intToStr(1+random(2))); // random for less collisions
-    exit('Please wait, server busy');
-    end;
+  antiDos:=TantiDos.create();
+  if useList and not antiDos.accept(cd.conn, cd.address) then
+    exit(cd.conn.reply.body);
 
   fullEncode:=FALSE;
   ofsRelUrl:=length(folder.url(fullEncode))+1;
@@ -3792,8 +3752,7 @@ try
   result:=replaceText(result, '%build-time%',
     floatToStrF((now()-buildTime)*SECONDS, ffFixed, 7,3) );
 finally
-  if useList then
-    updateAvailability();
+  freeAndNIL(antiDos);
   folder.unlock();
   diffTpl.free;
   end;
@@ -5098,10 +5057,10 @@ var
     for s in getFilesSelection() do
         begin
         selection:=TRUE;
-        if dirCrossing(s) then 
+        if dirCrossing(s) then
           continue;
         ft:=findFilebyURL(s, f);
-        if ft = NIL then 
+        if ft = NIL then
           continue;
         try
           if not ft.accessFor(data) then
@@ -5124,6 +5083,8 @@ var
         end;
     end; // addSelection
 
+  var
+    antiDos: TantiDos;
   begin
   if not f.hasRecursive(FA_ARCHIVABLE) then
     begin
@@ -5139,38 +5100,46 @@ var
   noFolders:=not stringExists(data.postVars.values['nofolders'], ['','0','false']);
   itsAsearch:=data.urlvars.values['search'] > '';
 
-  tar:=TtarStream.create(); // this is freed by ThttpSrv
+  antiDos:=TantiDos.create;
   try
-    tar.fileNamesOEM:=oemTarChk.checked;
-    addSelection();
-    if not selection then
-      addFolder(f);
+    tar:=TtarStream.create(); // this is freed by ThttpSrv
+    try
+      tar.fileNamesOEM:=oemTarChk.checked;
+      addSelection();
+      if not selection then
+        if antiDos.accept(data.conn, data.address) then
+          addFolder(f)
+        else
+          exit;
 
-    if tar.count = 0 then
-      begin
-      tar.free;
-      data.disconnectReason:='There is no file you are allowed to download';
-      getPage('deny', data, f);
-      exit;
+      if tar.count = 0 then
+        begin
+        tar.free;
+        data.disconnectReason:='There is no file you are allowed to download';
+        getPage('deny', data, f);
+        exit;
+        end;
+      data.fileXferStart:=now();
+      conn.reply.mode:=HRM_REPLY;
+      conn.reply.contentType:=DEFAULT_MIME;
+      conn.reply.bodyMode:=RBM_STREAM;
+      conn.reply.bodyStream:=tar;
+
+      if f.name = '' then exit; // can this really happen?
+      data.lastFN:=if_(f.name='/', 'home', f.name)
+        +'.'+if_(selection, 'selection', if_(itsAsearch, 'search', 'folder'))
+        +'.tar';
+      data.lastFN:=first(eventToFilename('archive name', [
+        '%archive-name%', data.lastFN,
+        '%mode%', if_(selection, 'selection','folder'),
+        '%archive-size%', intToStr(tar.size)
+      ]), data.lastFN);
+      if not noContentdispositionChk.checked then
+        addContentDisposition();
+    except tar.free
       end;
-    data.fileXferStart:=now();
-    conn.reply.mode:=HRM_REPLY;
-    conn.reply.contentType:=DEFAULT_MIME;
-    conn.reply.bodyMode:=RBM_STREAM;
-    conn.reply.bodyStream:=tar;
-
-    if f.name = '' then exit; // can this really happen?
-    data.lastFN:=if_(f.name='/', 'home', f.name)
-      +'.'+if_(selection, 'selection', if_(itsAsearch, 'search', 'folder'))
-      +'.tar';
-    data.lastFN:=first(eventToFilename('archive name', [
-      '%archive-name%', data.lastFN,
-      '%mode%', if_(selection, 'selection','folder'),
-      '%archive-size%', intToStr(tar.size)
-    ]), data.lastFN);
-    if not noContentdispositionChk.checked then
-      addContentDisposition();
-  except tar.free end;
+  finally freeAndNIL(antiDos)
+    end;
   end; // serveTar
 
   procedure checkCurrentAddress();
@@ -5245,10 +5214,10 @@ var
       getPage('deny', data);
       exit;
       end;
-    
+
     if conn.reply.contentType = '' then
       conn.reply.contentType:=ansistring(if_(trim(getTill('<', s))='', 'text/html', 'text/plain'))+'; charset=utf-8';
-    if conn.reply.mode = HRM_IGNORE then      
+    if conn.reply.mode = HRM_IGNORE then
       conn.reply.mode:=HRM_REPLY;
     conn.reply.bodyMode:=RBM_STRING;
     conn.reply.body:=UTF8encode(s);
@@ -5344,7 +5313,7 @@ var
     except end;
 
     if data.session.ttl < 0 then
-      exit('expired');    
+      exit('expired');
     data.account:=acc;
     data.session.user:=acc.user;
     data.user:=acc.user;
@@ -5352,7 +5321,7 @@ var
     data.session.redirect:='.';
     runEventScript('login')
     end; //urlAuth
-    
+
   var
     b: boolean;
     s: string;
@@ -5626,7 +5595,7 @@ var
     s:='';
   if (s > '') and f.isFolder() and not ansiStartsText('special:', s) then
     with tplFromFile(f) do // temporarily builds from diff tpls
-      try 
+      try
         section:=getsection(s);
         if assigned(section) and section.public then // it has to exist and be accessible
           begin
@@ -5635,7 +5604,7 @@ var
             getPage(s, data, f, me());
           exit;
           end;
-      finally free 
+      finally free
         end;
 
   if f.isFolder() and not (FA_BROWSABLE in f.flags)
@@ -5727,7 +5696,7 @@ var
     conn.addHeader('ETag: '+getEtag(f.resource));
   except end;
   }
-  
+
   data.fileXferStart:=now();
   if data.countAsDownload and (flashOn = 'download') then flash();
 
@@ -6222,7 +6191,7 @@ if f.isFile() and fingerprintsChk.checked and (autoFingerprint > 0) then
       end;
   except
   end;
-  
+
 if (f.resource = '') or not f.isVirtualFolder() then exit;
 // virtual folders must be run at addition-time
 if findFirst(f.resource+'\*',faAnyfile, sr) <> 0 then exit;
@@ -6957,7 +6926,7 @@ var
       // account properties are separated by pipes
       t:=chop('|',s);
       p:=chop(':',t); // get property name
-      if p = '' then 
+      if p = '' then
         continue;
       if p = 'login' then
       	begin
@@ -6966,15 +6935,15 @@ var
   	    a.user:=chop(':',t);
 	      a.pwd:=t;
         end
-      else if p = 'enabled' then 
+      else if p = 'enabled' then
         a.enabled:=yes(t)
-      else if p = 'no-limits' then 
+      else if p = 'no-limits' then
         a.noLimits:=yes(t)
-      else if p = 'group' then 
+      else if p = 'group' then
         a.group:=yes(t)
-      else if p = 'redir' then 
+      else if p = 'redir' then
         a.redir:=t
-      else if p = 'link' then 
+      else if p = 'link' then
         a.link:=split(':',t)
       else if p = 'notes' then
         a.notes:=UTF8ToString(unzipCfgProp(ansistring(t)))
@@ -7291,7 +7260,7 @@ end; // setcfg
 
 function loadCfg(var ini,tpl:string):boolean;
 
-  // until 2.2 the template could be kept in the registry, so we need to move it now.  
+  // until 2.2 the template could be kept in the registry, so we need to move it now.
   // returns true if the registry source can be deleted
   function moveLegacyTpl(tpl:string):boolean;
   begin
@@ -8012,7 +7981,7 @@ var
   if not stringExists(defaultIP, getPossibleAddresses()) then
     // previous address not available anymore (it happens using dial-up)
     findSimilarIP(defaultIP);
-    
+
   if searchbetteripChk.checked
   and not stringExists(defaultIP, customIPs) // we don't mess with custom IPs
   and isLocalIP(defaultIP) then // we prefer non-local addresses
@@ -8619,7 +8588,7 @@ try
       kind:=if_(res = mrYes, 'virtual', 'real');
       end;
 
-    if kind = 'virtual' then                                             
+    if kind = 'virtual' then
       include(f.flags, FA_VIRTUAL);
     end;
 
@@ -9209,7 +9178,7 @@ end;
 function TmainFrm.appEventsHelp(Command: Word; Data: Integer; var CallHelp: Boolean): Boolean;
 begin
 callHelp:=FALSE; // avoid exception to be thrown
-result:=FALSE; 
+result:=FALSE;
 end;
 
 procedure TmainFrm.appEventsMinimize(Sender: TObject);
@@ -9231,7 +9200,7 @@ if userInteraction.disabled then exit;
 case ev of
   TE_RCLICK:
     begin
-    setForegroundWindow(handle); // application.bringToFront() will act up when the window is minimized: the popped up menu will stay up forever  
+    setForegroundWindow(handle); // application.bringToFront() will act up when the window is minimized: the popped up menu will stay up forever
     with mouse.cursorPos do
       menu.popup(x,y);
     end;
@@ -9943,7 +9912,7 @@ var
   i: integer;
 begin
 if mi.shortcut = sc then mi.click();
-for i:=0 to mi.count-1 do resendShortcut(mi.items[i], sc); 
+for i:=0 to mi.count-1 do resendShortcut(mi.items[i], sc);
 end;
 
 procedure TmainFrm.FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -11300,7 +11269,7 @@ if i = sbarIdxs.banStatus then BannedIPaddresses1Click(NIL);
 if i = sbarIdxs.customTpl then Edit1Click(NIL);
 if i = sbarIdxs.oos then Minimumdiskspace1Click(NIL);
 if i = sbarIdxs.out then Speedlimit1Click(NIL);
-if i = sbarIdxs.notSaved then Savefilesystem1Click(NIL); 
+if i = sbarIdxs.notSaved then Savefilesystem1Click(NIL);
 end;
 
 procedure TmainFrm.sbarMouseDown(Sender: TObject; Button: TMouseButton;
@@ -11316,7 +11285,7 @@ resourcestring
   MSG_DISAB_FIND_EXT = 'This option makes pointless the option "Find external address at startup", which has now been disabled for your convenience.';
 begin
 dyndns.url:=url;
-if url = '' then exit; 
+if url = '' then exit;
 // this function is called when setting any dyndns service.
 // calling it from somewhere else may make the following test unsuitable
 if mainfrm.findExtOnStartupChk.checked then
@@ -11523,7 +11492,7 @@ resourcestring
       http.agent:=HFS_HTTP_AGENT;
       try http.get()
       except // a redirection will result in an exception
-        if (http.statusCode < 300) or (http.statusCode >= 400) then exit;        
+        if (http.statusCode < 300) or (http.statusCode >= 400) then exit;
         result:=TRUE;
         host:=http.hostname;
         port:=http.ctrlSocket.Port;
@@ -12134,7 +12103,7 @@ and only1instanceChk.checked and not mono.master then
 
 if not cfgLoaded then
   setTplText();
-  
+
 processParams_before(params);
 
 if not quitASAP then
@@ -12279,7 +12248,7 @@ end; // purgeFilesCB
 
 procedure TmainFrm.Properties1Click(Sender: TObject);
 begin
-if selectedFile = NIL then exit;                                                                           
+if selectedFile = NIL then exit;
 
 filepropFrm:=TfilepropFrm.Create(mainFrm);
 try
@@ -12477,7 +12446,7 @@ while current > '' do
     'dynamic-dns-user', 'dynamic-dns-host', 'ips-ever', 'ips-ever-connected',
     'icon-masks-user-images', 'last-external-address', 'last-dialog-folder'])
   then continue;
-  
+
   defV:=default.values[k];
   if defV = v then continue;
   if k = 'dynamic-dns-updater' then
@@ -12723,7 +12692,7 @@ for I := 0 to Form.ControlCount-1 do
   else if Ctrl is TEdit then
     Edit := TEdit(Ctrl);
   end;
-  
+
 Edit.SetBounds(Prompt.Left, Prompt.Top + Prompt.Height + 5, max(200, Prompt.Width), Edit.Height);
 Form.ClientWidth := (Edit.Left * 2) + Edit.Width;
 ButtonTop := Edit.Top + Edit.Height + 15;
