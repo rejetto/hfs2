@@ -1,4 +1,4 @@
-﻿{
+{
 Copyright (C) 2002-2020  Massimo Melina (www.rejetto.com)
 
 This file is part of HFS ~ HTTP File Server.
@@ -1365,6 +1365,7 @@ begin result:=reMatch(txt, '^'+quoteRegExprMetaChars(quoteIfAnyChar(' ',name)), 
 
 type
   TfileListing = class
+    actualCount: integer;
   public
     dir: array of Tfile;
     ignoreConnFilter: boolean;
@@ -1517,16 +1518,13 @@ end; // loadIon
 function TfileListing.fromFolder(folder:Tfile; cd:TconnData;
   recursive:boolean=FALSE; limit:integer=-1; toSkip:integer=-1; doClear:boolean=TRUE):integer;
 var
-  actualCount: integer;
   seeProtected, noEmptyFolders, forArchive: boolean;
   filesFilter, foldersFilter, urlFilesFilter, urlFoldersFilter: string;
 
   procedure recurOn(f:Tfile);
   begin
   if not f.isFolder() then exit;
-  setLength(dir, actualCount);
   toSkip:=fromFolder(f, cd, TRUE, limit, toSkip, FALSE);
-  actualCount:=length(dir);
   end; // recurOn
 
   procedure addToListing(f:Tfile);
@@ -1540,7 +1538,11 @@ var
   else
     begin
     if actualCount >= length(dir) then
-      setLength(dir, actualCount+100);
+      begin
+      setLength(dir, actualCount+1000);
+      if actualCount > 0 then
+        mainfrm.setStatusBarText(format('Listing files: %s',[dotted(actualCount)]));
+      end;
     dir[actualCount]:=f;
     inc(actualCount);
     end;
@@ -1719,8 +1721,7 @@ this would let us have "=" inside the names, but names cannot be assigned
     sr: TSearchRec;
     n: Ttreenode;
   begin
-  { this folder has been dinamically generated, thus the node is not actually
-  { its own... skip }
+  // this folder has been dinamically generated, thus the node is not actually its own... skip
   if folder.isTemp() then exit;
 
   // include (valid) items from the VFS branch
@@ -1785,7 +1786,8 @@ this would let us have "=" inside the names, but names cannot be assigned
 
 begin
 result:=toSkip;
-if doClear then dir:=NIL;
+if doClear then
+  actualCount:=0;
 
 if not folder.isFolder()
 or not folder.accessFor(cd)
@@ -1803,7 +1805,6 @@ if assigned(cd) then
     toSkip:=max(0, pred(strToIntDef(par('page'), 1))*limit);
   end;
 
-actualCount:=length(dir);
 folder.getFiltersRecursively(filesFilter, foldersFilter);
 if assigned(cd) and not ignoreConnFilter then
   begin
@@ -1827,7 +1828,10 @@ try
   if folder.isRealFolder() and not (FA_HIDDENTREE in folder.flags) and allowedTo(folder) then
     includeFilesFromDisk();
   includeItemsFromVFS();
-finally setLength(dir, actualCount) end;
+finally
+  if doClear then
+    setLength(dir, actualCount)
+  end;
 result:=toSkip;
 end; // fromFolder
 
@@ -5102,7 +5106,7 @@ var
 
   antiDos:=TantiDos.create;
   try
-    tar:=TtarStream.create(); // this is freed by ThttpSrv
+    tar:=TtarStream.create();
     try
       tar.fileNamesOEM:=oemTarChk.checked;
       addSelection();
@@ -5123,7 +5127,7 @@ var
       conn.reply.mode:=HRM_REPLY;
       conn.reply.contentType:=DEFAULT_MIME;
       conn.reply.bodyMode:=RBM_STREAM;
-      conn.reply.bodyStream:=tar;
+      conn.reply.bodyStream:=tar; // it will be freed by ThttpSrv
 
       if f.name = '' then exit; // can this really happen?
       data.lastFN:=if_(f.name='/', 'home', f.name)
