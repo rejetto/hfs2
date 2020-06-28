@@ -115,134 +115,134 @@
 #define main_MSG_WARN_ACT_DL 64765
 #define main_MSG_MAX_CON_SING_LONG 64766
 #define main_MSG_GRAPH_RATE 64767
-#define main_MSG_CON_HINT 64768
-#define main_MSG_CON_STATE_IDLE 64769
-#define main_MSG_CON_STATE_REQ 64770
-#define main_MSG_CON_STATE_RCV 64771
-#define main_MSG_CON_STATE_THINK 64772
-#define main_MSG_CON_STATE_REP 64773
-#define main_MSG_CON_STATE_SEND 64774
-#define main_MSG_CON_STATE_DISC 64775
-#define main_MSG_CON_PAUSED 64776
-#define main_MSG_CON_SENT 64777
-#define main_MSG_CON_RECEIVED 64778
+#define main_MSG_VFS_DONT_CONS_DL_MASK 64768
+#define main_MSG_VFS_INHERITED 64769
+#define main_MSG_VFS_EXTERNAL 64770
+#define main_MSG_CON_HINT 64771
+#define main_MSG_CON_STATE_IDLE 64772
+#define main_MSG_CON_STATE_REQ 64773
+#define main_MSG_CON_STATE_RCV 64774
+#define main_MSG_CON_STATE_THINK 64775
+#define main_MSG_CON_STATE_REP 64776
+#define main_MSG_CON_STATE_SEND 64777
+#define main_MSG_CON_STATE_DISC 64778
 #define main_MSG_TPL_RESET 64779
 #define main_MSG_ALLO_REF 64780
 #define main_MSG_ALLO_REF_LONG 64781
 #define main_MSG_BETTERSTOP 64782
 #define main_MSG_BADCRC 64783
-#define main_MSG_VFS_HIDE_EXT 64784
-#define main_MSG_VFS_ARCABLE 64785
-#define main_MSG_VFS_DEF_MASK 64786
-#define main_MSG_VFS_ACCESS 64787
-#define main_MSG_VFS_UPLOAD 64788
-#define main_MSG_VFS_DELETE 64789
-#define main_MSG_VFS_COMMENT 64790
-#define main_MSG_VFS_REALM 64791
-#define main_MSG_VFS_DIFF_TPL 64792
-#define main_MSG_VFS_FILES_FLT 64793
-#define main_MSG_VFS_FLD_FLT 64794
-#define main_MSG_VFS_UPL_FLT 64795
-#define main_MSG_VFS_DONT_CONS_DL 64796
-#define main_MSG_VFS_DONT_CONS_DL_MASK 64797
-#define main_MSG_VFS_INHERITED 64798
-#define main_MSG_VFS_EXTERNAL 64799
-#define main_CUST_TPL 64800
-#define main_VFS_ITEMS 64801
-#define main_MSG_ITEM_EXISTS 64802
-#define main_MSG_INSTALL_TPL 64803
-#define main_MSG_FOLDER_UPLOAD 64804
-#define main_MSG_VFS_DRAG_INVIT 64805
-#define main_MSG_VFS_URL 64806
-#define main_MSG_VFS_PATH 64807
-#define main_MSG_VFS_SIZE 64808
-#define main_MSG_VFS_DLS 64809
-#define main_MSG_VFS_INVISIBLE 64810
-#define main_MSG_VFS_DL_FORB 64811
-#define main_MSG_VFS_DONT_LOG 64812
-#define main_MSG_VFS_HIDE_EMPTY 64813
-#define main_MSG_VFS_NOT_BROW 64814
-#define main_MSG_VFS_HIDE_EMPTY_FLD 64815
-#define main_MSG_CHK_UPD 64816
-#define main_MSG_CHK_UPD_FAIL 64817
-#define main_MSG_CHK_UPD_HEAD 64818
-#define main_MSG_CHK_UPD_VER 64819
-#define main_MSG_CHK_UPD_VER_EXT 64820
-#define main_MSG_CHK_UPD_NONE 64821
-#define main_TO_CLIP 64822
-#define main_ALREADY_CLIP 64823
-#define main_MSG_NO_SPACE 64824
-#define main_CONN 64825
-#define main_TOT_IN 64826
-#define main_TOT_OUT 64827
-#define main_OUT_SPEED 64828
-#define main_IN_SPEED 64829
-#define main_BANS 64830
-#define main_MEMORY 64831
-#define main_MSG_DELETE 64832
-#define main_AUTOSAVE 64833
-#define main_SECONDS 64834
-#define main_MSG_SPD_LIMIT_SING 64835
-#define main_MSG_SPD_LIMIT 64836
-#define main_MSG_AUTO_SAVE 64837
-#define main_MSG_AUTO_SAVE_LONG 64838
-#define main_MSG_MIN 64839
-#define main_MSG_BAN 64840
-#define main_MSG_CANT_SAVE_OPT 64841
-#define main_MSG_UPD_SAVE_ERROR 64842
-#define main_MSG_UPD_REQ_ONLY1 64843
-#define main_MSG_UPD_WAIT 64844
-#define main_MSG_UPD_DL 64845
-#define main_MSG_UPDATE 64846
-#define main_MSG_REQUESTING 64847
-#define main_MSG_LOG_NOT_SERVED 64848
-#define main_MSG_LOG_UPL 64849
-#define main_MSG_LOG_UPLOADED 64850
-#define main_MSG_LOG_UPL_FAIL 64851
-#define main_MSG_LOG_DL 64852
-#define main_MSG_LOGIN_FAILED 64853
-#define main_MSG_MIN_DISK_REACHED 64854
-#define main_MSG_UPL_NAME_FORB 64855
-#define main_MSG_UPL_CANT_CREATE 64856
-#define main_FINGERPRINT 64857
-#define main_NO_FINGERPRINT 64858
-#define main_MSG_SAVE_VFS 64859
-#define main_MSG_INP_COMMENT 64860
-#define main_MSG_FILE_ADD_ABORT 64861
-#define main_MSG_ADDING 64862
-#define main_MSG_INV_FILENAME 64863
-#define main_MSG_CANT_OPEN_PORT 64864
-#define main_MSG_PORT_USED_BY 64865
-#define main_MSG_PORT_BLOCKED 64866
-#define main_MSG_KICK_ALL 64867
-#define main_MSG_TPL_INCOMPATIBLE 64868
-#define main_MSG_LOG_SERVER_START 64869
-#define main_MSG_LOG_SERVER_STOP 64870
-#define main_MSG_LOG_CONNECTED 64871
-#define main_MSG_LOG_DISC_SRV 64872
-#define main_MSG_LOG_DISC 64873
-#define main_MSG_LOG_GOT 64874
-#define main_MSG_LOG_BYTES_SENT 64875
-#define main_MSG_LOG_SERVED 64876
-#define main_MSG_LOG_HEAD 64877
-#define main_MSG_LOG_NOT_MOD 64878
-#define main_MSG_LOG_REDIR 64879
-#define main_MSG_DDNS_notfqdn 64880
-#define main_MSG_DDNS_nohost 64881
-#define main_MSG_DDNS_notyours 64882
-#define main_MSG_DDNS_numhost 64883
-#define main_MSG_DDNS_abuse 64884
-#define main_MSG_DDNS_dnserr 64885
-#define main_MSG_DDNS_911 64886
-#define main_MSG_DDNS_notdonator 64887
-#define main_MSG_DDNS_badagent 64888
-#define main_MSG_BAN_MASK 64889
-#define main_MSG_IP_MASK_LONG 64890
-#define main_MSG_KICK_ADDR 64891
-#define main_MSG_BAN_ALREADY 64892
-#define main_MSG_BAN_CMT 64893
-#define main_MSG_BAN_CMT_LONG 64894
-#define main_MSG_BREAK_DYN_DNS 64895
+#define main_MSG_VFS_HIDE_EMPTY 64784
+#define main_MSG_VFS_NOT_BROW 64785
+#define main_MSG_VFS_HIDE_EMPTY_FLD 64786
+#define main_MSG_VFS_HIDE_EXT 64787
+#define main_MSG_VFS_ARCABLE 64788
+#define main_MSG_VFS_DEF_MASK 64789
+#define main_MSG_VFS_ACCESS 64790
+#define main_MSG_VFS_UPLOAD 64791
+#define main_MSG_VFS_DELETE 64792
+#define main_MSG_VFS_COMMENT 64793
+#define main_MSG_VFS_REALM 64794
+#define main_MSG_VFS_DIFF_TPL 64795
+#define main_MSG_VFS_FILES_FLT 64796
+#define main_MSG_VFS_FLD_FLT 64797
+#define main_MSG_VFS_UPL_FLT 64798
+#define main_MSG_VFS_DONT_CONS_DL 64799
+#define main_IN_SPEED 64800
+#define main_BANS 64801
+#define main_MEMORY 64802
+#define main_CUST_TPL 64803
+#define main_VFS_ITEMS 64804
+#define main_MSG_ITEM_EXISTS 64805
+#define main_MSG_INSTALL_TPL 64806
+#define main_MSG_FOLDER_UPLOAD 64807
+#define main_MSG_VFS_DRAG_INVIT 64808
+#define main_MSG_VFS_URL 64809
+#define main_MSG_VFS_PATH 64810
+#define main_MSG_VFS_SIZE 64811
+#define main_MSG_VFS_DLS 64812
+#define main_MSG_VFS_INVISIBLE 64813
+#define main_MSG_VFS_DL_FORB 64814
+#define main_MSG_VFS_DONT_LOG 64815
+#define main_MSG_UPD_DL 64816
+#define main_MSG_UPDATE 64817
+#define main_MSG_REQUESTING 64818
+#define main_MSG_CHK_UPD 64819
+#define main_MSG_CHK_UPD_FAIL 64820
+#define main_MSG_CHK_UPD_HEAD 64821
+#define main_MSG_CHK_UPD_VER 64822
+#define main_MSG_CHK_UPD_VER_EXT 64823
+#define main_MSG_CHK_UPD_NONE 64824
+#define main_TO_CLIP 64825
+#define main_ALREADY_CLIP 64826
+#define main_MSG_NO_SPACE 64827
+#define main_CONN 64828
+#define main_TOT_IN 64829
+#define main_TOT_OUT 64830
+#define main_OUT_SPEED 64831
+#define main_MSG_FILE_ADD_ABORT 64832
+#define main_MSG_ADDING 64833
+#define main_MSG_INV_FILENAME 64834
+#define main_MSG_DELETE 64835
+#define main_AUTOSAVE 64836
+#define main_SECONDS 64837
+#define main_MSG_SPD_LIMIT_SING 64838
+#define main_MSG_SPD_LIMIT 64839
+#define main_MSG_AUTO_SAVE 64840
+#define main_MSG_AUTO_SAVE_LONG 64841
+#define main_MSG_MIN 64842
+#define main_MSG_BAN 64843
+#define main_MSG_CANT_SAVE_OPT 64844
+#define main_MSG_UPD_SAVE_ERROR 64845
+#define main_MSG_UPD_REQ_ONLY1 64846
+#define main_MSG_UPD_WAIT 64847
+#define main_MSG_LOG_HEAD 64848
+#define main_MSG_LOG_NOT_MOD 64849
+#define main_MSG_LOG_REDIR 64850
+#define main_MSG_LOG_NOT_SERVED 64851
+#define main_MSG_LOG_UPL 64852
+#define main_MSG_LOG_UPLOADED 64853
+#define main_MSG_LOG_UPL_FAIL 64854
+#define main_MSG_LOG_DL 64855
+#define main_MSG_LOGIN_FAILED 64856
+#define main_MSG_MIN_DISK_REACHED 64857
+#define main_MSG_UPL_NAME_FORB 64858
+#define main_MSG_UPL_CANT_CREATE 64859
+#define main_FINGERPRINT 64860
+#define main_NO_FINGERPRINT 64861
+#define main_MSG_SAVE_VFS 64862
+#define main_MSG_INP_COMMENT 64863
+#define main_MSG_BAN_CMT 64864
+#define main_MSG_BAN_CMT_LONG 64865
+#define main_MSG_BREAK_DYN_DNS 64866
+#define main_MSG_CANT_OPEN_PORT 64867
+#define main_MSG_PORT_USED_BY 64868
+#define main_MSG_PORT_BLOCKED 64869
+#define main_MSG_KICK_ALL 64870
+#define main_MSG_TPL_INCOMPATIBLE 64871
+#define main_MSG_LOG_SERVER_START 64872
+#define main_MSG_LOG_SERVER_STOP 64873
+#define main_MSG_LOG_CONNECTED 64874
+#define main_MSG_LOG_DISC_SRV 64875
+#define main_MSG_LOG_DISC 64876
+#define main_MSG_LOG_GOT 64877
+#define main_MSG_LOG_BYTES_SENT 64878
+#define main_MSG_LOG_SERVED 64879
+#define main_MSG_DDNS_FAIL 64880
+#define main_MSG_DDNS_REPLY_SIZE 64881
+#define main_MSG_DDNS_badauth 64882
+#define main_MSG_DDNS_notfqdn 64883
+#define main_MSG_DDNS_nohost 64884
+#define main_MSG_DDNS_notyours 64885
+#define main_MSG_DDNS_numhost 64886
+#define main_MSG_DDNS_abuse 64887
+#define main_MSG_DDNS_dnserr 64888
+#define main_MSG_DDNS_911 64889
+#define main_MSG_DDNS_notdonator 64890
+#define main_MSG_DDNS_badagent 64891
+#define main_MSG_BAN_MASK 64892
+#define main_MSG_IP_MASK_LONG 64893
+#define main_MSG_KICK_ADDR 64894
+#define main_MSG_BAN_ALREADY 64895
 #define main_MSG_ADDRESSES_EXCEED 64896
 #define main_MSG_NO_TEMP 64897
 #define main_MSG_ERROR_REGISTRY 64898
@@ -250,15 +250,15 @@
 #define main_MSG_ADD_TO_HFS 64900
 #define main_MSG_SINGLE_INSTANCE 64901
 #define main_MSG_COMM_ERROR 64902
-#define main_MSG_DDNS_NO_REPLY 64903
-#define main_MSG_DDNS_OK 64904
-#define main_MSG_DDNS_UNK 64905
-#define main_MSG_DDNS_ERR 64906
-#define main_MSG_DDNS_REQ 64907
-#define main_MSG_DDNS_DOING 64908
-#define main_MSG_DDNS_FAIL 64909
-#define main_MSG_DDNS_REPLY_SIZE 64910
-#define main_MSG_DDNS_badauth 64911
+#define main_MSG_CON_PAUSED 64903
+#define main_MSG_CON_SENT 64904
+#define main_MSG_CON_RECEIVED 64905
+#define main_MSG_DDNS_NO_REPLY 64906
+#define main_MSG_DDNS_OK 64907
+#define main_MSG_DDNS_UNK 64908
+#define main_MSG_DDNS_ERR 64909
+#define main_MSG_DDNS_REQ 64910
+#define main_MSG_DDNS_DOING 64911
 #define main_MSG_MAX_CON_SING 64912
 #define main_MSG_MAX_SIM_ADDR 64913
 #define main_MSG_MAX_SIM_ADDR_DL 64914
@@ -992,6 +992,9 @@ BEGIN
 	main_MSG_WARN_ACT_DL,	L"In this moment there are %d active downloads"
 	main_MSG_MAX_CON_SING_LONG,	L"Max simultaneous connections to accept from a single IP address.\rMost people don't know this function well, and have problems. If you are unsure, please use the \"Max simultaneous downloads from a single IP address\"."
 	main_MSG_GRAPH_RATE,	L"Graph refresh rate"
+	main_MSG_VFS_DONT_CONS_DL_MASK,	L"Don't consider as download (mask): %s"
+	main_MSG_VFS_INHERITED,	L" [inherited]"
+	main_MSG_VFS_EXTERNAL,	L" [external]"
 	main_MSG_CON_HINT,	L"Connection time: %s\rLast request time: %s\rAgent: %s"
 	main_MSG_CON_STATE_IDLE,	L"idle"
 	main_MSG_CON_STATE_REQ,	L"requesting"
@@ -1000,14 +1003,14 @@ BEGIN
 	main_MSG_CON_STATE_REP,	L"replying"
 	main_MSG_CON_STATE_SEND,	L"sending"
 	main_MSG_CON_STATE_DISC,	L"disconnected"
-	main_MSG_CON_PAUSED,	L"paused"
-	main_MSG_CON_SENT,	L"%s / %s sent"
-	main_MSG_CON_RECEIVED,	L"%s / %s received"
 	main_MSG_TPL_RESET,	L"The template has been reset"
 	main_MSG_ALLO_REF,	L"Allowed referer"
 	main_MSG_ALLO_REF_LONG,	L"Leave empty to disable this feature.\rHere you can specify a mask.\rWhen a file is requested, if the mask doesn't match the \"Referer\" HTTP field, the request is rejected."
 	main_MSG_BETTERSTOP,	L"\rGoing on may lead to problems.\rIt is adviced to stop loading.\rStop?"
 	main_MSG_BADCRC,	L"This file is corrupted (CRC)."
+	main_MSG_VFS_HIDE_EMPTY,	L"Hidden if empty"
+	main_MSG_VFS_NOT_BROW,	L"Not browsable"
+	main_MSG_VFS_HIDE_EMPTY_FLD,	L"Hide empty folders"
 	main_MSG_VFS_HIDE_EXT,	L"Hide extention"
 	main_MSG_VFS_ARCABLE,	L"Archivable"
 	main_MSG_VFS_DEF_MASK,	L"Default file mask: %s"
@@ -1021,9 +1024,9 @@ BEGIN
 	main_MSG_VFS_FLD_FLT,	L"Folders filter: %s"
 	main_MSG_VFS_UPL_FLT,	L"Upload filter: %s"
 	main_MSG_VFS_DONT_CONS_DL,	L"Don't consider as download"
-	main_MSG_VFS_DONT_CONS_DL_MASK,	L"Don't consider as download (mask): %s"
-	main_MSG_VFS_INHERITED,	L" [inherited]"
-	main_MSG_VFS_EXTERNAL,	L" [external]"
+	main_IN_SPEED,	L"In: %.1f KB/s"
+	main_BANS,	L"Ban rules: %d"
+	main_MEMORY,	L"Mem"
 	main_CUST_TPL,	L"Customized template"
 	main_VFS_ITEMS,	L"VFS: %d items"
 	main_MSG_ITEM_EXISTS,	L"%s item(s) already exists:\r%s\r\rContinue?"
@@ -1037,9 +1040,9 @@ BEGIN
 	main_MSG_VFS_INVISIBLE,	L"Invisible"
 	main_MSG_VFS_DL_FORB,	L"Download forbidden"
 	main_MSG_VFS_DONT_LOG,	L"Don't log"
-	main_MSG_VFS_HIDE_EMPTY,	L"Hidden if empty"
-	main_MSG_VFS_NOT_BROW,	L"Not browsable"
-	main_MSG_VFS_HIDE_EMPTY_FLD,	L"Hide empty folders"
+	main_MSG_UPD_DL,	L"Downloading new version..."
+	main_MSG_UPDATE,	L"You are invited to use the new version.\r\rUpdate now?"
+	main_MSG_REQUESTING,	L"Requesting..."
 	main_MSG_CHK_UPD,	L"Checking for updates"
 	main_MSG_CHK_UPD_FAIL,	L"Check update: failed"
 	main_MSG_CHK_UPD_HEAD,	L"Check update: "
@@ -1053,9 +1056,9 @@ BEGIN
 	main_TOT_IN,	L"Total In: %s"
 	main_TOT_OUT,	L"Total Out: %s"
 	main_OUT_SPEED,	L"Out: %.1f KB/s"
-	main_IN_SPEED,	L"In: %.1f KB/s"
-	main_BANS,	L"Ban rules: %d"
-	main_MEMORY,	L"Mem"
+	main_MSG_FILE_ADD_ABORT,	L"File addition was aborted.\rThe list of files is incomplete."
+	main_MSG_ADDING,	L"Adding item #%d"
+	main_MSG_INV_FILENAME,	L"Invalid filename"
 	main_MSG_DELETE,	L"Delete?"
 	main_AUTOSAVE,	L"Auto save every: "
 	main_SECONDS,	L"%d seconds"
@@ -1069,9 +1072,9 @@ BEGIN
 	main_MSG_UPD_SAVE_ERROR,	L"Cannot save the update"
 	main_MSG_UPD_REQ_ONLY1,	L"The auto-update feature cannot work because it requires the \"Only 1 instance\" option enabled.\r\rYour browser will now be pointed to the update, so you can install it manually."
 	main_MSG_UPD_WAIT,	L"Waiting for last requests to be served, then we'll update"
-	main_MSG_UPD_DL,	L"Downloading new version..."
-	main_MSG_UPDATE,	L"You are invited to use the new version.\r\rUpdate now?"
-	main_MSG_REQUESTING,	L"Requesting..."
+	main_MSG_LOG_HEAD,	L"Served head"
+	main_MSG_LOG_NOT_MOD,	L"Not modified, use cache"
+	main_MSG_LOG_REDIR,	L"Redirected to %s"
 	main_MSG_LOG_NOT_SERVED,	L"Not served: %d - %s"
 	main_MSG_LOG_UPL,	L"Uploading %s"
 	main_MSG_LOG_UPLOADED,	L"Fully uploaded %s - %s @ %sB/s"
@@ -1085,9 +1088,9 @@ BEGIN
 	main_NO_FINGERPRINT,	L"Create fingerprint on addition: disabled"
 	main_MSG_SAVE_VFS,	L"Your current file system is not saved.\rSave it?"
 	main_MSG_INP_COMMENT,	L"Please insert a comment for \"%s\".\rYou should use HTML: <br> for break line."
-	main_MSG_FILE_ADD_ABORT,	L"File addition was aborted.\rThe list of files is incomplete."
-	main_MSG_ADDING,	L"Adding item #%d"
-	main_MSG_INV_FILENAME,	L"Invalid filename"
+	main_MSG_BAN_CMT,	L"Ban comment"
+	main_MSG_BAN_CMT_LONG,	L"A comment for this ban..."
+	main_MSG_BREAK_DYN_DNS,	L"This option is NOT compatible with \"dynamic dns updater\".\rContinue?"
 	main_MSG_CANT_OPEN_PORT,	L"Cannot open port."
 	main_MSG_PORT_USED_BY,	L"It is already used by %s"
 	main_MSG_PORT_BLOCKED,	L"Something is blocking, maybe your system firewall."
@@ -1101,9 +1104,9 @@ BEGIN
 	main_MSG_LOG_GOT,	L"Got %d bytes"
 	main_MSG_LOG_BYTES_SENT,	L"%s bytes sent"
 	main_MSG_LOG_SERVED,	L"Served %s"
-	main_MSG_LOG_HEAD,	L"Served head"
-	main_MSG_LOG_NOT_MOD,	L"Not modified, use cache"
-	main_MSG_LOG_REDIR,	L"Redirected to %s"
+	main_MSG_DDNS_FAIL,	L"DNS update failed: %s\rUser intervention is required."
+	main_MSG_DDNS_REPLY_SIZE,	L"%d bytes reply"
+	main_MSG_DDNS_badauth,	L"invalid user/password"
 	main_MSG_DDNS_notfqdn,	L"incomplete hostname, required form aaa.bbb.com"
 	main_MSG_DDNS_nohost,	L"specified hostname does not exist"
 	main_MSG_DDNS_notyours,	L"specified hostname belongs to another username"
@@ -1117,9 +1120,6 @@ BEGIN
 	main_MSG_IP_MASK_LONG,	L"You can edit the address.\rMasks and ranges are allowed."
 	main_MSG_KICK_ADDR,	L"There are %d open connections from this address.\rDo you want to kick them all now?"
 	main_MSG_BAN_ALREADY,	L"This IP address is already banned"
-	main_MSG_BAN_CMT,	L"Ban comment"
-	main_MSG_BAN_CMT_LONG,	L"A comment for this ban..."
-	main_MSG_BREAK_DYN_DNS,	L"This option is NOT compatible with \"dynamic dns updater\".\rContinue?"
 	main_MSG_ADDRESSES_EXCEED,	L"The following addresses exceed the limit:\r%s"
 	main_MSG_NO_TEMP,	L"Cannot save temporary file"
 	main_MSG_ERROR_REGISTRY,	L"Can't write to registry.\rYou may lack necessary rights."
@@ -1127,15 +1127,15 @@ BEGIN
 	main_MSG_ADD_TO_HFS,	L"\"Add to HFS\" has been added to your Window's Explorer right-click menu."
 	main_MSG_SINGLE_INSTANCE,	L"Sorry, this feature only works with the \"Only 1 instance\" option enabled.\r\rYou can find this option under Menu -> Start/Exit\r(only in expert mode)"
 	main_MSG_COMM_ERROR,	L"Network error. Request failed."
+	main_MSG_CON_PAUSED,	L"paused"
+	main_MSG_CON_SENT,	L"%s / %s sent"
+	main_MSG_CON_RECEIVED,	L"%s / %s received"
 	main_MSG_DDNS_NO_REPLY,	L"no reply"
 	main_MSG_DDNS_OK,	L"successful"
 	main_MSG_DDNS_UNK,	L"unknown reply: %s"
 	main_MSG_DDNS_ERR,	L"error: %s"
 	main_MSG_DDNS_REQ,	L"DNS update requested for %s: %s"
 	main_MSG_DDNS_DOING,	L"Updating dynamic DNS..."
-	main_MSG_DDNS_FAIL,	L"DNS update failed: %s\rUser intervention is required."
-	main_MSG_DDNS_REPLY_SIZE,	L"%d bytes reply"
-	main_MSG_DDNS_badauth,	L"invalid user/password"
 	main_MSG_MAX_CON_SING,	L"Max connections from single address"
 	main_MSG_MAX_SIM_ADDR,	L"Max simultaneous addresses"
 	main_MSG_MAX_SIM_ADDR_DL,	L"Max simultaneous addresses downloading"

@@ -1,4 +1,4 @@
-{
+﻿{
 Copyright (C) 2002-2020  Massimo Melina (www.rejetto.com)
 
 This file is part of HFS ~ HTTP File Server.
@@ -159,6 +159,9 @@ resourcestring
   MSG_ENABLED =   'Option enabled';
   MSG_DISABLED = 'Option disabled';
   MSG_COMM_ERROR = 'Network error. Request failed.';
+  MSG_CON_PAUSED = 'paused';
+  MSG_CON_SENT = '%s / %s sent';
+  MSG_CON_RECEIVED = '%s / %s received';
 
 type
   Pboolean = ^boolean;
@@ -8825,10 +8828,30 @@ procedure TmainFrm.appEventsShowHint(var HintStr: String; var CanShow: Boolean; 
     MSG_CON_HINT = 'Connection time: %s'#13'Last request time: %s'#13'Agent: %s';
   var
     cd: TconnData;
+    st: string;
   begin
   cd:=pointedConnection();
   if assigned(cd) then
-    result:=format(MSG_CON_HINT, [dateTimeToStr(cd.time), dateTimeToStr(cd.requestTime), first(cd.agent,'<unknown>')])
+    begin
+    if isSendingFile(cd) then
+      st:=format(MSG_CON_SENT, [
+        dotted(cd.conn.bytesSentLastItem),
+        dotted(cd.conn.bytesPartial)
+      ])
+    else if isReceivingFile(cd) then
+      st:=format(MSG_CON_received, [
+        dotted(cd.conn.bytesPosted),
+        dotted(cd.conn.post.length)
+      ])
+    else
+      st:='';
+
+    result:=format(MSG_CON_HINT, [
+      dateTimeToStr(cd.time),
+      dateTimeToStr(cd.requestTime),
+      first(cd.agent,'<unknown>')
+    ])+nonEmptyConcat(#13,st);
+    end
   else
     result:=if_(HintsForNewcomersChk.checked, 'This box shows info about current connections');
   end;
@@ -9109,10 +9132,6 @@ var
   end;
 
   function getStatus():string;
-  resourcestring
-    MSG_CON_PAUSED = 'paused';
-    MSG_CON_SENT = '%s / %s sent';
-    MSG_CON_RECEIVED = '%s / %s received';
   begin
   if isSendingFile(data) then
     begin
@@ -9120,16 +9139,16 @@ var
       result:=MSG_CON_PAUSED
     else
       result:=format(MSG_CON_SENT, [
-        dotted(data.conn.bytesSentLastItem),
-        dotted(data.conn.bytesPartial)
+        smartsize(data.conn.bytesSentLastItem),
+        smartsize(data.conn.bytesPartial)
       ]);
     exit;
     end;
   if isReceivingFile(data) then
     begin
     result:=format(MSG_CON_received, [
-      dotted(data.conn.bytesPosted),
-      dotted(data.conn.post.length)
+      smartsize(data.conn.bytesPosted),
+      smartsize(data.conn.post.length)
     ]);
     exit;
     end;
