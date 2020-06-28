@@ -1,4 +1,4 @@
-﻿{
+{
 Copyright (C) 2002-2020  Massimo Melina (www.rejetto.com)
 
 This file is part of HFS ~ HTTP File Server.
@@ -5015,6 +5015,13 @@ var
       addString(getTill('#', data.postvars.valueFromIndex[i]), result) // omit #anchors
   end; // getFilesSelection
 
+  function possibleCSRF():boolean;
+  var s: string;
+  begin
+  s:= conn.getHeader('origin');
+  result:=(s > '') and not s.endsWith( conn.getHeader('Host'))
+  end; // possibleCSRF
+
   procedure serveTar();
   var
     tar: TtarStream;
@@ -5242,7 +5249,9 @@ var
     begin
     if (conn.request.method <> HM_POST)
     or (data.postVars.values['action'] <> 'delete')
-    or not accountAllowed(FA_DELETE, data, f) then exit;
+    or not accountAllowed(FA_DELETE, data, f)
+    or possibleCSRF()
+    then exit;
 
     doneRes:=NIL;
     errors:=NIL;
