@@ -1,4 +1,4 @@
-{
+﻿{
 Copyright (C) 2002-2020  Massimo Melina (www.rejetto.com)
 
 This file is part of HFS ~ HTTP File Server.
@@ -1383,6 +1383,7 @@ type
 constructor TfileListing.create();
 begin
 dir:=NIL;
+timeout:=Now()+1/MINUTES;
 end; // create
 
 destructor TfileListing.destroy;
@@ -5039,7 +5040,6 @@ var
     listing:=TfileListing.create();
     try
       listing.ignoreConnFilter:=ignoreConnFilters;
-      listing.timeout:= now()+1/MINUTES;
       listing.fromFolder( f, data, shouldRecur(data));
       fIsTemp:=f.isTemp();
       ofs:=length(f.resource)-length(f.name)+1;
