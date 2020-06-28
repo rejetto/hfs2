@@ -99,7 +99,7 @@
 #define main_SW2EXPERT 64749
 #define main_SW2EASY 64750
 #define main_MSG_DL_TIMEOUT_LONG 64751
-#define main_MSG_NEWER 64752
+#define main_MSG_NEWER_INCOMP 64752
 #define main_MSG_ZLIB 64753
 #define main_MSG_BAKAVAILABLE 64754
 #define main_MSG_CANT_LOAD_SAVE 64755
@@ -976,7 +976,7 @@ BEGIN
 	main_SW2EXPERT,	L"Switch to Expert mode"
 	main_SW2EASY,	L"Switch to Easy mode"
 	main_MSG_DL_TIMEOUT_LONG,	L"Enter the number of MINUTES with no download after which the program automatically shuts down.\rLeave blank to get no timeout."
-	main_MSG_NEWER,	L"This file has been created with a newer and incompatible version."
+	main_MSG_NEWER_INCOMP,	L"This file has been created with a newer and incompatible version."
 	main_MSG_ZLIB,	L"This file is corrupted (ZLIB)."
 	main_MSG_BAKAVAILABLE,	L"This file is corrupted but a backup is available.\rContinue with backup?"
 	main_MSG_CANT_LOAD_SAVE,	L"Cannot load or save while adding files"

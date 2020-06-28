@@ -9578,7 +9578,7 @@ resourcestring
     +#13'It is adviced to stop loading.'
     +#13'Stop?';
   MSG_BADCRC = 'This file is corrupted (CRC).';
-  MSG_NEWER='This file has been created with a newer and incompatible version.';
+  MSG_NEWER_INCOMP='This file has been created with a newer and incompatible version.';
   MSG_ZLIB = 'This file is corrupted (ZLIB).';
   MSG_BAKAVAILABLE = 'This file is corrupted but a backup is available.'#13'Continue with backup?';
 
@@ -9665,7 +9665,7 @@ while not tlv.isOver() do
         after.resetLetBrowse:=TRUE;
         end;
       if (int_(data) > CURRENT_VFS_FORMAT)
-      and (msgDlg(MSG_NEWER+MSG_BETTERSTOP, MB_ICONERROR+MB_YESNO) = IDYES) then
+      and (msgDlg(MSG_NEWER_INCOMP+MSG_BETTERSTOP, MB_ICONERROR+MB_YESNO) = IDYES) then
         exit;
       end;
   	FK_CRC:
