@@ -1368,6 +1368,7 @@ type
     actualCount: integer;
   public
     dir: array of Tfile;
+    timeout: TDateTime;
     ignoreConnFilter: boolean;
     constructor create();
     destructor Destroy; override;
@@ -1661,6 +1662,8 @@ this would let us have "=" inside the names, but names cannot be assigned
         repeat
         application.ProcessMessages();
         cd.lastActivityTime:=now();
+        if cd.lastActivityTime > timeout then
+          break;
         // we don't list these entries
         if (sr.name = '.') or (sr.name = '..')
         or isCommentFile(sr.name) or isFingerprintFile(sr.name) or sameText(sr.name, DIFF_TPL_FILE)
@@ -5026,6 +5029,7 @@ var
     listing:=TfileListing.create();
     try
       listing.ignoreConnFilter:=ignoreConnFilters;
+      listing.timeout:= now()+1/MINUTES;
       listing.fromFolder( f, data, shouldRecur(data));
       fIsTemp:=f.isTemp();
       ofs:=length(f.resource)-length(f.name)+1;

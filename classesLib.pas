@@ -848,10 +848,12 @@ var
 
 var
   i, posBak: int64;
+  n: integer;
 begin
 posBak:=pos;
 p:=@buffer;
-while (count > 0) and (cur < length(flist)) do
+n:=length(flist);
+while (count > 0) and (cur < n) do
   case where of
     TW_HEADER:
       begin
