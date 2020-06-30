@@ -1,4 +1,4 @@
-﻿{
+{
 Copyright (C) 2002-2020  Massimo Melina (www.rejetto.com)
 
 This file is part of HFS ~ HTTP File Server.
@@ -35,8 +35,8 @@ uses
   HSlib, traylib, monoLib, progFrmLib, classesLib;
 
 const
-  VERSION = '2.4.0 RC6';
-  VERSION_BUILD = '318';
+  VERSION = '2.4.0 RC7';
+  VERSION_BUILD = '319';
   VERSION_STABLE = {$IFDEF STABLE } TRUE {$ELSE} FALSE {$ENDIF};
   CURRENT_VFS_FORMAT :integer = 1;
   CRLF = #13#10;
@@ -1383,7 +1383,6 @@ type
 constructor TfileListing.create();
 begin
 dir:=NIL;
-timeout:=Now()+1/MINUTES;
 end; // create
 
 destructor TfileListing.destroy;
@@ -1666,7 +1665,7 @@ this would let us have "=" inside the names, but names cannot be assigned
         repeat
         application.ProcessMessages();
         cd.lastActivityTime:=now();
-        if cd.lastActivityTime > timeout then
+        if (timeout > 0) and (cd.lastActivityTime > timeout) then
           break;
         // we don't list these entries
         if (sr.name = '.') or (sr.name = '..')
@@ -5040,6 +5039,7 @@ var
     listing:=TfileListing.create();
     try
       listing.ignoreConnFilter:=ignoreConnFilters;
+      listing.timeout:= now()+1/MINUTES;
       listing.fromFolder( f, data, shouldRecur(data));
       fIsTemp:=f.isTemp();
       ofs:=length(f.resource)-length(f.name)+1;
