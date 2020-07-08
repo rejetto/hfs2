@@ -206,9 +206,10 @@
             </Platforms>
             <ModelSupport>False</ModelSupport>
             <Deployment Version="3">
-                <DeployFile LocalName="hfs.exe" Configuration="Release" Class="ProjectOutput">
+                <DeployFile LocalName="hfs.dpr" Configuration="Release" Class="ProjectFile">
                     <Platform Name="Win32">
-                        <RemoteName>hfs.exe</RemoteName>
+                        <RemoteDir>.\</RemoteDir>
+                        <Enabled>false</Enabled>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -218,16 +219,15 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="hfs.dpr" Configuration="Debug" Class="ProjectFile">
+                <DeployFile LocalName="hfs.exe" Configuration="Release" Class="ProjectOutput">
                     <Platform Name="Win32">
-                        <RemoteDir>.\</RemoteDir>
+                        <RemoteName>hfs.exe</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="hfs.dpr" Configuration="Release" Class="ProjectFile">
+                <DeployFile LocalName="hfs.dpr" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="Win32">
                         <RemoteDir>.\</RemoteDir>
-                        <Enabled>false</Enabled>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

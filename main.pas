@@ -1,4 +1,4 @@
-{
+﻿{
 Copyright (C) 2002-2020  Massimo Melina (www.rejetto.com)
 
 This file is part of HFS ~ HTTP File Server.
@@ -671,7 +671,6 @@ type
     Speedlimitforsingleaddress1: TMenuItem;
     macrosLogChk: TMenuItem;
     Debug1: TMenuItem;
-    Appendmacroslog1: TMenuItem;
     preventStandbyChk: TMenuItem;
     titlePnl: TPanel;
     HTMLtemplate1: TMenuItem;
@@ -3624,8 +3623,6 @@ begin
 result:='';
 if (folder = NIL) or not folder.isFolder() then exit;
 
-if macrosLogChk.checked and not appendmacroslog1.checked then
-  resetLog();
 diffTpl:=Ttpl.create();
 folder.lock();
 try
@@ -11871,7 +11868,6 @@ if menu.items.find(logmenu.items.caption) = NIL then
 SwitchON1.imageIndex:=if_(srv.active, 11, 4);
 SwitchON1.caption:=if_(srv.active, S_OFF, S_ON);
 
-Appendmacroslog1.Enabled:=macrosLogChk.checked;
 stopSpidersChk.Enabled:=not fileExistsByURL('/robots.txt');
 Showbandwidthgraph1.visible:=not graphBox.visible;
 if bakShellMenuText='' then

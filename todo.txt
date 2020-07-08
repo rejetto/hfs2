@@ -34,7 +34,7 @@ document: single line diff templates (file path)
 document: {.disconnection reason|if=XXX.}
 document: %url%
 document: commands returning white space: add folder, save, set account, exec, mkdir, chdir, delete, rename, move copy, set
-document: base64, base64decode, dir, disk free, filetime, file changed, load tpl, sha256, for line
+document: pipe, base64, base64decode, dir, disk free, filetime, file changed, load tpl, sha256, for line
 document {.convert|macros|dec|hex.}
 document: new event [login]
 + event to filter logging http://www.rejetto.com/forum/index.php/topic,9784.0.html
@@ -92,12 +92,12 @@ document: new event [login]
 + an updated hint on virtual folders, to explain how to get upload working
 - requesting a non-existant file inside an unauthorized folder, apache replies 401, hfs 404. try to comply.
 + make %list% available in every page
-+ support for ALT+F4 with option "Minimize to tray clicking the close button" www.rejetto.com/forum/?topic=6351 
++ support for ALT+F4 with option "Minimize to tray clicking the close button" www.rejetto.com/forum/?topic=6351
 + replace and delete icons http://www.rejetto.com/forum/index.php?topic=6317.msg1038157#msg1038157
 ? currently the delete permission is only inside a folder. you can't mark a file or delete the marked folder. is this ok?
-+ when a link is protected (no access for this user) it may be displayed as a link to the %item-name%, then 401, and if login is successful provide a redirection 
-+ change folder/link/generic-file icons (via GUI, without editing the template) 
-+ a way to get bigger icons (client side) 
++ when a link is protected (no access for this user) it may be displayed as a link to the %item-name%, then 401, and if login is successful provide a redirection
++ change folder/link/generic-file icons (via GUI, without editing the template)
++ a way to get bigger icons (client side)
 + be able to produce rss http://www.rejetto.com/forum/index.php?topic=5846.msg1035481#msg1035481
 * better warning message http://www.rejetto.com/forum/index.php?topic=5795.msg1034406#msg1034406
 ? on the fly files compression www.rejetto.com/forum/?topic=5492
@@ -105,7 +105,7 @@ document: new event [login]
 ? auto-removing folders www.rejetto.com/forum/?topic=3149
 + last-access-time for files www.rejetto.com/forum/?topic=5266
 + expiration time for account www.rejetto.com/forum/?topic=5409
-+ warn the user if there's no useful IP address http://www.rejetto.com/forum/index.php?topic=3193.msg1031371#msg1031371  
++ warn the user if there's no useful IP address http://www.rejetto.com/forum/index.php?topic=3193.msg1031371#msg1031371
 + GUI suggestions www.rejetto.com/forum/?topic=5334
 + {.cookie.} http://www.rejetto.com/forum/index.php?topic=5349.0
 + restrict access to -> ip mask www.rejetto.com/forum/?topic=5244
@@ -126,37 +126,37 @@ document: new event [login]
 + per-folder no-limit
 + windows auth (NLTM? seems to be available in ICS) www.rejetto.com/forum/?topic=3762
 + more stats www.rejetto.com/forum/?topic=4968
-+ to disable single ban rules 
++ to disable single ban rules
 + ban by hostname
 + edit comments for real folders www.rejetto.com/forum/?topic=4667
 + a way to pass ini commands through the command line
 + create folders via command line www.rejetto.com/forum/?topic=3955
 ? support mp3ToIon www.rejetto.com/forum/?topic=4600
 + download only for <account-list>
-+ account: see all transfers in ~progress http://www.rejetto.com/forum/index.php/topic,9325.msg1053416/topicseen.html#msg1053416 
++ account: see all transfers in ~progress http://www.rejetto.com/forum/index.php/topic,9325.msg1053416/topicseen.html#msg1053416
 + limit account to a host mask
 + tray icons for uploads
 + MAC filter
 + if robots.txt does not exist, an option "don't be listed on search engines"
 + menu -> limits -> temporarily disable all limits
 + menu -> limits -> max speed for each address
-+ option to display counter for folders as number of accesses instead of total access to files in it   
-+ autodisabling accounts www.rejetto.com/forum/?topic=5379 
++ option to display counter for folders as number of accesses instead of total access to files in it
++ autodisabling accounts www.rejetto.com/forum/?topic=5379
 + on update, propose a link to the "what's new" page
 + add special folder (expert mode): let you specify a special folder, like documents, or manually enter a path (useful for relative paths), or GUID
 + logs rotation (hfs always append)
-+ double address bar, one for LAN and one for the Internet   
++ double address bar, one for LAN and one for the Internet
 + per user diff-tpl (apply both folder and user diff-tpl.s, and let the user decide priority, default:user,folder)
 + "Folder image mask", a file mask indicating the external file that should be used as icon (~img_folder)
 + to be able to add icons from multi-icon files (like shell32.dll)
 + installer (saving to registry, and making ini-file the new default, don't ask for shell menu)
-+ support unicode filenames (FindFirstFileW. Cannot be done because widgets don't support unicode) 
++ support unicode filenames (FindFirstFileW. Cannot be done because widgets don't support unicode)
 * show "(home)" instead of "/" in VFS
 + show updateinfo notice also in autocheck
 + top 10 downloaded files
 + after the self test fails, and a router problem is detected, prompt a wizard for portforwad.com (extract routers list)
 + export vfs map as txt/html
-+ specific message for each disabled account             
++ specific message for each disabled account
 + search for files including meta information (id3 tag) www.rejetto.com/forum/?topic=5312
 + multiupload using flash
 ? support shortcut to folders in real-folders
@@ -184,7 +184,7 @@ document: new event [login]
 * stop using /~commands and move all of them in the standard ?name=value form
 
 VER 3
-+ new kind of folder (no more real/virtual folders) 
++ new kind of folder (no more real/virtual folders)
 
 VER 3.5
 + search for files

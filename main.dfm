@@ -2963,10 +2963,6 @@ object mainFrm: TmainFrm
         AutoCheck = True
         Caption = 'Enable macros.log'
       end
-      object Appendmacroslog1: TMenuItem
-        AutoCheck = True
-        Caption = 'Append macros.log'
-      end
       object Runscript1: TMenuItem
         Caption = 'Run script...'
         OnClick = Runscript1Click
