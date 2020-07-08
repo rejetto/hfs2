@@ -4,7 +4,7 @@ Here below you'll find some options affecting the template.
 Consider 1 is used for "yes", and 0 is used for "no".
 
 DO NOT EDIT this template just to change options. It's a very bad way to do it, and you'll pay for it!
-Correct way: create a new text file 'hfs.diff.tpl' in the same folder of the program. 
+Correct way: create a new text file 'hfs.diff.tpl' in the same folder of the program.
 Add this as first line [+special:strings]
 and following all the options you want to change, using the same syntax you see here.
 That's all. To know more about diff templates read the documentation.
@@ -30,11 +30,10 @@ def 3.0
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="shortcut icon" href="/favicon.ico">
 	<link rel="stylesheet" href="/~style.css" type="text/css">
-    <script type="text/javascript" src="/?mode=jquery"></script>
     <script>
-	var HFS = { 
-		user: '{.js encode|%user%.}', 
-		folder: '{.js encode|%folder%.}', 
+	var HFS = {
+		user: '{.js encode|%user%.}',
+		folder: '{.js encode|%folder%.}',
 		sid: '{.cookie|HFS_SID_.}',
 		canChangePwd: '{.can change pwd.}',
 	}
@@ -60,7 +59,7 @@ def 3.0
 
 [list panel]
 {.if not| %number% |{:
-	<div id='nothing'>{.!{.if|{.length|{.?search.}.}|No results|No files.}.}</div> 
+	<div id='nothing'>{.!{.if|{.length|{.?search.}.}|No results|No files.}.}</div>
 :}|{:
 	<div id='files' class="hideTs {.for each|z|mkdir|comment|move|rename|delete|{: {.if|{.can {.^z.}.}|can-{.^z.} .}:}.}">
 	%list%
@@ -73,10 +72,11 @@ def 3.0
 
 [menu panel]
 <script>
-	$(function(){
-        if ($('#menu-panel').css('position').indexOf('sticky') < 0) // sticky is not supported
-            setInterval(function(){ $('#wrapper').css('margin-top', $('#menu-panel').height()+5) }, 300); // leave space for the fixed panel
-    });
+$domReady(()=>{
+	if ($sel('#menu-panel').style.position.indexOf('sticky') < 0) // sticky is not supported
+		setInterval(()=>
+			$sel('#wrapper').style.marginTop = $sel('#menu-panel').clientHeight+5, 300); // leave space for the fixed panel
+});
 </script>
 
 <div id='menu-panel'>
@@ -90,7 +90,7 @@ def 3.0
 		.}
 		{.if| {.get|can recur.} |
 		<button title="{.!Search.}"
-		    onclick="{.if|{.length|{.?search.}.}| location = '.'| $('#search-panel').toggle().find(':input:first').focus().}">
+		    onclick="{.if|{.length|{.?search.}.}| location = '.'| $sel(':input', $toggle('search-panel')).focus().}">
 			<i class='fa fa-search'></i><span>{.!Search.}</span>
 		</button>
 		/if.}
@@ -99,7 +99,7 @@ def 3.0
 			<span>{.!Selection.}</span>
 		</button>
 		{.if|{.can mkdir.}|
-			<button title="{.!New folder.}" id='newfolderBtn' onclick='ask(this.innerHTML, "text", name=> ajax("mkdir", { name:name }))'>
+			<button title="{.!New folder.}" id='newfolderBtn' onclick='ask(this.innerHTML, "text", name=> ajax("mkdir", { name }))'>
 				<i class="fa fa-folder"></i>
 				<span>{.!New folder.}</span>
 			</button>
@@ -111,7 +111,7 @@ def 3.0
 
 		{.if|{.get|can archive.}|
 		<button id='archiveBtn' title="{.!Download selected files as a single archive.}" onclick='
-			ask("{.!Download these files as a single archive?.}", ()=> 
+			ask("{.!Download these files as a single archive?.}", ()=>
 				submit({ selection: getSelectedItemsName() }, "{.get|url|mode=archive|recursive.}") )'>
 			<i class="fa fa-file-archive"></i>
 			<span>{.!Archive.}</span>
@@ -126,7 +126,7 @@ def 3.0
 
 		<button id="sort" title="{.!Change list order.}" onclick="changeSort()">
 			<i class='fa fa-sort'></i>
-			<span></span>
+			<span>{.!Sort.}</span>
 		</button>
 	</div>
 
@@ -155,23 +155,24 @@ var darkOs = window.matchMedia('(prefers-color-scheme:dark)').matches
 var curTheme = localStorage['theme']
 if (!themes.includes(curTheme))
 	curTheme = themes[+darkOs]
-$('body').addClass(curTheme+themePostfix)
-$(function(){
+var body = document.body
+body.classList.add(curTheme+themePostfix)
+$domReady(()=>{
 
-    var titleBar = $('#title-bar')
-	var h = titleBar.height()
+    var titleBar = $sel('#title-bar')
+	var h = titleBar.clientHeight
 	var k = 'shrink'
     window.onscroll = function(){
         if (window.scrollY > h)
-        	titleBar.addClass(k)
+        	titleBar.classList.add(k)
 		else if (!window.scrollY)
-            titleBar.removeClass(k)
+            titleBar.classList.remove(k)
     }
 
-    $('#switch-theme').click(()=>{
-        $('body').toggleClass(curTheme+themePostfix);
+    $click('#switch-theme', ()=>{
+        $xclass(body, curTheme+themePostfix);
 		curTheme = themes[themes.indexOf(curTheme) ^1]
-        $('body').toggleClass(curTheme+themePostfix);
+        $xclass(body, curTheme+themePostfix);
         localStorage.setItem('theme', curTheme);
     });
 });
@@ -225,25 +226,26 @@ $(function(){
 	#search-panel button { float:right }
 </style>
 <script>
-    $('#search-panel').submit(function(){
-        var s = $(this).find('[name=search]').val()
-        var folder = ''
-        var ps = []
-        switch ($('[name=where]:checked').val()) {
-            case 'anywhere': folder = '/'
-            case 'fromhere':
-                ps.push('search='+s)
-                break
-            case 'here':
-                if (s.indexOf('*') < 0)
-                    s = '*'+s+'*'
-                ps.push('files-filter='+s)
-                ps.push('folders-filter='+s)
-                break
-        }
-        location = folder+'?'+ps.join('&')
-        return false
-    })
+$on('#search-panel', { submit(ev) {
+	var f = $form(ev.target)
+	var s = f.search
+	var folder = ''
+	var ps = []
+	switch (f.where) {
+		case 'anywhere': folder = '/'
+		case 'fromhere':
+			ps.push('search='+s)
+			break
+		case 'here':
+			if (s.indexOf('*') < 0)
+				s = '*'+s+'*'
+			ps.push('files-filter='+s)
+			ps.push('folders-filter='+s)
+			break
+	}
+	location = folder+'?'+ps.join('&')
+	return false
+}})
 </script>
 
 [+special:strings]
@@ -313,8 +315,8 @@ button i.fa { font-size:110% }
 .item img { vertical-align: text-bottom; margin:0 0.2em; }
 .item .fa-lock { margin-right: 0.2em; }
 .item .clearer { clear:both }
-.comment { color:#666; padding:.1em 1.8em .2em; border-radius: 1em; margin-top: 0.1em; 
-	background-color:rgba(0,0,0,.04); /* dynamically darker, as also hover is darker */  } 
+.comment { color:#666; padding:.1em 1.8em .2em; border-radius: 1em; margin-top: 0.1em;
+	background-color:rgba(0,0,0,.04); /* dynamically darker, as also hover is darker */  }
 .comment>i:first-child { margin-right:0.5em; margin-left:-1.4em; }
 .item-size { margin-left:.3em }
 .selector { float:left; width: 1.2em; height:1.2em; margin-right: .5em; filter:grayscale(1); }
@@ -354,6 +356,7 @@ button i.fa { font-size:110% }
 }
 .dialog-content input { border: 1px solid #888; } /* without this the border on chrome83 is not consistent */
 .ask input { border:1px solid rgba(0,0,0,0.5); padding: .2em; margin-top: .5em; }
+.ask textarea { margin:1em 0; width:25em; height:8em; }
 .ask .close { float: right; font-size: 1.2em; color: red; position: relative; top: -0.4em; right: -0.3em; }
 
 #additional-panels input { border:0; color: #555; padding: .1em .3em .2em; border-radius: 0.4em; }
@@ -584,9 +587,10 @@ z-index:1; /* without this .item-menu will be over*/ }
 [ajax.comment|public|no log]
 {.check session.}
 {.break|if={.not|{.can comment.}.} |result=forbidden.}
+{.set|t|{.escape html|{.postvar|text.}.}.}
 {.for each|fn|{.replace|:|{.no pipe||.}|{.postvar|files.}.}|{:
      {.break|if={.is file protected|var=fn.}|result=forbidden.}
-     {.set item|%folder%{.^fn.}|comment={.postvar|text.}.}
+     {.set item|%folder%{.^fn.}|comment={.^t.}.}
 :}.}
 {.pipe|ok.}
 
@@ -604,16 +608,251 @@ can delete=get|can delete
 can change pwd={.{.member of|can change password.} >.}
 can move=and|{.get|can delete.}|{.!option.move.}
 escape attr=replace|"|&quot;|$1
+escape html=replace|<|&lt;|{.replace|>|&gt;|$1.}
 commentNL=if|{.pos|<br|$1.}|$1|{.replace|{.chr|10.}|<br />|$1.}
 add bytes=switch|{.cut|-1||$1.}|,|0,1,2,3,4,5,6,7,8,9|$1 {.!Bytes.}|K,M,G,T|$1B
 
 [special:import]
 {.new account|can change password|enabled=1|is group=1|notes=accounts members of this group will be allowed to change their password.}
 
-[lib.js|public|no log|cache]
-// <script> // this is here for the syntax highlighter
+[login.js|public]
+function wantArray(x) {
+	return Array.isArray(x) ? x : [x]
+}
+
+function $create(tag, opts={}){
+    let v = tag.split('.')
+	tag = v.shift()
+    let e = document.createElement(tag)
+	if (v.length)
+		e.setAttribute('class', v.join(' '))
+	if (Array.isArray(opts) || opts instanceof Element)
+		opts = { h:opts }
+	if (v=opts.s)
+	    e.style = v
+    if (v=opts.t)
+        e.textContent = v
+    if (v=opts.h)
+		if (typeof v==='string')
+			e.innerHTML = v
+		else
+		    wantArray(v).forEach(x=> e.append(x))
+	Object.assign(e, opts.a)
+	if (v=opts.on)
+		$on(e, v)
+	if (v=opts.click)
+		$on(e, { click:v })
+	if (v=opts.app)
+	    $sel(v).append(e)
+    return e
+}
+
+function $msel(sel, root, opts={}) {
+	if (typeof root==='function')
+		opts=root, root=0
+	if (!root)
+		root = document
+	sel = sel.replace(/:input\b/g, 'input,textarea,select,button')
+	if (opts.single)
+	    return root.querySelector(sel)
+	let ret = [...root.querySelectorAll(sel)]
+	if (typeof opts==='function')
+		opts.f = opts
+	if (opts.f)
+		ret = ret.filter(opts.f)
+	return ret
+}
+
+function $sel(sel, root){
+    if (sel && sel instanceof Element)
+        return sel
+    return $msel(sel, root, { single:true })
+}
+
+function $on(root, evs, sel) {
+	if (!root)
+		root = document
+	if (typeof root==='string')
+	    root = $msel(root)
+	for (let k in evs)
+	    wantArray(root).forEach(r=> r.addEventListener(k, function(ev){
+			if (sel && !(ev.delTarget = ev.target.closest(sel)))
+				return
+			if (false === evs[k].call(this,ev)) {
+				ev.stopPropagation()
+				ev.preventDefault()
+			}
+		}))
+}
+
+function $click(sel, cb, del) {
+    if (typeof sel==='string') {
+        let a = sel.split('/')
+        if (a.length > 1)
+            sel=a[0], del=a[1]
+    }
+    return $on(sel, { click:cb }, del)
+}
+
+function $toggle(id, state) {
+	let r = typeof id==='string' ? document.getElementById(id) : id
+	if (!r)
+		return
+	if (state===undefined)
+	    state = r.style.display==='none'
+	r.style.display = state ? '' : 'none'
+	return r
+}
+
+function $xclass(el, cls, st) {
+    let l = el.classList
+    if (st===undefined ? l.contains(cls) : !st)
+        return l.remove(cls), false
+    l.add(cls)
+    return true
+}
+
+function $post(url, data, opts) {
+    return fetch(url, Object.assign({ method:'POST', cache:'no-cache', body:new URLSearchParams(data) }, opts))
+        .then(r=> r.text())
+}
+
+function $button(lab, click) {
+	let m = lab.split('@@')
+	if (m.length > 1)
+		lab = '<i class="fa fa-'+m[0]+'"></i> '+m[1]
+	return $create('button', { h:lab, click })
+}
+
+function $form(form, field) {
+    if (typeof form==='string')
+        form = $sel(form)
+    if (!form.elements)
+        form = $sel('form', form)
+	if (field)
+		return form.elements.namedItem(field).value
+	let ret = {}
+	for (let e of form.elements)
+		if (e.name) {
+			let v = e.value
+			if (field === false)
+				v = v.trim()
+			ret[e.name] = v
+		}
+	return ret
+}
+
+function $domReady(cb) {
+	document.readyState !== 'loading' ? cb() : document.addEventListener('DOMContentLoaded', cb)
+}
+
+// options: cb(function), closable(false)
+function dialog(content, options) {
+	options = options||{}
+	var cb = typeof options==='function' ? options : options.cb
+	var active = document.activeElement
+    var ret = $create('div.dialog-content', {
+		h:content,
+		on:{
+			click(ev){ ev.stopImmediatePropagation() },
+			keydown(ev){ ev.keyCode===27 && close2() }
+		}
+	})
+	ret.close = ()=> {
+        ret.closest('.dialog-overlay').remove()
+		active.focus()
+        cb && cb()
+    }
+	function close2(){
+		if (options.closable !== false)
+			ret.close()
+	}
+
+	$create('div.dialog-overlay', { h:ret, click:close2, app:'body' })
+	setTimeout(()=>
+		$sel(':input:not(:disabled)', ret).focus())
+    return ret
+}//dialog
+
+// options: cb(function), buttons(jq|false)
+function showMsg(content, options) {
+	options = options||{}
+	var cb = typeof options==='function' ? options : options.cb
+	var bs = options.buttons
+	if (~content.indexOf('<'))
+		content = content.replace(/\n/g, '<br>')
+    var ret = dialog($create('div', { s:'display:inline-block; text-Align:left' , h:content }), cb)
+	//.css('text-align', 'center')
+	if (bs!==false)
+		$create('div.buttons', {
+			app: ret,
+			h: bs || $button("{.!Ok.}", ()=> ret.close())
+		})
+	return ret
+}//showMsg
+
+function showError(msg, cb) {
+	if (!msg)
+		return
+	let ret = showMsg("<h2>{.!Error.}</h2>"+msg, cb)
+	ret.classList.add('error')
+    return ret
+}
 
 {.$sha256.js.}
+
+function sha256(s) { return SHA256.hash(s) }
+
+function showLogin(options) {
+	if (!HFS.sid) // the session was just deleted
+		return location.reload() // but it's necessary for login
+	let warning = `<div style='border-bottom:1px solid #888; margin-bottom:1em; padding-bottom:1em;'>
+		The current account (${HFS.user}) has no access to this resource.
+		<br>Please enter different credentials.
+	</div>`
+	let d = dialog($create('form', {
+		s:'line-height:1.9em',
+		// the following works because HFS.user is always a string
+		h: (HFS.user && warning)+`
+			{.!Username.}
+			<br><input name=usr />
+			<br>{.!Password.}
+			<br><input name=pwd type=password />
+			<br><br><button type=submit>{.!Login.}</button>
+		`,
+		on:{
+			submit(){
+				var v = $form(d, false)
+				var data = {
+					user: v.usr,
+					passwordSHA256: sha256(sha256(v.pwd)+HFS.sid)  // hash must be lowercase. Double-hashing is causing case sensitiv
+				}
+				$post("?mode=login", data).then(res=>{
+					if (res !== 'ok')
+						return showError(res)
+					d.close()
+					showLoading()
+					location.reload()
+				}, ajaxError);
+				return false
+			}
+		}
+	}), options)
+} // showLogin
+
+function showLoading(show){
+	if (showLoading.last)
+		showLoading.last.close()
+	if (show===false)
+		return
+	let ret = showLoading.last = showMsg('<i class="fa fa-refresh" style="animation:spin 6s linear infinite;position: absolute;top: calc(50% - .5em);left: calc(50% - 0.5em); font-size: 12em; font-size:min(50vw, 50vh); color: #fff;" />',{ buttons:false })
+	ret.style.background = 'none'
+	return ret
+}
+
+[lib.js|public|no log|cache]
+
+{.$login.js.}
 
 function ajax(method, data, cb) {
     if (!data)
@@ -621,10 +860,10 @@ function ajax(method, data, cb) {
     data.token = HFS.sid; // avoid CSRF attacks
     showLoading()
     // calling this section 'under' the current folder will affect permissions commands like {.get|can delete.}
-    return $.post("?mode=section&id=ajax."+method, data).then(function(){
+    return $post("?mode=section&id=ajax."+method, data).then(res=>{
         if (cb)
             showLoading(false)
-        ;(cb||getStdAjaxCB()).apply(this,arguments)
+        ;(cb||getStdAjaxCB())(res)
     }, ajaxError);
 }//ajax
 
@@ -632,36 +871,25 @@ function changePwd() {
 	if (!HFS.canChangePwd)
 		return showError("{.!Sorry, you lack permissions for this action.}")
 	ask(`{.!Warning: the password will be sent unencrypted to the server. For better security change the password from HFS window..}
-		<hr><i class="fa fa-key"></i> {.!Enter new password.}`, 
-		'password', 
+		<hr><i class="fa fa-key"></i> {.!Enter new password.}`,
+		'password',
 		s=>
 			s && ajax('changepwd', {'new':s}, getStdAjaxCB(function(){
-				showLoading(false)				
+				showLoading(false)
 				showMsg("{.!Password changed.}")
 			}))
 	)
 }//changePwd
 
-
-function outsideV(e, additionalMargin) {
-    outsideV.w || (outsideV.w = $(window));
-    if (!(e instanceof $))
-        e = $(e);
-    return e.offset().top + e.height() > outsideV.w.height() - (additionalMargin || 0) - 17;
-} // outsideV
-
-function selectionChanged() { $('#selected-counter').text( getSelectedItems().length ) }
+function selectionChanged() { $sel('#selected-counter').textContent = getSelectedItems().length }
 
 function getItemName(el) {
     if (!el)
         return false
-    el = $(el)
-    var a = el.closest('a')
-    if (!a.length)
-        a = el.closest('.item').find('.item-link:first a')
+    var a = el.closest('a') || $sel('.item-link a', el.closest('.item'))
     // take the url, and ignore any #anchor part
-    var s = a.attr('href') || a.attr('value');
-    s = s.split('#')[0];
+    var s = a.href || a.value
+    s = s.split('#')[0]
     // remove protocol and hostname
     var i = s.indexOf('://');
     if (i > 0)
@@ -678,16 +906,10 @@ function getItemName(el) {
 } // getItemName
 
 function submit(data, url) {
-    var f = $('<form method="post">').attr('action',url||undefined).hide().appendTo('body')
-    for (var k in data) {
-        var v = data[k]
-		if (!Array.isArray(v))
-            f.append("<input type='hidden' name='"+k+"' value='"+v+"' />")
-		else
-		    v.forEach(function(v2) {
-				f.append("<input type='hidden' name='"+k+"' value='"+v2+"' />")
-        	})
-    }
+    var f = $create('form', { app:'body', a:{method:'post', action:url||undefined }, s:'display:none' })
+    for (var k in data)
+		wantArray(data[k]).forEach(v2=>
+			$create('input', { app:f, a:{type:'hidden', name:k, value:v2 } }))
     f.submit()
 }//submit
 
@@ -699,54 +921,6 @@ RegExp.escape = function(text) {
     return text.replace(arguments.callee.sRE, '\\$1');
 }//escape
 
-// options: cb(function), closable(false)
-function dialog(content, options) {
-	options = options||{}
-	var cb = typeof options==='function' ? options : options.cb
-	var active = document.activeElement
-    var ret = $('<div class="dialog-content">').html(content).keydown(function(ev) {
-		if (ev.keyCode===27)
-			close2()
-	})
-	ret.close = function() {
-        ret.closest('.dialog-overlay').remove()
-		$(active).focus()
-        cb && cb()		
-    }
-	function close2(){
-		if (options.closable !== false)
-			ret.close()
-	}
-    ret.appendTo(
-        $('<div class="dialog-overlay">').appendTo('body')
-            .click(close2)
-    ).click(function(ev){
-        ev.stopImmediatePropagation()
-    })
-	setTimeout(()=>
-		ret.find(':input:not(:disabled):first').focus() )
-    return ret
-} // dialog
-
-// options: cb(function), buttons(jq|false)
-function showMsg(content, options) {
-	options = options||{}
-	var cb = typeof options==='function' ? options : options.cb
-	var bs = options.buttons
-	if (~content.indexOf('<'))
-		content = content.replace(/\n/g, '<br>')
-    var ret = dialog($('<div>').css({ display:'inline-block', textAlign:'left' }).html(content), cb).css('text-align', 'center')
-		.append(
-			bs===false ? null 
-			: $('<div class="buttons">').html(bs ||
-				$('<button>').text("{.!Ok.}")	
-					.click(ev=> ret.close() ) ) )
-	return ret
-}//showMsg
-
-function showError(msg, cb) {
-    return msg && showMsg("<h2>{.!Error.}</h2>"+msg, cb).addClass('error')
-}
 
 /*  cb: function(value, dialog)
 	options: type:string(text,textarea,number), value:any, keypress:function
@@ -764,21 +938,23 @@ function ask(msg, options, cb) {
 	if (!v)
 	    msg += '<br><button>{.!Ok.}</button>'
 	else if (v == 'textarea')
-		msg += '<textarea name="txt" cols="30" rows="8">'+options.value+'</textarea><br><button type="submit">Ok</button>';
+		msg += '<textarea name="txt">'+options.value+'</textarea><br><button type="submit">Ok</button>';
 	else
 		msg += '<input name="txt" type="'+v+'" value="'+(options.value||'')+'" />';
-	var ret = dialog($('<form class="ask">')
-		//.html($(`<i class="fa fa-times-rectangle close">`).click(ev=>ret.close()))
-		.append(msg)
-		.submit(function(ev) {
-			if (false !== cb(options.type ? $.trim(ret.find(':input').val()) : $(ev.target), $(ev.target).closest('form'))) {
+	var ret = dialog( $create('form.ask', { h:msg, on:{
+		submit(ev){
+			if (false !== cb(options.type ? $sel(':input', ret).value.trim() : ev.target, ev.target.closest('form'))) {
                 ret.close()
                 return false
             }
-		})
-	)
+		}
+	} }) )
 
-    ret.find(':input').focus().select() // autofocus attribute seems to work only first time :(
+    let i = $sel(':input', ret)
+	if (i) {
+		i.focus() // autofocus attribute seems to work only first time :(
+		if (i.select) i.select() // buttons don't
+	}
 
 	return ret
 }//ask
@@ -786,7 +962,7 @@ function ask(msg, options, cb) {
 // this is a factory for ajax request handlers
 function getStdAjaxCB(what2do) {
     return function(res){
-        res = $.trim(res)
+        res = res.trim()
         if (res === "ok")
 			return (typeof what2do==='function') ? what2do() : location.reload()
 		showLoading(false)
@@ -795,12 +971,11 @@ function getStdAjaxCB(what2do) {
 }//getStdAjaxCB
 
 function getSelectedItems() {
-    return $('#files .selector:checked')
+    return $msel('#files .selector:checked')
 }
 
 function getSelectedItemsName() {
-    return getSelectedItems().get().map(x=>
-        getItemName(x))
+    return getSelectedItems().map(getItemName)
 }//getSelectedItemsName
 
 function deleteFiles(files) {
@@ -812,7 +987,7 @@ function deleteFiles(files) {
 
 function moveFiles(files) {
 	ask("{.!Enter the destination folder.}", 'text', function(dst) {
-		return ajax('move', { dst: dst, files: files.join(':') }, function(res) {
+		return ajax('move', { dst, files: files.join(':') }, function(res) {
 			var a = res.split(';')
 			a.pop()
 			if (!a.length)
@@ -820,8 +995,8 @@ function moveFiles(files) {
 			var failed = 0;
 			var ok = 0;
 			var msg = '';
-			a.forEach(function(s) {
-				s = $.trim(s)
+			a.forEach(s=> {
+				s = s.trim()
 				if (!s.length) {
 					ok++
 					return
@@ -843,7 +1018,7 @@ function moveFiles(files) {
 function reload() { location = '.' }
 
 function selectionMask() {
-    ask("{.!Please enter the file mask to select.}", {type:'text', value:'*'}, function(s){
+    ask("{.!Please enter the file mask to select.}", {type:'text', value:'*'}, s=>{
         if (!s) return;
         var re = s.match('^/([^/]+)/([a-zA-Z]*)');
         if (re)
@@ -859,71 +1034,24 @@ function selectionMask() {
             }
             re = new RegExp(s, "i");
         }
-        $("#files .selector")
-            .filter((i, e)=> invert ^ re.test(getItemName(e)))
-            .prop('checked',true);
+        $msel( "#files .selector", e=>
+			(invert ^ re.test(getItemName(e))) && (e.checked=true))
         selectionChanged()
     });
 }//selectionMask
 
-function showLogin(options) {
-	if (!HFS.sid) // the session was just deleted
-		return location.reload() // but it's necessary for login
-	var d = dialog(`
-		<form style="line-height:1.9em">
-			{.!Username.}
-			<br><input name=usr />
-			<br>{.!Password.}
-			<br><input name=pwd type=password />
-			<br><br><button type=submit>{.!Login.}</button>
-		</form>`, options)
-
-	if (HFS.user)
-		d.find('form').prepend(`<div style='border-bottom:1px solid #888; margin-bottom:1em; padding-bottom:1em;'>
-			The current account (${HFS.user}) has no access to this resource.
-			<br>Please enter different credentials.
-		</div>`)
-	
-	d.find('form').submit(function(){
-		var vals = d.find('[name]').get().map(x=> x.value.trim())
-		var data = { 
-			user: vals[0],
-			passwordSHA256: sha256(sha256(vals[1])+HFS.sid)  // hash must be lowercase. Double-hashing is causing case sensitiv
-		}  
-		$.post("?mode=login", data).then(function(res){
-			if (res !== 'ok')
-				return showError(res)
-			d.close()
-			showLoading()
-			location.reload()
-		}, ajaxError);
-		return false
-	})
-} // showLogin
-
-function showLoading(show){
-	if (showLoading.last)
-		showLoading.last.close()
-	if (show===false)			
-		return
-	return showLoading.last = showMsg('<i class="fa fa-refresh" style="animation:spin 6s linear infinite;position: absolute;top: calc(50% - .5em);left: calc(50% - 0.5em); font-size: 12em; font-size:min(50vw, 50vh); color: #fff;" />',{ buttons:false })
-		.css({ background:'none' })
-}
-
 function showAccount() {
-	dialog('<div style="line-height:3em">\
-			<h1>{.!Account panel.}</h1>\
-			<span>{.!User.}: '+HFS.user+'</span>\
-			<br><button onclick="changePwd()"><i class="fa fa-key"></i> {.!Change password.}</button>\
-			<br><button onclick="logout()"><i class="fa fa-logout"></i> {.!Logout.}</button>\
-        </div>')
+	dialog(`<div style="line-height:3em">
+			<h1>{.!Account panel.}</h1>
+			<span>{.!User.}: '+HFS.user+'</span>
+			<br><button onclick="changePwd()"><i class="fa fa-key"></i> {.!Change password.}</button>
+			<br><button onclick="logout()"><i class="fa fa-logout"></i> {.!Logout.}</button>
+        </div>`)
 } // showAccount
 
 function logout(){
 	showLoading()
-	$.post('?mode=logout').then(function(){
-		location.reload()
-	}, ajaxError);
+	$post('?mode=logout').then(()=> location.reload(), ajaxError);
 }
 
 function setCookie(name,value,days) {
@@ -946,70 +1074,63 @@ function getCookie(name) {
 // quando in modalità selezione, viene mostrato una checkbox per ogni item, e viene anche mostrato un pannello per all/none/invert
 var multiSelection = false
 function toggleSelection() {
-    $('#selection-panel').toggle()
-	if (multiSelection = !multiSelection)
-		$("<input type='checkbox' class='selector' />")
-			.prependTo('.item-selectable a') // having the checkbox inside the A element will put it on the same line of A even with long A, otherwise A will start on a new line.
-			.click(ev=>{ // we are keeping the checkbox inside an A tag for layout reasons, and firefox72 is triggering the link when the checkbox is clicked. So we reprogram the behaviour.
-				setTimeout(()=>{ 
-					ev.target.checked ^= 1
-					selectionChanged() 
-				})
-				return false 
-			})
+    $toggle('selection-panel')
+	if (multiSelection = !multiSelection) {
+		let base = $create('input.selector', { a:{type:'checkbox'} })
+		$msel('.item-selectable a', e=> // having the checkbox inside the A element will put it on the same line of A even with long A, otherwise A will start on a new line.
+			e.append(base.cloneNode()) )
+	}
 	else
-		$('#files .selector').remove()
+		$msel('#files .selector', x=> x.remove())
 }//toggleSelection
 
 function upload(){
-	$("<input type='file' name='file' multiple>").change(function(){
-		var files = this.files
-		if (!files.length) return
-		$('#upload-panel').slideDown('fast')
-		uploadQ.add(done=>
-			sendFiles(files, done))
+	$create('input', {
+		a:{ type:'file', name:'file', multiple:true },
+		on: { change(ev){
+			var files = ev.target.files
+			if (!files.length) return
+			$toggle('upload-panel')
+			uploadQ.add(done=>
+				sendFiles(files, done))
+		} }
   	}).click()
 } //upload
 
-uploadQ = newQ().on('change', function(ev) {
-    var n = Math.max(0, ev.count-1) // we don't consider the one we are working
-    $('#upload-q').text(n)
-})
+uploadQ = newQ(n=>
+    $sel('#upload-q').textContent = Math.max(0, n-1) ) // we don't consider the one we are working
 
-function newQ(){
+function newQ(onChange){
     var a = []
-	var ret = $({})
-    ret.add = function(job) {
-        a.push(job)
-		change()
-        if (a.length!==1) return
-		job(function consume(){
-			a.shift() // trash it
-			if (a.length)
-				a[0](consume) // next
-			else
-				ret.trigger('empty')
+	var ret = {
+		add(job) {
+			a.push(job)
 			change()
-		})
-    }
+			if (a.length!==1) return
+			job(function consume(){
+				a.shift() // trash it
+				if (a.length)
+					a[0](consume) // next
+				change()
+			})
+		}
+	}
 
-    function change(){ ret.trigger({ type:'change', count:a.length }) }
+    function change(){ onChange && onChange(a.length) }
 
 	return ret
 }//newQ
 
 function changeSort(){
+	let u = urlParams // shortcut
     dialog([
-        $('<h3>').text('{.!Sort by.}'),
-        $('<div class="buttons">').html(objToArr(sortOptions, (label,code)=>
-            $('<button>')
-				.text(label)
-				.prepend(urlParams.sort===code ? '<i class="fa fa-sort-alt-'+(urlParams.rev?'down':'up')+'"></i> ' : '')
-                .click(function(){
-					urlParams.rev = (urlParams.sort===code && !urlParams.rev) ? 1 : undefined
-					urlParams.sort = code||undefined
-                    location.search = encodeURL(urlParams)
-				})
+        $create('h3', { t:'{.!Sort by.}' }),
+        $create('div.buttons', objToArr(sortOptions, (label,code)=>
+            $button( (u.sort===code ? 'sort-alt-'+(u.rev?'down':'up')+'@@' : '')+label, ()=>{
+				u.rev = (u.sort===code && !u.rev) ? 1 : undefined
+				u.sort = code||undefined
+				location.search = encodeURL(urlParams)
+			})
 		))
 	])
 }//changeSort
@@ -1028,50 +1149,48 @@ function sendFiles(files, done) {
     for (var i = 0; i < files.length; i++)
         formData.append('file', files[i])
 
-    $.ajax({
-        type: 'POST',
-        data: formData,
-        success(data) {
-            try {
-                data = JSON.parse(data)
-                data.forEach(function(r) {
-                    $('#upload-'+(r.err ? 'ko' : 'ok')).text((i, s)=> +s +1)
-						.parent().show() // only for 'ko'
-                    $(r.err ? '<span title="'+r.err+'"><i class="fa fa-ban"></i> '+ r.name+'</span>' 
-						: '<a title="{.!Size.}: '+r.size+'&#013;{.!Speed.}: '+r.speed+'B/s" href="'+r.url+'"><i class="fa fa-'+(r.err ? 'ban' : 'check-circled')+'"></i> '+r.name+'</a>')
-						.appendTo('#upload-results');
-                })
-            }
-            catch(e){
-                console.error(e)
-                showError('Invalid server reply')
-            }
-        },
-        complete: done,
-        cache: false,
-        contentType: false,
-        processData: false,
-        xhr() {
-            var e = $('#upload-progress')
-            var prog = e.find('progress').prop('value', 0)
-            e.slideDown('fast')
-            var xhr = $.ajaxSettings.xhr()
-            var last = 0
-            var now = 0
-            xhr.upload.onprogress = function(ev){
-                prog.prop('value', (now = ev.loaded) / ev.total);
-            }
-            var h = setInterval(function() {
-                $('#progress-text').text(smartSize(now)+'B @ '+smartSize(now-last)+'/s')
-                last = now
-            },1000)
-            xhr.upload.onload = function(ev) {
-                e.slideUp('fast')
-                clearInterval(h)
-            }
-            return xhr
-        }
-    })
+	var xhr = new XMLHttpRequest();
+	xhr.open('POST', '');
+	xhr.send(formData);
+	xhr.onload = data=> {
+		try {
+			data = JSON.parse(data)
+			data.forEach(r=> {
+				let e = $sel('#upload-'+(r.err ? 'ko' : 'ok'))
+				e.textContent = +e.textContent +1
+				$toggle(e.parentNode, true) // only for 'ko'
+				e = r.err ? $create('span', { a:{title:r.err}, h:'<i class="fa fa-ban"></i> '+ r.name })
+					: $create('a', {
+						a: { href:r.url, title:"{.!Size.}: '+r.size+'&#013;{.!Speed.}: '+r.speed+'B/s" },
+						h: '<i class="fa fa-'+(r.err ? 'ban' : 'check-circled')+'"></i> '+r.name
+					})
+				$sel('#upload-results').appendChild(e)
+			})
+		}
+		catch(e){
+			console.error(e)
+			showError('Invalid server reply')
+		}
+		done()
+	}
+	xhr.onerror = done
+
+	var e = $sel('#upload-progress')
+	var prog = $sel('progress', e)
+	prog.value = 0
+	$toggle(e)
+	var last = 0
+	var now = 0
+	xhr.onprogress = ev=>
+		prog.value = (now = ev.loaded) / ev.total
+	var h = setInterval(()=>{
+		$sel('#progress-text').textContent = smartSize(now)+'B @ '+smartSize(now-last)+'/s'
+		last = now
+	},1000)
+	xhr.onload = ev=> {
+		$toggle(e)
+		clearInterval(h)
+	}
 }//sendFiles
 
 function smartSize(n, options) {
@@ -1100,18 +1219,18 @@ function log(){
 }
 
 function toggleTs(){
-    var k = 'hideTs'
-    $('#files').toggleClass(k)
-    localStorage.setItem('ts', Number(!$('#files').hasClass(k)));
+    let k = 'hideTs'
+    let now = $xclass($sel('#files'), k)
+    localStorage.setItem('ts', Number(!now));
 }
 
 function decodeURL(urlData) {
 	var ret = {}
-    urlData.split('&').forEach(function(x){
-        if (!x) return
+    for (let x of urlData.split('&')) {
+        if (!x) continue
         x = x.split("=").map(decodeURIComponent)
-		ret[x[0]] = x.length===1 ? true : x[1]
-    })
+		ret[x[0]] = x.length===1 || x[1]
+    }
 	return ret
 }//decodeURL
 
@@ -1132,8 +1251,6 @@ function ajaxError(x){
 	showError(x.status || 'communication error')
 }
 
-function sha256(s) { return SHA256.hash(s) }
-
 urlParams = decodeURL(location.search.substring(1))
 sortOptions = {
 	n: "{.!Name.}",
@@ -1144,35 +1261,42 @@ sortOptions = {
 	'': '{.!Default.}'
 }
 
-$(function(){
-    $('.trash-me').detach(); // this was hiding things for those w/o js capabilities
+function $icon(name, title, opts) {
+    if (typeof opts==='function')
+        opts = { click:opts }
+	return $create('i.fa.fa-'+name, Object.assign({ title },opts))
+}
+
+$domReady(()=>{
+	if (!$sel('#menu-panel')) // this is an error page
+		return
+    $msel('.trash-me', x=> x.remove()) // this was hiding things for those w/o js capabilities
     if (Number(localStorage['ts']))
         toggleTs()
 
-    $('body').on('click','.item-menu', function(ev){
-        var it = $(ev.target).closest('.item')
-        var acc = it.hasClass('can-access')
+    $click('/.item-menu', ev=>{
+        var it = ev.target.closest('.item')
+        var acc = it.matches('.can-access')
         var name = getItemName(ev.target)
         dialog([
-            $('<h3>').text(name),
-            it.find('.item-ts').clone(),
-            $('<div class="buttons">').html([
-                it.closest('.can-delete').length > 0
-				&& $('<button><i class="fa fa-trash"></i> {.!Delete.}</button>')
-					.click(()=> deleteFiles([name]) ),
-                it.closest('.can-rename').length > 0
-				&& $('<button><i class="fa fa-edit"></i> {.!Rename.}</button>').click(renameItem),
-                it.closest('.can-comment').length > 0
-				&& $('<button><i class="fa fa-quote-left"></i> {.!Comment.}</button>').click(setComment),
-                it.closest('.can-move').length > 0
-				&& $('<button><i class="fa fa-truck"></i> {.!Move.}</button>')
-					.click(()=> moveFiles([name]) )
+            $create('h3', { t:name }),
+            $sel('.item-ts', it).cloneNode(true),
+            $create('div.buttons', [
+                it.closest('.can-delete')
+				&& $button('trash@@{.!Delete.}', ()=> deleteFiles([name])),
+                it.closest('.can-rename')
+				&& $button('edit@@{.!Rename.}', renameItem),
+                it.closest('.can-comment')
+				&& $button('quote-left@@{.!Comment.}', setComment),
+                it.closest('.can-move')
+				&& $button('truck@@{.!Move.}', ()=> moveFiles([name]) )
             ])
-        ]).addClass('item-menu-dialog')
+        ]).classList.add('item-menu-dialog')
 
         function setComment() {
-            var value = it.find('.comment-text').text() || '';
-            ask(this.innerHTML, { type: 'textarea', value: value }, function(s){
+            let e = $sel('.comment-text',it)
+            let value = e && e.textContent || '';
+            ask(this.innerHTML, { type: 'textarea', value }, s=>{
                 if (s !== value)
                     ajax('comment', { text: s, files: name })
             })
@@ -1180,59 +1304,53 @@ $(function(){
 
         function renameItem() {
             ask(this.innerHTML+ ' '+name, { type: 'text', value: name }, to=>
-                ajax("rename", { from: name, to: to }))
+                ajax("rename", { from: name, to }))
         }
     })
 
-    $('#select-invert').click(function(ev) {
-        $('#files .selector').prop('checked', function(i,v){ return !v })
+	$click('/.selector', ev=>{
+		setTimeout(()=>{ // we are keeping the checkbox inside an A tag for layout reasons, and firefox72 is triggering the link when the checkbox is clicked. So we reprogram the behaviour.
+			ev.target.checked ^= 1
+			selectionChanged()
+		})
+		return false
+	})
+
+	$click('#select-invert', ev=>{
+        $msel('#files .selector', x=> x.checked=!x.checked)
         selectionChanged()
     })
-    $('#select-mask').click(selectionMask)
-    $('#move-selection').click(function(ev) { moveFiles(getSelectedItemsName()) })
-		.toggle($('.can-delete').length > 0)
-    $('#delete-selection').click(function(ev) { deleteFiles(getSelectedItemsName()) })
-        .toggle($('.can-delete').length > 0)
 
-    $('#files .cannot-access .item-link img').after('<i class="fa fa-lock" title="{.!No access.}"></i>')
-	$('#files.can-delete .item:not(.cannot-access), #files .item.can-archive').addClass('item-selectable')
-    if (! $('.item-selectable').length)
-        $('#multiselection').hide()
+    $click('#select-mask', selectionMask)
+    $click('#move-selection',()=> moveFiles(getSelectedItemsName()) )
+	$toggle('move-selection', $sel('.can-delete'))
+    $click('#delete-selection', ()=> deleteFiles(getSelectedItemsName()) )
+    $toggle('delete-selection', $sel('.can-delete'))
 
-    $('.additional-panel.closeable').prepend(
-        $('<i class="fa fa-times-circle close">').click(function(ev){
-            $(ev.target).closest('.closeable').fadeOut('fast').trigger('closed')
-        }))
+    $msel('#files .cannot-access .item-link img', x=>
+		x.insertAdjacentElement('afterend', $icon('lock', "{.!No access.}") ))
+	$msel('#files.can-delete .item:not(.cannot-access), #files .item.can-archive', x=>
+		$xclass(x,'item-selectable',1))
+    if (! $sel('.item-selectable'))
+        $toggle('#multiselection', false)
 
-    $('#upload-panel').on('closed', function(ev){
-        $('#upload-ok,#upload-ko').text('0')
-        $('#upload-results').html('')
-    })
+    $msel('.additional-panel.closeable', x=>
+		x.prepend( $icon('times-circle close', 'close', ev=>{
+            let e = ev.target.closest('.closeable')
+            $toggle(e, false)
+            e.dispatchEvent(new CustomEvent('closed'))
+        })) )
 
-	$('#sort span').text(sortOptions[urlParams.sort]||'{.!Sort.}')
+    $on('#upload-panel', { closed(){
+        $sel('#upload-ok').textContent = 0
+		$sel('#upload-ko').textContent = 0
+        $sel('#upload-results').textContent = ''
+    } })
 
-    /* experiment
-    $('.additional-panel.closeable').each(function(i, e) {
-        swipable(e, 'right')
-    })
-
-    function swipable(e, dir) {
-        e = $(e)
-        e.mousedown(function(ev) {
-            e.css('position','relative')
-            var o = { x:ev.pageX, y:ev.pageY }
-            console.warn(o)
-            e.mouseup(function(ev) {
-                e.css({ left: 0, top: 0 })
-                e.off('mousemove.dragging')
-            })
-            e.on('mousemove.dragging', function(ev) { return e.css({ left:ev.pageX-o.x, top:ev.pageY-o.y }) })
-        })
-    }
-    */
+	$sel('#sort span').textContent = sortOptions[urlParams.sort]||'{.!Sort.}'
 
     selectionChanged()
-})//onload
+})//$domReady
 
 [sha256.js|public]
 // from https://github.com/AndersLindman/SHA256
