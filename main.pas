@@ -1,4 +1,4 @@
-﻿{
+{
 Copyright (C) 2002-2020  Massimo Melina (www.rejetto.com)
 
 This file is part of HFS ~ HTTP File Server.
@@ -5982,7 +5982,7 @@ case event of
 
     refreshConn(data);
     end;
-  HE_POST_VAR: data.postVars.add(conn.post.varname+'='+conn.post.data);
+  HE_POST_VAR: data.postVars.add(conn.post.varname+'='+UTF8toString(conn.post.data));
   HE_POST_VARS:
     if conn.post.mode = PM_URLENCODED then
       urlToStrings(conn.post.data, data.postVars);
