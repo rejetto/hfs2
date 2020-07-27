@@ -161,15 +161,17 @@ var
   procedure deprecatedMacro(what:string=''; instead:string='');
   begin mainfrm.add2log('WARNING, deprecated macro: '+first(what, name)+nonEmptyConcat(' - Use instead: ',instead), NIL, clRed) end;
 
+  procedure unsatisfied(b:boolean=TRUE);
+  begin
+  if b then
+    macroError('cannot be used here')
+  end;
+
   function satisfied(p:pointer):boolean;
   begin
   result:=assigned(p);
-  if not result then
-    macroError('cannot be used here');
+  unsatisfied(not result);
   end;
-
-  procedure unsatisfied(b:boolean=TRUE);
-  begin if b then macroError('cannot be used here') end;
 
   function parEx(idx:integer; name:string=''; doTrim:boolean=TRUE):string; overload;
   var
@@ -262,9 +264,9 @@ var
     result:=staticVars;
     delete(varname,1,length(G_VAR_PREFIX));
     end
-  else if satisfied(md.cd) then
+  else if assigned(md.cd) then
     result:=md.cd.vars
-  else if satisfied(md.tempVars) then
+  else if assigned(md.tempVars) then
     result:=md.tempVars
   else
     raise Exception.create('no namespace available');
@@ -293,7 +295,7 @@ var
   if not satisfied(space) then exit;
   i:=space.indexOfName(varname);
   if i < 0 then
-    if value = '' then exit // all is good the way it is
+    if value = '' then exit(TRUE) // all is good the way it is
     else i:=space.add(varname+'='+value)
   else
     if value > '' then // in case of empty value, there's no need to assign, because we are going to delete it (after we cleared the bound object)
