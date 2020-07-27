@@ -2220,7 +2220,7 @@ const
 var
   sa            : TSecurityAttributes;
   ReadPipe,WritePipe  : THandle;
-  start               : TStartUpInfoA;
+  start               : TStartUpInfoW;
   ProcessInfo         : TProcessInformation;
   Buffer              : Pansichar;
   TotalBytesRead,
@@ -2251,7 +2251,7 @@ else
   timeout:=now()+timeout/SECONDS;
 // Create a Console Child Process with redirected input and output
 try
-  if CreateProcessA(nil, PansiChar(ansistring(DosApp)), @sa, @sa, true, CREATE_NO_WINDOW or NORMAL_PRIORITY_CLASS, nil, nil, start, ProcessInfo) then
+  if CreateProcess(nil, PChar(dosApp), @sa, @sa, true, CREATE_NO_WINDOW or NORMAL_PRIORITY_CLASS, nil, nil, start, ProcessInfo) then
     repeat
     result:=TRUE;
     // wait for end of child process
@@ -2261,16 +2261,22 @@ try
     // so that the pipe is not blocked by an overflow. New information
     // can be written from the console app to the pipe only if there is
     // enough buffer space.
-    if not PeekNamedPipe(ReadPipe, @Buffer[TotalBytesRead], ReadBuffer,
-      @BytesRead, @TotalBytesAvail, @BytesLeftThisMessage ) then
-      break
-    else if BytesRead > 0 then
-      ReadFile(ReadPipe, Buffer[TotalBytesRead], BytesRead, BytesRead, nil );
+    if not PeekNamedPipe(ReadPipe, @Buffer[TotalBytesRead], ReadBuffer, @BytesRead, @TotalBytesAvail, @BytesLeftThisMessage )
+    or (BytesRead > 0) and not ReadFile(ReadPipe, Buffer[TotalBytesRead], BytesRead, BytesRead, nil ) then
+      break;
     inc(TotalBytesRead, BytesRead);
     until (Apprunning <> WAIT_TIMEOUT) or (now() >= timeout);
-  Buffer[TotalBytesRead]:= #0;
-  OemToCharA(PansiChar(Buffer),Buffer);
-  output:=string(ansistrings.strPas(Buffer));
+  if IsTextUnicode(Buffer, TotalBytesRead, NIL) then
+    begin
+    Pchar(@Buffer[TotalBytesRead])^:= #0;
+    output:=pchar(Buffer)
+    end
+  else
+    begin
+    Buffer[TotalBytesRead]:= #0;
+    OemToCharA(Buffer,Buffer);
+    output:=string(ansistrings.strPas(Buffer));
+    end;
 finally
   GetExitCodeProcess(ProcessInfo.hProcess, exitcode);
   TerminateProcess(ProcessInfo.hProcess, 0);
