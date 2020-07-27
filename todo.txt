@@ -29,6 +29,7 @@ document: {.if|var}
 document: {.exec|out|timeout|exitcode.}
 document: [+section]
 document: {.set item|diff template.}
+document: {.add header|overwrite=0.}
 document: {.calc| ][ }
 document: single line diff templates (file path)
 document: {.disconnection reason|if=XXX.}

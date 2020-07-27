@@ -1,4 +1,4 @@
-{
+﻿{
 Copyright (C) 2002-2020  Massimo Melina (www.rejetto.com)
 
 This file is part of HFS ~ HTTP File Server.
@@ -3627,7 +3627,7 @@ diffTpl:=Ttpl.create();
 folder.lock();
 try
   buildTime:=now();
-  cd.conn.addHeader('Cache-Control: no-cache, no-store, must-revalidate, max-age=-1');
+  cd.conn.setHeaderIfNone('Cache-Control: no-cache, no-store, must-revalidate, max-age=-1');
   recur:=shouldRecur(cd);
   baseurl:=protoColon()+getSafeHost(cd)+folder.url(TRUE);
 
@@ -4006,9 +4006,9 @@ if result then
   conn.reply.mode:=HRM_NOT_MODIFIED;
   exit;
   end;
-conn.addHeader('ETag: '+UTF8encode(etag));
+conn.setHeaderIfNone('ETag: '+UTF8encode(etag));
 if ts > '' then
-  conn.addHeader('Last-Modified: '+UTF8encode(ts));
+  conn.setHeaderIfNone('Last-Modified: '+UTF8encode(ts));
 end; // notModified
 
 function notModified(conn:ThttpConn; f:string):boolean; overload;
@@ -4940,7 +4940,7 @@ var
   var s:ansistring;
   begin
   s:=ansistring(HSlib.encodeURL(data.lastFN));
-  conn.addHeader( ansistring('Content-Disposition: '+if_(attach, 'attachment; ')
+  conn.setHeaderIfNone( ansistring('Content-Disposition: '+if_(attach, 'attachment; ')
     +'filename*=UTF-8'''''+s+'; filename='+s));
   end;
 
