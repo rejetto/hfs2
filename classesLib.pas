@@ -1127,7 +1127,7 @@ var
     ss: TStringDynArray;
     s, si: string;
     till: pchar;
-    append: boolean;
+    append, prepend, add: boolean;
     sect, from: PtplSection;
   begin
   till:=pred(bos);
@@ -1143,8 +1143,10 @@ var
   if not parseFlagsAndAcceptSection(ss) then
     exit;
 
-  append:=ansiStartsStr('+', cur_section);
-  if append then
+  prepend:=startsStr('^', cur_section);
+  append:=startsStr('+', cur_section);
+  add:=prepend or append;
+  if add then
     delete(cur_section,1,1);
 
   // there may be several section names separated by =
@@ -1160,16 +1162,19 @@ var
     from:=NIL;
     if sect = NIL then // not found
       begin
-      if append then
+      if add then
         from:=getSection(s);
       sect:=newSection(s);
       end
     else
-      if append then
+      if add then
         from:=sect;
     if from<>NIL then
       begin // inherit from it
-      sect.txt:=from.txt+base.txt;
+      if append then
+        sect.txt:=from.txt+base.txt
+      else
+        sect.txt:=base.txt+CRLF+from.txt;
       sect.nolog:=from.nolog or base.nolog;
       sect.public:=from.public or base.public;
       sect.noList:=from.noList or base.noList;
