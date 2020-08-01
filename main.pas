@@ -5339,6 +5339,29 @@ var
     runEventScript('login')
     end; //urlAuth
 
+    function thumb():Boolean;
+    var
+      b: rawbytestring;
+      s, e: integer;
+    begin
+    if mode <> 'thumb' then
+      exit(FALSE);
+    result:=TRUE;
+    b:=loadFile(f.resource, 0, 96*KILO);
+    s:= pos(rawbytestring(#$FF#$D8#$FF), b, 2);
+    if s > 0 then
+      e:=pos(rawbytestring(#$FF#$D9), b, s);
+    if (s=0) or (e=0) then
+      begin
+      data.conn.reply.mode:=HRM_NOT_FOUND;
+      exit;
+      end;
+    conn.reply.contentType:='image/jpeg';
+    conn.reply.mode:=HRM_REPLY;
+    conn.reply.bodyMode:=RBM_STRING;
+    conn.reply.body:=Copy(b, s, e-s+2);
+    end;
+
   var
     b: boolean;
     s: string;
@@ -5698,6 +5721,9 @@ var
 
   if notModified(conn, f) then // calling notModified before limitsExceededOnDownload makes possible for [download] to manipualate headers set here
     exit;
+  if thumb() then
+    Exit;
+
   data.countAsDownload:=f.shouldCountAsDownload();
   if data.countAsDownload and limitsExceededOnDownload() then
     exit;
