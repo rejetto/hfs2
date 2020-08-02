@@ -111,7 +111,7 @@ $domReady(()=>{
 
 		{.if|{.get|can archive.}|
 		<button id='archiveBtn' title="{.!Download selected files as a single archive.}" onclick='
-			ask("{.!Download these files as a single archive?.}", ()=>
+			ask("{.!Downloading many files as archive can be a lengthy operation, and the result is a TAR file. Continue?.}", ()=>
 				submit({ selection: getSelectedItemsName() }, "{.get|url|mode=archive|recursive.}") )'>
 			<i class="fa fa-file-archive"></i>
 			<span>{.!Archive.}</span>
@@ -324,6 +324,8 @@ button i.fa { font-size:110% }
 .dialog-content h1 { margin:0; }
 .dialog-content .buttons { margin-top:1.5em }
 .dialog-content .buttons button { margin:.5em auto; min-width: 9em; display:block; }
+.ask .buttons { margin-top:1em }
+.ask .buttons button { display:initial; min-width: 6em; }
 .dialog-content.error { background: #fcc; }
 .dialog-content.error h2 { text-align:center }
 .dialog-content.error button { background-color: #f77; color: white; }
@@ -355,7 +357,7 @@ button i.fa { font-size:110% }
 	background:#fff; border-radius: 1em; padding: 1em; text-align:center; min-width: 10em;
 }
 .dialog-content input { border: 1px solid #888; } /* without this the border on chrome83 is not consistent */
-.ask input { border:1px solid rgba(0,0,0,0.5); padding: .2em; margin-top: .5em; }
+.ask input { border:1px solid rgba(0,0,0,0.5); padding: .2em; margin-top:1em; }
 .ask textarea { margin:1em 0; width:25em; height:8em; }
 .ask .close { float: right; font-size: 1.2em; color: red; position: relative; top: -0.4em; right: -0.3em; }
 
@@ -935,15 +937,19 @@ function ask(msg, options, cb) {
 		options = { type:options }
     msg += '<br />';
     var v = options.type
-	if (!v)
-	    msg += '<br><button>{.!Ok.}</button>'
-	else if (v == 'textarea')
-		msg += '<textarea name="txt">'+options.value+'</textarea><br><button type="submit">Ok</button>';
-	else
+    var buttons = `<div class=buttons>
+		<button>{.!Ok.}</button>
+		<button class="cancel">{.!Cancel.}</button>
+	</div>`
+	if (v == 'textarea')
+		msg += '<textarea name="txt">'+options.value+'</textarea>';
+	else if (v)
 		msg += '<input name="txt" type="'+v+'" value="'+(options.value||'')+'" />';
+    msg += buttons
 	var ret = dialog( $create('form.ask', { h:msg, on:{
 		submit(ev){
-			if (false !== cb(options.type ? $sel(':input', ret).value.trim() : ev.target, ev.target.closest('form'))) {
+		    if (ev.submitter.classList.contains('cancel')
+			|| false !== cb(options.type ? $sel(':input', ret).value.trim() : ev.target, ev.target.closest('form'))) {
                 ret.close()
                 return false
             }
