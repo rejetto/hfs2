@@ -109,14 +109,6 @@ $domReady(()=>{
 			<span>{.!Toggle timestamp.}</span>
 		</button>
 
-		{.if|{.get|can archive.}|
-		<button id='archiveBtn' title="{.!Download selected files as a single archive.}" onclick='
-			ask("{.!Downloading many files as archive can be a lengthy operation, and the result is a TAR file. Continue?.}", ()=>
-				submit({ selection: getSelectedItemsName() }, "{.get|url|mode=archive|recursive.}") )'>
-			<i class="fa fa-file-archive"></i>
-			<span>{.!Archive.}</span>
-		</button>
-		.}
 		{.if| {.get|can upload.} |{:
 			<button id="upload" onclick="upload()" title="{.!Upload.}">
 				<i class='fa fa-upload'></i>
@@ -140,6 +132,12 @@ $domReady(()=>{
 				<button id="select-invert"><i class="fa fa-retweet"></i><span>{.!Invert.}</span></button>
 				<button id="delete-selection"><i class="fa fa-trash"></i><span>{.!Delete.}</span></button>
 				<button id="move-selection"><i class="fa fa-truck"></i><span>{.!Move.}</span></button>
+				{.if|{.get|can archive.}|
+				<button id='archive' title="{.!Download selected files as a single archive.}">
+					<i class="fa fa-file-archive"></i>
+					<span>{.!Archive.}</span>
+				</button>
+				.}
 			</span>
 		</div>
     </div>
@@ -1273,6 +1271,12 @@ function $icon(name, title, opts) {
 	return $create('i.fa.fa-'+name, Object.assign({ title },opts))
 }
 
+function mustSelect() {
+    return getSelectedItems().length
+        || showError(`{.!You need to select some files first.}`)
+        && 0
+}
+
 $domReady(()=>{
 	if (!$sel('#menu-panel')) // this is an error page
 		return
@@ -1328,10 +1332,15 @@ $domReady(()=>{
     })
 
     $click('#select-mask', selectionMask)
-    $click('#move-selection',()=> moveFiles(getSelectedItemsName()) )
+    $click('#move-selection',()=>
+        mustSelect() && moveFiles(getSelectedItemsName()) )
 	$toggle('move-selection', $sel('.can-delete'))
-    $click('#delete-selection', ()=> deleteFiles(getSelectedItemsName()) )
+    $click('#delete-selection', ()=>
+        mustSelect() && deleteFiles(getSelectedItemsName()) )
     $toggle('delete-selection', $sel('.can-delete'))
+    $click('#archive', ()=>
+        mustSelect() && ask("{.!Downloading many files as archive can be a lengthy operation, and the result is a TAR file. Continue?.}", ()=>
+            submit({ selection: getSelectedItemsName() }, "{.get|url|mode=archive|recursive.}") ))
 
     $msel('#files .cannot-access .item-link img', x=>
 		x.insertAdjacentElement('afterend', $icon('lock', "{.!No access.}") ))
