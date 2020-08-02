@@ -1049,7 +1049,7 @@ function selectionMask() {
 function showAccount() {
 	dialog(`<div style="line-height:3em">
 			<h1>{.!Account panel.}</h1>
-			<span>{.!User.}: '+HFS.user+'</span>
+			<span>{.!User.}: ${HFS.user}</span>
 			<br><button onclick="changePwd()"><i class="fa fa-key"></i> {.!Change password.}</button>
 			<br><button onclick="logout()"><i class="fa fa-logout"></i> {.!Logout.}</button>
         </div>`)
