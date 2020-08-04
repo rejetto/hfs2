@@ -227,6 +227,10 @@ $domReady(()=>{
 $on('#search-panel', { submit(ev) {
 	var f = $form(ev.target)
 	var s = f.search
+	if (!s) {
+		showError(`{.!Search field is mandatory.}`)
+		return false
+	}
 	var folder = ''
 	var ps = []
 	switch (f.where) {
@@ -733,7 +737,7 @@ function $form(form, field) {
 		return form.elements.namedItem(field).value
 	let ret = {}
 	for (let e of form.elements)
-		if (e.name) {
+		if (e.name && (e.type !== 'radio' || e.checked)) {
 			let v = e.value
 			if (field === false)
 				v = v.trim()
@@ -1081,7 +1085,7 @@ function toggleSelection() {
     $toggle('selection-panel')
 	if (multiSelection = !multiSelection) {
 		let base = $create('input.selector', { a:{type:'checkbox'} })
-		$msel('.item-selectable a', e=> // having the checkbox inside the A element will put it on the same line of A even with long A, otherwise A will start on a new line.
+		$msel('.item-selectable .item-link a', e=> // having the checkbox inside the A element will put it on the same line of A even with long A, otherwise A will start on a new line.
 			e.append(base.cloneNode()) )
 	}
 	else
@@ -1340,7 +1344,7 @@ $domReady(()=>{
     $toggle('delete-selection', $sel('.can-delete'))
     $click('#archive', ()=>
         mustSelect() && ask("{.!Downloading many files as archive can be a lengthy operation, and the result is a TAR file. Continue?.}", ()=>
-            submit({ selection: getSelectedItemsName() }, "{.get|url|mode=archive|recursive.}") ))
+            submit({ selection: getSelectedItemsName() }, "?mode=archive") ))
 
     $msel('#files .cannot-access .item-link img', x=>
 		x.insertAdjacentElement('afterend', $icon('lock', "{.!No access.}") ))
