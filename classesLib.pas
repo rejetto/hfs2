@@ -99,6 +99,7 @@ type
     constructor create;
     destructor Destroy; override;
     function addFile(src:string; dst:string=''; data:Tobject=NIL):boolean; virtual;
+    function contains(src:string):boolean;
     function count():integer;
     procedure reset(); virtual;
     property totalSize:int64 read getTotal;
@@ -523,6 +524,16 @@ begin
 if cachedTotal < 0 then calculate();
 result:=cachedTotal;
 end; // getTotal
+
+function TarchiveStream.contains(src:string):boolean;
+var
+  i: integer;
+begin
+for i:=0 to Length(flist)-1 do
+  if flist[i].src = src then
+    exit(TRUE);
+result:=FALSE;
+end;
 
 function TarchiveStream.addFile(src:string; dst:string=''; data:Tobject=NIL):boolean;
 

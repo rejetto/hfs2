@@ -5024,6 +5024,14 @@ var
     tar: TtarStream;
     nofolders, selection, itsAsearch: boolean;
 
+    procedure addToTar(src,dst:string);
+    var
+      i: integer;
+    begin
+    if not selection or not tar.contains(src) then
+      tar.addFile(src, dst);
+    end;
+
     procedure addFolder(f:Tfile; ignoreConnFilters:boolean=FALSE);
     var
       i, ofs: integer;
@@ -5058,7 +5066,7 @@ var
         else
           s:=fi.pathTill(f.parent); // we want the path to include also f, so stop at f.parent
 
-        tar.addFile(fi.resource, s);
+        addToTar(fi.resource, s);
         end
     finally listing.free end;
     end; // addFolder
@@ -5093,7 +5101,7 @@ var
             t:=substr(s, lastDelimiter('\/', s)+1)
           else
             t:=s;
-          tar.addFile(ft.resource, t);
+          addToTar(ft.resource, t);
         finally freeIfTemp(ft) end;
         end;
     end; // addSelection
