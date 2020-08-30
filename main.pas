@@ -5025,8 +5025,6 @@ var
     nofolders, selection, itsAsearch: boolean;
 
     procedure addToTar(src,dst:string);
-    var
-      i: integer;
     begin
     if not selection or not tar.contains(src) then
       tar.addFile(src, dst);
@@ -8120,10 +8118,10 @@ var
 
         if userSocketBuffer > 0 then
           data.conn.sndBuf:=userSocketBuffer
-        else
+        else if highSpeedChk.checked then
           begin
           size:=minmax(8192, MEGA, round(data.averageSpeed));
-          if highSpeedChk.checked and (safeDiv(0.0+size, data.conn.sndbuf, 2) > 2) then
+          if safeDiv(0.0+size, data.conn.sndbuf, 2) > 2 then
             data.conn.sndBuf:=size;
           end;
         end;
@@ -12126,7 +12124,7 @@ tray:=TmyTrayicon.create(self);
 DragAcceptFiles(handle, true);
 caption:=format('HFS ~ HTTP File Server %s', [VERSION]);
 application.Title:=format('HFS %s', [VERSION]);
-setSpeedLimit(-1);
+setSpeedLimit(50000);
 setSpeedLimitIP(-1);
 setGraphRate(10);
 setMaxConnections(0);

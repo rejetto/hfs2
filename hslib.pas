@@ -104,7 +104,7 @@ type
     );
     body: ansistring;    // specifies reply body according to bodyMode
     bodyFile: string;
-    bodyStream: Tstream;   // note: the stream is automatically freed 
+    bodyStream: Tstream;   // note: the stream is automatically freed
     firstByte, lastByte: int64;  // body interval for partial replies (206)
     realm,           // this will appear in the authentication dialog
     reason,         // customized reason phrase
@@ -423,7 +423,7 @@ begin
   repeat
   result:=posEx(ss, s, ofs);
   if result = 0 then exit;
-  
+
     repeat
     qpos:=posEx(quote, s, ofs);
     if qpos = 0 then exit; // there's no quoting, our result will fit
@@ -1599,7 +1599,7 @@ end; // initInputStream
 
 function ThttpConn.sendNextChunk(max:integer=MAXINT):integer;
 var
-  n: int64;
+  n, toSend: int64;
   buf: ansistring;
 begin
 result:=0;
@@ -1611,7 +1611,8 @@ if (n = 0) or (bytesSentLastItem = 0) then n:=max;
 if n > MAXIMUM_CHUNK_SIZE then n:=MAXIMUM_CHUNK_SIZE;
 if n < MINIMUM_CHUNK_SIZE then n:=MINIMUM_CHUNK_SIZE;
 if n > max then n:=max;
-if n > bytesToSend then n:=bytesToSend;
+toSend:=bytesToSend;
+if n > toSend then n:=toSend;
 if n = 0 then exit;
 setLength(buf, n);
 n:=stream.read(buf[1], n);
