@@ -2979,7 +2979,7 @@ object mainFrm: TmainFrm
     object Updates1: TMenuItem
       Caption = 'Updates'
       object Checkforupdates1: TMenuItem
-        Caption = 'Check for news/updates'
+        Caption = 'Check for new updates'
         OnClick = Checkforupdates1Click
       end
       object updateDailyChk: TMenuItem
