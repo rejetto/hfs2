@@ -1,3 +1,9 @@
+# Obsolete
+This is the repository of the old HFS.
+
+I'm working on HFS 3 on another repository. Check it out! 
+https://github.com/rejetto/hfs
+
 ## Introduction
 You can use HFS (HTTP File Server) to send and receive files.
 It's different from classic file sharing because it uses web technology.
