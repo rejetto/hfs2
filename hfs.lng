@@ -286,7 +286,7 @@ menu.Debug1.Runscript1.Caption=Run script...
 menu.Debug1.showMemUsageChk.Caption=Show memory usage
 menu.Debug1.noContentdispositionChk.Caption=No Content-disposition
 menu.Updates1.Caption=Updates
-menu.Updates1.Checkforupdates1.Caption=Check for news/updates
+menu.Updates1.Checkforupdates1.Caption=Check for new updates
 menu.Updates1.updateDailyChk.Caption=Auto check every day
 menu.Updates1.keepBakUpdatingChk.Caption=Keep old version
 menu.Updates1.testerUpdatesChk.Caption=Updates from official to beta versions
@@ -760,4 +760,3 @@ Panel1.Button2.Caption=&No
 65119_OverbyteIcsCharsetUtils_sHebrewISOLogical=Hebrew (ISO-Logical)
 65134_OverbyteIcsCharsetUtils_sArabicISO=Arabic (ISO)
 65135_OverbyteIcsCharsetUtils_sArabicWindows=Arabic (Windows)
-
