@@ -17,6 +17,8 @@ Icons are generated at http://fontello.com/ . Use fontello.json for further modi
 
 For the default template we are targeting compatibility with Chrome 49 as it's the latest version running on Windows XP.
 
+Warning: Delphi Community Edition 10.4 removed support for command-line compilation, and is thus unable to compile JEDI Code Library, and is thus unable to compile HFS2, ref [Community Edition no longer includes the command-line compilers](https://blogs.embarcadero.com/delphi-cbuilder-community-editions-now-available-in-version-10-4-2/#comment-1339) - meaning the last version of Community Edition cabale of compiling HFS2 is Delphi 10.3.x
+
 ## Libs used
 - [ICS v8.64](http://www.overbyte.be) by François PIETTE 
 - [TRegExpr v0.952b](https://github.com/andgineer/TRegExpr/releases) by Andrey V. Sorokin
